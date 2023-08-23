@@ -13,6 +13,8 @@ spec:
       app: stackn-studio
       type: app
       pod: nginx-static
+  strategy:
+      type: {{ .Values.studio.static.strategy.type }}
   template:
     metadata:
       annotations:
@@ -32,7 +34,7 @@ spec:
           name: {{ .Release.Name }}-static-config
       - name: mediavol
         persistentVolumeClaim:
-          claimName: {{ .Release.Name }}-studio-media
+          claimName: {{ .Release.Name }}-{{ .Values.studio.media.storage.claimName }}
       containers:
       - name: static
         image: {{ .Values.studio.static.image }}

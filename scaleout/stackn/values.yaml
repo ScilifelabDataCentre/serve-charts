@@ -51,8 +51,11 @@ networkPolicy:
 studio:
   servicename: studio
   replicas: 1
+  strategy:
+    type: RollingUpdate
   debug: true
   init: true
+  enable_project_extra_settings: false
   inactive_users: False
   custom_apps:
     enabled: true
@@ -72,6 +75,8 @@ studio:
   kube_api_request_timeout: 1
   static:
     replicas: 1
+    strategy:
+      type: Recreate
     image: ghcr.io/scaleoutsystems/stackn/studio:develop
     pullPolicy: IfNotPresent
     resources:
@@ -98,6 +103,8 @@ studio:
       storageClass: ""
       size: "5Gi"
       accessModes: ReadWriteMany
+      claimName: studio-media
+      mountStudio: false
     mount_path: /app/media/
   superUser: admin
   superuserPassword: ""
@@ -122,6 +129,25 @@ studio:
       port: 8080
     initialDelaySeconds: 20
     periodSeconds: 20
+  djangoSecret: ''
+  emailService:
+    enabled: false
+    host: ''
+    port: 587
+    hostUser: ''
+    hostPassword: ''
+    smtpEmailFrom: ''
+    domainName: ''
+    apiEndpoint: ''
+    apiKey: ''
+    notifyOnAccountRegisterList:
+      - ''
+  disabledAppInstanceFields:
+    enabled: false
+    fields:
+      - ''
+
+
   
 #kubernetes config
 kubeconfig: ""

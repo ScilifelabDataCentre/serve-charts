@@ -67,6 +67,26 @@ spec:
         - name: KUBECONFIG
           value: {{ .Values.studio.kubeconfig_file | quote }}
         {{- end }}
+        - name: DJANGO_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.secretName" . }}
+              key: django-secret-key
+        - name: EMAIL_HOST_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.secretName" . }}
+              key: email-host-user
+        - name: EMAIL_HOST_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.secretName" . }}
+              key: email-host-password
+        - name: EMAIL_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.secretName" . }}
+              key: email-api-key
         image: {{ .Values.studio.image.repository }}
         imagePullPolicy: {{ .Values.studio.image.pullPolicy }}
         name: {{ .Release.Name }}-celery-worker

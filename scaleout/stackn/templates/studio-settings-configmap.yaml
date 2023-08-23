@@ -33,7 +33,7 @@ data:
     # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
     # SECURITY WARNING: keep the secret key used in production secret!
-    SECRET_KEY = 'pyey3^@n)$id1tc3_g7xcb55n7ii1989jy#&%!yk^z(u1us4@*'
+    SECRET_KEY = os.environ["DJANGO_SECRET"]
 
     # SECURITY WARNING: don't run with debug turned on in production
     {{ if .Values.studio.debug }}
@@ -46,8 +46,6 @@ data:
         ALLOWED_HOSTS = ['*']
     else:
         ALLOWED_HOSTS = ['{{ .Values.domain }}', '{{ .Release.Name }}-{{ .Values.studio.servicename }}', '{{ .Release.Name }}-studio.{{ .Values.namespace | default "default" }}.svc.{{ .Values.cluster_domain | default "cluster.local"}}']
-
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
     # Application definition
 
@@ -282,9 +280,24 @@ data:
     CSRF_TRUSTED_ORIGINS = ['https://*{{ .Values.session_cookie_domain }}','https://*.127.0.0.1'] + [{{ .Values.studio.csrf_trusted_origins | quote}}]
 
     # Email
+    {{ if .Values.studio.emailService.enabled }}
+    EMAIL_HOST = {{ .Values.studio.emailService.host | quote}}
+    EMAIL_PORT = {{ .Values.studio.emailService.port }}
+    EMAIL_HOST_USER = os.environ["EMAIL_HOST_USER"]
+    EMAIL_HOST_PASSWORD = os.environ["EMAIL_HOST_PASSWORD"]
+    EMAIL_USE_TLS = True
+
+    EMAIL_DOMAIN_NAME = {{ .Values.studio.emailService.domainName | quote}}
+    EMAIL_API_KEY = os.environ["EMAIL_API_KEY"]
+    EMAIL_MAILGUN_API = {{ .Values.studio.emailService.apiEndpoint | quote}}
+    EMAIL_NOTIFY_ON_ACCOUNT_REGISTER_LIST = [{{- range .Values.studio.emailService.notifyOnAccountRegisterList }}{{. | quote }},{{- end }}]
+    DEFAULT_FROM_EMAIL = {{ .Values.studio.emailService.smtpEmailFrom | quote}}
+    {{ else }}
     EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
     EMAIL_FILE_PATH =  os.path.join(BASE_DIR, 'sent_emails')
-    
+    {{ end }}
+    EMAIL_TEMPLATE_PROTOCOL = "https"
+
     VERSION = {{ .Values.studio.version | quote  }}
 
     MIGRATION_MODULES = {
@@ -302,9 +315,9 @@ data:
     {{- end }}
 
     # Defines how many apps a user is allowed to create within one project
-    APPS_PER_USER_LIMIT = {
+    APPS_PER_PROJECT_LIMIT = {
         "vscode": 1,
-        "volumeK8s": 1,
+        "volumeK8s": 5,
         "pytorch-serve": 1,
         "tensorflow-serve": 1,
         "mlflow-serve": 1,
@@ -319,4 +332,13 @@ data:
     }
 
     PROJECTS_PER_USER_LIMIT = 3
-    
+
+    STUDIO_ACCESSMODE = os.environ.get("STUDIO_ACCESSMODE", "")
+    {{ if .Values.studio.enable_project_extra_settings }}
+    ENABLE_PROJECT_EXTRA_SETTINGS = True
+    {{ else }}
+    ENABLE_PROJECT_EXTRA_SETTINGS = False
+    {{ end }}
+    {{ if .Values.studio.disabledAppInstanceFields.enabled }}
+    DISABLED_APP_INSTANCE_FIELDS = [{{- range .Values.studio.disabledAppInstanceFields.fields }}{{. | quote }},{{- end }}]
+    {{- end }}

@@ -16,6 +16,8 @@ data:
             client_max_body_size 0;
             large_client_header_buffers 4 128k;
             location / {
+              etag on;
+              expires max;
             }
         }
     }
