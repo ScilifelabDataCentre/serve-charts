@@ -72,6 +72,7 @@ spec:
             secretKeyRef:
               name: {{ include "stackn.secretName" . }}
               key: django-secret-key
+        {{ if .Values.studio.emailService.enabled }}
         - name: EMAIL_HOST_USER
           valueFrom:
             secretKeyRef:
@@ -87,6 +88,7 @@ spec:
             secretKeyRef:
               name: {{ include "stackn.secretName" . }}
               key: email-api-key
+        {{- end }}
         image: {{ .Values.studio.image.repository }}
         imagePullPolicy: {{ .Values.studio.image.pullPolicy }}
         name: {{ .Release.Name }}-celery-worker

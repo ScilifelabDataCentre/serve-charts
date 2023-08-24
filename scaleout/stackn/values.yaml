@@ -53,7 +53,7 @@ studio:
   replicas: 1
   strategy:
     type: RollingUpdate
-  debug: true
+  debug: false
   init: true
   enable_project_extra_settings: false
   inactive_users: False
@@ -77,7 +77,7 @@ studio:
     replicas: 1
     strategy:
       type: Recreate
-    image: ghcr.io/scaleoutsystems/stackn/studio:develop
+    image: ghcr.io/scilifelabdatacentre/stackn/serve-ingress:develop-20230823 
     pullPolicy: IfNotPresent
     resources:
       limits:
@@ -87,7 +87,7 @@ studio:
         cpu: "100m"
         memory: "256Mi"
   image: #tell which image to deploy for studio
-    repository: ghcr.io/scaleoutsystems/stackn/ingress:develop #This image can be built from Dockerfile inside stackn/components/studio (https://github.com/scaleoutsystems/stackn)
+    repository: ghcr.io/scilifelabdatacentre/stackn/serve-studio:develop-20230823  #This image can be built from Dockerfile inside stackn/components/studio (https://github.com/scaleoutsystems/stackn)
     pullPolicy: IfNotPresent # used to ensure that each time we redeploy always pull the latest image
   resources:
     limits:
@@ -159,18 +159,18 @@ accessmode: ReadWriteMany
 cluster_domain: cluster.local
 
 # Enable ingress if you want your to access the studio solution from a kubernetes host/localhost.
-domain: studio.127.0.0.1.nip.io
-session_cookie_domain: .127.0.0.1.nip.io
+domain: studio.10.0.1.1.nip.io
+session_cookie_domain: .10.0.1.1.nip.io
 ingress:
   enabled: true
   annotations: {}
   hosts:
-    - host: studio.127.0.0.1.nip.io
+    - host: studio.10.0.1.1.nip.io
   # setup TLS if you have a platform certificate or use 'tls-acme' if you have certbot deployed and want to generate a certificate.
   tls:
     - secretName: prod-ingress
       hosts:
-        - studio.127.0.0.1.nip.io
+        - studio.10.0.1.1.nip.io
 
 ### A Postgres database for STACKn ###
 # Here we use https://charts.bitnami.com/bitnami postgresql chart 
