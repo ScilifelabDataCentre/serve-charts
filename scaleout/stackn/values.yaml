@@ -159,18 +159,18 @@ accessmode: ReadWriteMany
 cluster_domain: cluster.local
 
 # Enable ingress if you want your to access the studio solution from a kubernetes host/localhost.
-domain: studio.10.0.1.1.nip.io
-session_cookie_domain: .10.0.1.1.nip.io
+domain: studio.127.0.0.1.nip.io
+session_cookie_domain: .127.0.0.1.nip.io
 ingress:
   enabled: true
   annotations: {}
   hosts:
-    - host: studio.10.0.1.1.nip.io
+    - host: studio.127.0.0.1.nip.io
   # setup TLS if you have a platform certificate or use 'tls-acme' if you have certbot deployed and want to generate a certificate.
   tls:
     - secretName: prod-ingress
       hosts:
-        - studio.10.0.1.1.nip.io
+        - studio.127.0.0.1.nip.io
 
 ### A Postgres database for STACKn ###
 # Here we use https://charts.bitnami.com/bitnami postgresql chart 
