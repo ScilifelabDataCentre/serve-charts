@@ -28,10 +28,11 @@ spec:
       securityContext:
         fsGroup: {{ .Values.studio.securityContext.fsGroup }}
       initContainers:
-        {{ if .Values.studio.debug }}
+        {{ if and .Values.studio.debug .Values.studio.media.storage.mountStudio }}
         - name: volume-permissions
           image: busybox
-          command: ['sh', '-c', 'chown -R 1000 /app/media && chgrp -R 1000 /app/media']
+          command: ['sh', '-c', 'chown -R 1000 {{ .Values.studio.media.mount_path }} && chgrp -R 1000 {{ .Values.studio.media.mount_path }}']
+        
           volumeMounts:
           - name: mediavol
             mountPath: {{ .Values.studio.media.mount_path }}
