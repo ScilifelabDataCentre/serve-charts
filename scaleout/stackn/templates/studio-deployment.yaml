@@ -32,7 +32,6 @@ spec:
         - name: volume-permissions
           image: busybox
           command: ['sh', '-c', 'chown -R 1000 {{ .Values.studio.media.mount_path }} && chgrp -R 1000 {{ .Values.studio.media.mount_path }}']
-        
           volumeMounts:
           - name: mediavol
             mountPath: {{ .Values.studio.media.mount_path }}
