@@ -51,8 +51,11 @@ networkPolicy:
 studio:
   servicename: studio
   replicas: 1
-  debug: true
+  strategy:
+    type: RollingUpdate
+  debug: false
   init: true
+  enable_project_extra_settings: false
   inactive_users: False
   custom_apps:
     enabled: true
@@ -72,7 +75,9 @@ studio:
   kube_api_request_timeout: 1
   static:
     replicas: 1
-    image: ghcr.io/scaleoutsystems/stackn/studio:develop
+    strategy:
+      type: Recreate
+    image: ghcr.io/scilifelabdatacentre/stackn/serve-ingress:develop-20230823 
     pullPolicy: IfNotPresent
     resources:
       limits:
@@ -82,7 +87,7 @@ studio:
         cpu: "100m"
         memory: "256Mi"
   image: #tell which image to deploy for studio
-    repository: ghcr.io/scaleoutsystems/stackn/ingress:develop #This image can be built from Dockerfile inside stackn/components/studio (https://github.com/scaleoutsystems/stackn)
+    repository: ghcr.io/scilifelabdatacentre/stackn/serve-studio:develop-20230823  #This image can be built from Dockerfile inside stackn/components/studio (https://github.com/scaleoutsystems/stackn)
     pullPolicy: IfNotPresent # used to ensure that each time we redeploy always pull the latest image
   resources:
     limits:
@@ -98,6 +103,8 @@ studio:
       storageClass: ""
       size: "5Gi"
       accessModes: ReadWriteMany
+      claimName: studio-media
+      mountStudio: false
     mount_path: /app/media/
   superUser: admin
   superuserPassword: ""
@@ -122,6 +129,25 @@ studio:
       port: 8080
     initialDelaySeconds: 20
     periodSeconds: 20
+  djangoSecret: ''
+  emailService:
+    enabled: false
+    host: ''
+    port: 587
+    hostUser: ''
+    hostPassword: ''
+    smtpEmailFrom: ''
+    domainName: ''
+    apiEndpoint: ''
+    apiKey: ''
+    notifyOnAccountRegisterList:
+      - ''
+  disabledAppInstanceFields:
+    enabled: false
+    fields:
+      - ''
+
+
   
 #kubernetes config
 kubeconfig: ""

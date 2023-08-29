@@ -4,14 +4,9 @@ This repository contains Helm charts maintained by Scaleout Systems AB. The repo
 
 **Note:** The main branch is now the new default branch. For getting the latest version of these charts  please clone the main branch and not the master.
 
-## TODO
-
-```bash
-kubectl label namespace kube-system name=kube-system
-```
 
 ## Getting started
-To be able to deploy Helm chrats from this repository you first need to add this repository as a source of charts.
+To be able to deploy Helm charts from this repository you first need to add this repository as a source of charts.
 
 ```bash
 $ helm repo add scaleout https://scaleoutsystems.github.io/charts/scaleout/stackn

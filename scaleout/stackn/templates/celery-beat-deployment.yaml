@@ -90,6 +90,28 @@ spec:
             secretKeyRef:
               name: {{ include "stackn.rabbit.secretName" . }}
               key: rabbitmq-password
+        - name: DJANGO_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.secretName" . }}
+              key: django-secret-key
+        {{ if .Values.studio.emailService.enabled }}
+        - name: EMAIL_HOST_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.secretName" . }}
+              key: email-host-user
+        - name: EMAIL_HOST_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.secretName" . }}
+              key: email-host-password
+        - name: EMAIL_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.secretName" . }}
+              key: email-api-key
+        {{- end }}
         image: {{ .Values.studio.image.repository }}
         imagePullPolicy: {{ .Values.studio.image.pullPolicy }}
         name: {{ .Release.Name }}-celery-beat
