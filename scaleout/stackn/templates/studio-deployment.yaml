@@ -24,7 +24,8 @@ spec:
         allow-api-access: "true"
         networking/allow-internet-egress: "true"
     spec:
-      automountServiceAccountToken: false
+      automountServiceAccountToken: true
+      serviceAccountName: {{ include "common.names.fullname" .}}
       securityContext:
         fsGroup: {{ .Values.studio.securityContext.fsGroup }}
       initContainers:
