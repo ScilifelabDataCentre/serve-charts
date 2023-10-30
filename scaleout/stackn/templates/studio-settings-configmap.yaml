@@ -167,7 +167,7 @@ data:
     STATIC_URL = '/static/'
     #Use in production and together with Nginx 
     STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-    STATICFILES_DIRS = ( os.path.join('static'), )
+    STATICFILES_DIRS = os.path.join(BASE_DIR, 'static/')
 
 
     TEMPLATE_LOADERS = (
@@ -336,7 +336,8 @@ data:
         'models': 'studio.migrations.models',
         'monitor': 'studio.migrations.monitor',
         'portal': 'studio.migrations.portal',
-        'projects': 'studio.migrations.projects'
+        'projects': 'studio.migrations.projects',
+        "common": "common.migrations",
     }
 
     {{ if .Values.studio.custom_migrations.enabled }}
@@ -378,3 +379,9 @@ data:
     {{ if .Values.studio.disabledAppInstanceFields.enabled }}
     DISABLED_APP_INSTANCE_FIELDS = [{{- range .Values.studio.disabledAppInstanceFields.fields }}{{. | quote }},{{- end }}]
     {{- end }}
+    # This was added in SS-507.
+    # This setting is for django-guardian.
+    # We had to set it because AnonymousUser was not working properly.
+    # Specifically, apps.tests.test_user_has_no_access was failing.
+    # Also anonymous access to pages was not working.
+    ANONYMOUS_USER_NAME = None
