@@ -101,6 +101,7 @@ data:
         "apps",
         "api",
         "customtags",
+        "news"
     ] + DJANGO_WIKI_APPS
 
     {{ if .Values.studio.custom_apps.enabled }}
@@ -339,6 +340,7 @@ data:
         'portal': 'studio.migrations.portal',
         'projects': 'studio.migrations.projects',
         "common": "common.migrations",
+        "news": "news.migrations",
     }
 
     {{ if .Values.studio.custom_migrations.enabled }}
