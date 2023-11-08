@@ -170,7 +170,8 @@ data:
 
     STATIC_URL = '/static/'
     #Use in production and together with Nginx 
-    STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+    #STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+    STATIC_ROOT = ""
     # SS-507
     # Please keep "static" files first, because common/forms.py expects it
     STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
