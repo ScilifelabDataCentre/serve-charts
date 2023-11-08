@@ -173,7 +173,7 @@ data:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
     # SS-507
     # Please keep "static" files first, because common/forms.py expects it
-    STATICFILES_DIRS = (os.path.join("static"),)
+    STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
     TEMPLATE_LOADERS = (
         'django.template.loaders.filesystem.Loader',
