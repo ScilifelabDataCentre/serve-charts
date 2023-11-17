@@ -55,6 +55,7 @@ studio:
     type: RollingUpdate
   debug: false
   init: true
+  reset_db: false
   enable_project_extra_settings: false
   inactive_users: False
   custom_apps:
