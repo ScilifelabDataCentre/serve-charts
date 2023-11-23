@@ -66,6 +66,8 @@ spec:
         {{ end }}
         - name: INIT
           value: {{ .Values.studio.init | quote }}
+        - name: RESET_DB
+          value: {{ .Values.studio.reset_db | quote }}
         - name: STUDIO_STORAGECLASS
           value: {{ include "stackn.studio.storageclass" . }}
         - name: STUDIO_ACCESSMODE
