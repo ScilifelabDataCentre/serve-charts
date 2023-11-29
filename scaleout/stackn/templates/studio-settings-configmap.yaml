@@ -146,6 +146,10 @@ data:
     # then setting BigAutoField on app level (ex /projects/apps.py)
     DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
+    # Allow all clients to make requests to the OpenAPI
+    CORS_URLS_REGEX = r"^/openapi/.*$"
+    CORS_ALLOW_ALL_ORIGINS = True
+
     # Django guardian 403 templates
     GUARDIAN_RENDER_403 = True
     GUARDIAN_TEMPLATE_403 = '403.html'
