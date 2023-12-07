@@ -373,6 +373,7 @@ data:
     "pytorch-serve": 10,
     "tensorflow-serve": 10,
     "mlflow-serve": 10,
+    "python-serve": 10,
     "rstudio": 3,
     "vscode": 3,
     "jupyter-lab": 3,
