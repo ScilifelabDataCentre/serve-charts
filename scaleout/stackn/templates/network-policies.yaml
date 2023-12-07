@@ -65,10 +65,7 @@ spec:
   policyTypes:
   - Egress
   egress:
-  - to:
-    - ipBlock:
-        cidr: {{ .Values.networkPolicy.kubernetes.cidr }}
-    ports:
+  - ports:
     - protocol: TCP
       port: {{ .Values.networkPolicy.kubernetes.port }}
 ---
