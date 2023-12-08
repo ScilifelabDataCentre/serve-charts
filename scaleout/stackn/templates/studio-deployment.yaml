@@ -115,7 +115,7 @@ spec:
             secretKeyRef:
               name: {{ include "stackn.secretName" . }}
               key: email-host-user
-        - name: EMAIL_PASSWORD
+        - name: EMAIL_HOST_PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ include "stackn.secretName" . }}
