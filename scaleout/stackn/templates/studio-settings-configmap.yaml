@@ -322,9 +322,9 @@ data:
 
     # Email
     {{ if .Values.studio.debug }}
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    {{ else }}
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    {{ else }}
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     {{ end }}
     {{ if .Values.studio.emailService.enabled }}
     EMAIL_HOST = {{ .Values.studio.emailService.host | quote}}
