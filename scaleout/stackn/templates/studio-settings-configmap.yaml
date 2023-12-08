@@ -321,7 +321,11 @@ data:
     CSRF_TRUSTED_ORIGINS = ['https://*{{ .Values.session_cookie_domain }}','https://*.127.0.0.1'] + [{{ .Values.studio.csrf_trusted_origins | quote}}]
 
     # Email
-    EMAIL_BACKEND = ("django.core.mail.backends.smtp.EmailBackend" if not DEBUG else "django.core.mail.backends.console.EmailBackend")
+    {{ if .Values.studio.debug }}
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    {{ else }}
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    {{ end }}
     {{ if .Values.studio.emailService.enabled }}
     EMAIL_HOST = {{ .Values.studio.emailService.host | quote}}
     EMAIL_PORT = {{ .Values.studio.emailService.port }}
