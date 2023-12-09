@@ -83,11 +83,6 @@ spec:
             secretKeyRef:
               name: {{ include "stackn.secretName" . }}
               key: email-host-password
-        - name: EMAIL_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "stackn.secretName" . }}
-              key: email-api-key
         {{- end }}
         image: {{ .Values.studio.image.repository }}
         imagePullPolicy: {{ .Values.studio.image.pullPolicy }}
