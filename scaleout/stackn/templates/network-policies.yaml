@@ -65,10 +65,7 @@ spec:
   policyTypes:
   - Egress
   egress:
-  - to:
-    - ipBlock:
-        cidr: {{ .Values.networkPolicy.kubernetes.cidr }}
-    ports:
+  - ports:
     - protocol: TCP
       port: {{ .Values.networkPolicy.kubernetes.port }}
 ---
@@ -332,3 +329,24 @@ spec:
         matchLabels:
           app: shinyproxy-deployment
 {{- end }}
+---
+# allow internet policy for shinyproxy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: shinyproxy-allow-internet-egress
+  namespace: {{ .Values.namespace | default "default" }}
+spec:
+  podSelector:
+    matchLabels:
+      allow-internet-egress: "true"
+  policyTypes:
+    - Egress
+  egress: 
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        {{- range $cidr := .Values.networkPolicy.internal_cidr }}
+        - {{ $cidr }}
+        {{- end }}
