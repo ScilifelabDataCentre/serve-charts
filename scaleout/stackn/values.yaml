@@ -147,6 +147,9 @@ studio:
     enabled: false
     fields:
       - ''
+  loki:
+    enabled: true
+    host: http://loki-gateway.loki-stack.svc.cluster.local
 
 
   
