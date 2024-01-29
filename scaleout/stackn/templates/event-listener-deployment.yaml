@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    reloader.stakater.com/auto: "true"
+  labels:
+    name: {{ .Release.Name }}-event-listener
+  name: {{ .Release.Name }}-event-listener
+spec:
+  replicas: {{ .Values.celeryWorkers.replicas | default 2 }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      name: {{ .Release.Name }}-event-listener
+  template:
+    metadata:
+      labels:
+        name: {{ .Release.Name }}-event-listener
+        app: stackn-studio
+        allow-api-access: "true"
+    spec:
+      serviceAccountName: {{ include "common.names.fullname" .}}
+      initContainers:
+        - name: wait-for-studio
+          image: busybox:1.28.4
+          command: ['sh', '-c', "until nslookup {{ .Release.Name }}-{{ .Values.studio.servicename }}; do echo waiting for {{ .Release.Name }}-{{ .Values.studio.servicename }} service; sleep 5; done"]
+          resources:
+            limits:
+              cpu: "100m"
+              memory: "512Mi"
+            requests:
+              cpu: "100m"
+              memory: "512Mi"
+      containers:
+        {{- if .Values.studio.securityContext.enabled }}
+        securityContext:
+          runAsUser: {{ .Values.studio.securityContext.runAsUser }}
+          runAsGroup: {{ .Values.studio.securityContext.runAsGroup }}
+          allowPrivilegeEscalation: {{ .Values.studio.securityContext.allowPrivilegeEscalation }}
+          privileged: {{ .Values.studio.securityContext.privileged }}
+          capabilities:
+            drop:
+              - all
+        {{- end }}
+        env:
+        - name: BASE_URL
+          value: {{ .Release.Name }}-{{ .Values.studio.servicename }}
+          value: 
+        - name: DEBUG
+          value: "false"
+        - name: KUBECONFIG
+          value: {{ .Values.studio.kubeconfig_file | quote }}
+        - name: USERNAME
+          value: {{ include "stackn.studio.superuser" . }}
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.secretName" . }}
+              key: studio-superuser-password
+        image: {{ .Values.eventListener.image }}
+        imagePullPolicy: Always
+        name: {{ .Release.Name }}-event-listener
+        resources:
+          limits:
+            cpu: {{ .Values.eventListener.resources.limits.cpu }}
+            memory: {{ .Values.eventListener.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.eventListener.resources.requests.cpu }}
+            memory: {{ .Values.eventListener.resources.requests.memory }}
+      imagePullSecrets:
+        - name: ghcrsecret
+      restartPolicy: Always
+      volumes:
+status: {}

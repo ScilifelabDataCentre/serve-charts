@@ -267,3 +267,14 @@ reloader:
   namespace: default
   reloader:
     watchGlobally: false
+
+eventListener:
+  image: 
+  replicas: 1
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "1Gi"
+    limits:
+      cpu: "500m"
+      memory: "2Gi"
