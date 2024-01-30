@@ -24,7 +24,7 @@ spec:
       initContainers:
         - name: wait-for-studio
           image: busybox:1.28.4
-          command: ['sh', '-c', "until nslookup {{ .Release.Name }}-{{ .Values.studio.servicename }}; do echo waiting for {{ .Release.Name }}-{{ .Values.studio.servicename }} service; sleep 5; done"]
+          command: ['sh', '-c', "until wget --tries=1 --spider {{ .Release.Name }}-{{ .Values.studio.servicename }}:8080/openapi/v1/are-you-there; do echo waiting for {{ .Release.Name }}-{{ .Values.studio.servicename }} service; sleep 5; done"]
           resources:
             limits:
               cpu: "100m"
@@ -50,19 +50,19 @@ spec:
         env:
         - name: BASE_URL
           value: http://{{ .Release.Name }}-{{ .Values.studio.servicename }}:8080
-          - name: DEBUG
-          {{ if .Values.studio.debug }}
-            value: "true"
-          {{ else }}
-            value: "false"
-          {{ end }}
+        - name: DEBUG
+        {{- if .Values.studio.debug }}
+          value: "true"
+        {{- else }}
+          value: "false"
+        {{- end }}
         - name: USERNAME
-          value: {{ include "stackn.studio.superuser" . }}@test.com
+          value: {{ include "stackn.studio.eventuser.email" . }}
         - name: PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ include "stackn.secretName" . }}
-              key: studio-superuser-password
+              key: event-user-password
         resources:
           limits:
             cpu: {{ .Values.eventListener.resources.limits.cpu }}

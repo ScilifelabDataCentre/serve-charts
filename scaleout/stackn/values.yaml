@@ -78,7 +78,7 @@ studio:
     replicas: 1
     strategy:
       type: Recreate
-    image: ghcr.io/scilifelabdatacentre/stackn/serve-ingress:develop-20230823 
+    image: ghcr.io/scilifelabdatacentre/stackn/serve-ingress:develop-20240130
     pullPolicy: IfNotPresent
     resources:
       limits:
@@ -88,7 +88,7 @@ studio:
         cpu: "100m"
         memory: "256Mi"
   image: 
-    repository: ghcr.io/sandstromviktor/studio-dev:v18
+    repository: ghcr.io/scilifelabdatacentre/stackn/serve-studio:develop-20240130
     pullPolicy: IfNotPresent
   resources:
     limits:
@@ -110,6 +110,9 @@ studio:
   superUser: admin
   superuserPassword: ""
   superuserEmail: admin@test.com
+  eventUser: ""
+  eventuserPassword: ""
+  eventuserEmail: ""
   version: studio
   securityContext:
     enabled: true

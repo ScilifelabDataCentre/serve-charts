@@ -59,11 +59,11 @@ spec:
         - containerPort: 8080
         env:
         - name: DEBUG
-        {{ if .Values.studio.debug }}
+        {{- if .Values.studio.debug }}
           value: "true"
-        {{ else }}
+        {{- else }}
           value: "false"
-        {{ end }}
+        {{- end }}
         - name: INIT
           value: {{ .Values.studio.init | quote }}
         - name: RESET_DB
@@ -81,6 +81,11 @@ spec:
             secretKeyRef:
               name: {{ include "stackn.secretName" . }}
               key: studio-superuser-password
+        - name: EVENT_USER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.secretName" . }}
+              key: event-user-password
         - name: GET_HOSTS_FROM
           value: dns
         - name: POSTGRES_PASSWORD
