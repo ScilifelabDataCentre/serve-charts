@@ -87,9 +87,9 @@ studio:
       requests:
         cpu: "100m"
         memory: "256Mi"
-  image: #tell which image to deploy for studio
-    repository: ghcr.io/scilifelabdatacentre/stackn/serve-studio:develop-20230823  #This image can be built from Dockerfile inside stackn/components/studio (https://github.com/scaleoutsystems/stackn)
-    pullPolicy: IfNotPresent # used to ensure that each time we redeploy always pull the latest image
+  image: 
+    repository: ghcr.io/sandstromviktor/studio-dev:v18
+    pullPolicy: IfNotPresent
   resources:
     limits:
       cpu: "1000m"
@@ -269,8 +269,7 @@ reloader:
     watchGlobally: false
 
 eventListener:
-  image: 
-  replicas: 1
+  image: ghcr.io/scilifelabdatacentre/serve-event-listener/event-listener:v0.1.1
   resources:
     requests:
       cpu: "100m"

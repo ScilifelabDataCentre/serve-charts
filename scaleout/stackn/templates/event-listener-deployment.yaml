@@ -7,7 +7,7 @@ metadata:
     name: {{ .Release.Name }}-event-listener
   name: {{ .Release.Name }}-event-listener
 spec:
-  replicas: {{ .Values.celeryWorkers.replicas | default 2 }}
+  replicas: 1
   strategy:
     type: Recreate
   selector:
@@ -33,6 +33,10 @@ spec:
               cpu: "100m"
               memory: "512Mi"
       containers:
+      - name: {{ .Release.Name }}-event-listener
+        image: {{ .Values.eventListener.image }}
+        imagePullPolicy: Always
+        name: {{ .Release.Name }}-event-listener
         {{- if .Values.studio.securityContext.enabled }}
         securityContext:
           runAsUser: {{ .Values.studio.securityContext.runAsUser }}
@@ -45,22 +49,20 @@ spec:
         {{- end }}
         env:
         - name: BASE_URL
-          value: {{ .Release.Name }}-{{ .Values.studio.servicename }}
-          value: 
-        - name: DEBUG
-          value: "false"
-        - name: KUBECONFIG
-          value: {{ .Values.studio.kubeconfig_file | quote }}
+          value: http://{{ .Release.Name }}-{{ .Values.studio.servicename }}:8080
+          - name: DEBUG
+          {{ if .Values.studio.debug }}
+            value: "true"
+          {{ else }}
+            value: "false"
+          {{ end }}
         - name: USERNAME
-          value: {{ include "stackn.studio.superuser" . }}
+          value: {{ include "stackn.studio.superuser" . }}@test.com
         - name: PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ include "stackn.secretName" . }}
               key: studio-superuser-password
-        image: {{ .Values.eventListener.image }}
-        imagePullPolicy: Always
-        name: {{ .Release.Name }}-event-listener
         resources:
           limits:
             cpu: {{ .Values.eventListener.resources.limits.cpu }}
