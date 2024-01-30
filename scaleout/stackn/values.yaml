@@ -272,7 +272,7 @@ reloader:
     watchGlobally: false
 
 eventListener:
-  image: ghcr.io/scilifelabdatacentre/serve-event-listener/event-listener:v0.1.1
+  image: ghcr.io/scilifelabdatacentre/serve-event-listener/event-listener:v0.1.3
   resources:
     requests:
       cpu: "100m"
