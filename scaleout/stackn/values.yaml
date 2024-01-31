@@ -78,7 +78,7 @@ studio:
     replicas: 1
     strategy:
       type: Recreate
-    image: ghcr.io/scilifelabdatacentre/stackn/serve-ingress:develop-20230823 
+    image: ghcr.io/scilifelabdatacentre/stackn/serve-ingress:develop-20240130
     pullPolicy: IfNotPresent
     resources:
       limits:
@@ -87,9 +87,9 @@ studio:
       requests:
         cpu: "100m"
         memory: "256Mi"
-  image: #tell which image to deploy for studio
-    repository: ghcr.io/scilifelabdatacentre/stackn/serve-studio:develop-20230823  #This image can be built from Dockerfile inside stackn/components/studio (https://github.com/scaleoutsystems/stackn)
-    pullPolicy: IfNotPresent # used to ensure that each time we redeploy always pull the latest image
+  image: 
+    repository: ghcr.io/scilifelabdatacentre/stackn/serve-studio:develop-20240130
+    pullPolicy: IfNotPresent
   resources:
     limits:
       cpu: "1000m"
@@ -110,6 +110,9 @@ studio:
   superUser: admin
   superuserPassword: ""
   superuserEmail: admin@test.com
+  eventUser: ""
+  eventuserPassword: ""
+  eventuserEmail: ""
   version: studio
   securityContext:
     enabled: true
@@ -267,3 +270,13 @@ reloader:
   namespace: default
   reloader:
     watchGlobally: false
+
+eventListener:
+  image: ghcr.io/scilifelabdatacentre/serve-event-listener/event-listener:v0.1.3
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "1Gi"
+    limits:
+      cpu: "500m"
+      memory: "2Gi"
