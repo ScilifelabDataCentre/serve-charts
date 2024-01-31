@@ -34,6 +34,7 @@ spec:
               memory: "512Mi"
       containers:
       - name: {{ .Release.Name }}-event-listener
+        args: ["--namespace", {{ .Values.namespace | quote }}]
         image: {{ .Values.eventListener.image }}
         imagePullPolicy: Always
         name: {{ .Release.Name }}-event-listener
