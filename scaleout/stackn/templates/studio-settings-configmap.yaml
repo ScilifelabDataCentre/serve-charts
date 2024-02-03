@@ -388,8 +388,8 @@ data:
     "mongodb": 0,
     "netpolicy": 0,
     }
-    {{ if .Values.studio.loki.enabled }}
-    LOKI_SVC = {{ .Values.studio.loki.host | quote}}
+    {{ if .Values.loki.enabled }}
+    LOKI_SVC = {{ .Values.loki.host | quote}}
     {{ end }}
     PROJECTS_PER_USER_LIMIT = 5
     STUDIO_ACCESSMODE = os.environ.get("STUDIO_ACCESSMODE", "")
