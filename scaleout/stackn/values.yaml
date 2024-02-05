@@ -151,8 +151,6 @@ studio:
     fields:
       - ''
 
-
-  
 #kubernetes config
 kubeconfig: ""
 
@@ -280,3 +278,8 @@ eventListener:
     limits:
       cpu: "500m"
       memory: "2Gi"
+
+loki:
+    enabled: true
+    namespace: loki-stack
+    host: http://loki-gateway.loki-stack.svc.cluster.local # assumes loki deployed separately in loki-stack namespace with loki helm chart
