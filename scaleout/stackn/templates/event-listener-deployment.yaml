@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    reloader.stakater.com/auto: "true"
+  labels:
+    name: {{ .Release.Name }}-event-listener
+  name: {{ .Release.Name }}-event-listener
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      name: {{ .Release.Name }}-event-listener
+  template:
+    metadata:
+      labels:
+        name: {{ .Release.Name }}-event-listener
+        app: stackn-studio
+        allow-api-access: "true"
+    spec:
+      serviceAccountName: {{ include "common.names.fullname" .}}
+      initContainers:
+        - name: wait-for-studio
+          image: busybox:1.28.4
+          command: ['sh', '-c', "until wget --tries=1 --spider {{ .Release.Name }}-{{ .Values.studio.servicename }}:8080/openapi/v1/are-you-there; do echo waiting for {{ .Release.Name }}-{{ .Values.studio.servicename }} service; sleep 5; done"]
+          resources:
+            limits:
+              cpu: "100m"
+              memory: "512Mi"
+            requests:
+              cpu: "100m"
+              memory: "512Mi"
+      containers:
+      - name: {{ .Release.Name }}-event-listener
+        args: ["--namespace", {{ .Values.namespace | quote }}]
+        image: {{ .Values.eventListener.image }}
+        imagePullPolicy: Always
+        name: {{ .Release.Name }}-event-listener
+        {{- if .Values.studio.securityContext.enabled }}
+        securityContext:
+          runAsUser: {{ .Values.studio.securityContext.runAsUser }}
+          runAsGroup: {{ .Values.studio.securityContext.runAsGroup }}
+          allowPrivilegeEscalation: {{ .Values.studio.securityContext.allowPrivilegeEscalation }}
+          privileged: {{ .Values.studio.securityContext.privileged }}
+          capabilities:
+            drop:
+              - all
+        {{- end }}
+        env:
+        - name: BASE_URL
+          value: http://{{ .Release.Name }}-{{ .Values.studio.servicename }}:8080
+        - name: DEBUG
+        {{- if .Values.studio.debug }}
+          value: "true"
+        {{- else }}
+          value: "false"
+        {{- end }}
+        - name: USERNAME
+          value: {{ include "stackn.studio.eventuser.email" . }}
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.secretName" . }}
+              key: event-user-password
+        resources:
+          limits:
+            cpu: {{ .Values.eventListener.resources.limits.cpu }}
+            memory: {{ .Values.eventListener.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.eventListener.resources.requests.cpu }}
+            memory: {{ .Values.eventListener.resources.requests.memory }}
+      imagePullSecrets:
+        - name: ghcrsecret
+      restartPolicy: Always
+      volumes:
+status: {}

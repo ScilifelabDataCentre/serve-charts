@@ -129,7 +129,7 @@ data:
     REST_FRAMEWORK = {
         "DEFAULT_AUTHENTICATION_CLASSES": ["rest_framework.authentication.TokenAuthentication"],
         "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.NamespaceVersioning",
-        "ALLOWED_VERSIONS": [None, "beta", "v1"],
+        "ALLOWED_VERSIONS": [None, "beta", "v1", "api", "api-v1"],
         "DEFAULT_VERSION": "v1",
         "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
         "DEFAULT_PARSER_CLASSES": ("rest_framework.parsers.JSONParser",),
@@ -381,16 +381,17 @@ data:
     "jupyter-lab": 3,
     "mlflow": 1,
     "volumeK8s": 0,
-    "minio": 0,
+    "minio": 1,
     "mongo-express": 0,
     "reducer": 0,
     "combiner": 0,
     "mongodb": 0,
     "netpolicy": 0,
     }
-
+    {{ if .Values.loki.enabled }}
+    LOKI_SVC = {{ .Values.loki.host | quote}}
+    {{ end }}
     PROJECTS_PER_USER_LIMIT = 5
-
     STUDIO_ACCESSMODE = os.environ.get("STUDIO_ACCESSMODE", "")
     {{ if .Values.studio.enable_project_extra_settings }}
     ENABLE_PROJECT_EXTRA_SETTINGS = True
