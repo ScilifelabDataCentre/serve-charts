@@ -328,7 +328,6 @@ spec:
     - podSelector:
         matchLabels:
           app: shinyproxy-deployment
-{{- end }}
 ---
 # allow internet policy for shinyproxy
 apiVersion: networking.k8s.io/v1
@@ -350,3 +349,29 @@ spec:
         {{- range $cidr := .Values.networkPolicy.internal_cidr }}
         - {{ $cidr }}
         {{- end }}
+---
+# policy to allow communication with loki
+{{- if .Values.loki.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-from-studio-to-loki
+  namespace: {{ .Values.namespace | default "default" }}
+spec:
+  egress:
+    - to:
+        - namespaceSelector:
+            matchExpressions:
+              - key: name
+                operator: In
+                values:
+                  - loki-stack
+            matchLabels:
+              name: loki-stack
+  podSelector:
+    matchLabels:
+      web: studio-web
+  policyTypes:
+    - Egress
+{{- end }}
+{{- end }}

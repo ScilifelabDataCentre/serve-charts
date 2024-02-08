@@ -170,3 +170,28 @@ Return STACKn rabbit secret
 {{- end -}}
 
 
+{{/*
+    Return eventuser password
+    */}}
+    {{- define "stackn.studio.eventuser.password" -}}
+    {{- if .Values.global.studio.eventuserPassword }}
+        {{- .Values.global.studio.eventuserPassword -}}
+    {{- else if .Values.studio.eventuserPassword -}}
+        {{- .Values.studio.eventuserPassword -}}
+    {{- else -}}
+        {{- randAlphaNum 10 -}}
+    {{- end -}}
+    {{- end -}}
+    
+    {{/*
+    Return eventuser email
+    */}}
+    {{- define "stackn.studio.eventuser.email" -}}
+    {{- if .Values.global.studio.eventuserEmail }}
+        {{- .Values.global.studio.eventuserEmail -}}
+    {{- else if .Values.studio.eventuserEmail -}}
+        {{- .Values.studio.eventuserEmail -}}
+    {{- else -}}
+        event_user@test.com
+    {{- end -}}
+    {{- end -}}
