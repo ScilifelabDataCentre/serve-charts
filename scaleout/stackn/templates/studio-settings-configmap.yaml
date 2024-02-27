@@ -228,7 +228,7 @@ data:
 
     # Session settings for managing automatic login expiration.
     # The age of session cookies, in seconds. Set to 1 day = 86400 seconds:
-    SESSION_COOKIE_AGE = 86400
+    SESSION_COOKIE_AGE = {{ .Values.studio.session_cookie_age | default 86400 }}
     # Whether to save the session data on every request. For sliding expiration:
     SESSION_SAVE_EVERY_REQUEST = True
     # Whether to expire the session when the user closes their browser:
@@ -236,9 +236,9 @@ data:
 
     # Settings for the Django Axes brute force login protection
     # Number of allowed login failures before action is taken
-    AXES_FAILURE_LIMIT = 10
+    AXES_FAILURE_LIMIT = {{ .Values.studio.axes_failure_limit | default 10 }}
     # Duration in hours after which old failed login attempts will be cleared
-    AXES_COOLOFF_TIME = 1
+    AXES_COOLOFF_TIME = {{ .Values.studio.axes_cooloff_time | default 1 }}
     # Reset the number of failed attempts to 0 after a successful login
     AXES_RESET_ON_SUCCESS = True
     # Block failed attempts based on IP and username combination
