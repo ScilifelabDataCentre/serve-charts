@@ -218,8 +218,8 @@ rabbitmq:
   persistence:
     enabled: true
   auth:
-    existingSecretPasswordKey: pqf1ALLLMXKGg21a
-    existingSecretErlangKey: 97A5vTbUa1gkeOs3uks1ZrTj1GFaBcBB
+    existingPasswordSecret: pqf1ALLLMXKGg21a
+    existingErlangSecret: 97A5vTbUa1gkeOs3uks1ZrTj1GFaBcBB
 
 
 

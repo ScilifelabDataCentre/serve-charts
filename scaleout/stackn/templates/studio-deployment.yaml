@@ -101,10 +101,7 @@ spec:
               name: {{ include "stackn.redis.secretName" . }}
               key: {{ include "stackn.redis.secretPasswordKey" . }}
         - name: RABBITMQ_DEFAULT_PASS
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "stackn.rabbit.secretName" . }}
-              key: rabbitmq-password
+          value: {{ .Values.rabbitmq.auth.existingPasswordSecret }}
         {{- if .Values.chartcontroller.addSecret }}
         - name: KUBECONFIG
           value: {{ .Values.studio.kubeconfig_file | quote }}

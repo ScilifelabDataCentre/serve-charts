@@ -86,7 +86,7 @@ spec:
               name: {{ include "stackn.redis.secretName" . }}
               key: {{ include "stackn.redis.secretPasswordKey" . }}
         - name: RABBITMQ_DEFAULT_PASS
-          value: {{ .Values.rabbitmq.auth.existingSecretPasswordKey }}
+          value: {{ .Values.rabbitmq.auth.existingPasswordSecret }}
         - name: DJANGO_SECRET
           valueFrom:
             secretKeyRef:

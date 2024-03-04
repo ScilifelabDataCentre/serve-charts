@@ -53,7 +53,7 @@ spec:
         - name: POSTGRES_USER
           value: {{ .Values.postgresql.global.postgresql.auth.user }}
         - name: RABBITMQ_DEFAULT_PASS
-          value: {{ .Values.rabbitmq.auth.existingSecretPasswordKey }}
+          value: {{ .Values.rabbitmq.auth.existingPasswordSecret }}
         - name: RABBITMQ_HOST
           value: {{ .Release.Name }}-rabbit
         - name: RABBITMQ_USER
