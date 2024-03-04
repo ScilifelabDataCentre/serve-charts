@@ -53,7 +53,10 @@ spec:
         - name: POSTGRES_USER
           value: {{ .Values.postgresql.global.postgresql.auth.user }}
         - name: RABBITMQ_DEFAULT_PASS
-          value: {{ .Values.rabbitmq.auth.existingSecretPasswordKey }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "stackn.secretName" . }}
+              key: rabbit-password
         - name: RABBITMQ_HOST
           value: {{ .Release.Name }}-rabbit
         - name: RABBITMQ_USER
