@@ -16,13 +16,16 @@ global:
     existingSecret: ""
     storageClass: ""
   postgresql:
-      auth:
-        username: studio
-        password: ""
-        postgresPassword: ""
-        database: studio
-        existingSecret: ""
-      storageClass:
+    auth:
+      username: studio
+      password: ""
+      postgresPassword: ""
+      database: studio
+      existingSecret: ""
+    storageClass:
+  redis:
+    password: Abqt5n19AM
+  
 
 
 namespace: default
@@ -214,6 +217,9 @@ rabbitmq:
   podLabels: {"app":"stackn-studio","allow-api-access": "true"}
   persistence:
     enabled: true
+  auth:
+    existingSecretPasswordKey: pqf1ALLLMXKGg21a
+    existingSecretErlangKey: 97A5vTbUa1gkeOs3uks1ZrTj1GFaBcBB
 
 
 
