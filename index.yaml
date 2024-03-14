@@ -43,6 +43,15 @@ entries:
   netpolicy:
   - apiVersion: v1
     appVersion: "0.1"
+    created: "2024-03-14T17:58:50.778873793Z"
+    description: A Helm chart for network policy
+    digest: 446f38fbc24311d2b1023e0272f9a6c86494d6958073f13912a983908f2574fa
+    name: netpolicy
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/netpolicy-1.0.0/netpolicy-1.0.0.tgz
+    version: 1.0.0
+  - apiVersion: v1
+    appVersion: "0.1"
     created: "2024-03-14T16:33:25.93974742Z"
     description: A Helm chart for Scaleout Volumes
     digest: 4c3ae8896497a32e164b7d58955d72fcf7f8b431956cf8cf97f7ff2a7ee4d03e
@@ -94,6 +103,15 @@ entries:
   volumes:
   - apiVersion: v1
     appVersion: "0.1"
+    created: "2024-03-14T17:58:50.957919988Z"
+    description: A Helm chart for Volumes
+    digest: e00d7c6f118d95df0745046264ab5a69c6b90e5b988b16d640bd974c8908443c
+    name: volumes
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/volumes-1.0.0/volumes-1.0.0.tgz
+    version: 1.0.0
+  - apiVersion: v1
+    appVersion: "0.1"
     created: "2024-03-14T16:33:26.579237834Z"
     description: A Helm chart for Scaleout Volumes
     digest: 3e60c1774298c4182f8750eff84719a9a94508a05c50dbaa06010c0462596a45
@@ -104,6 +122,15 @@ entries:
   vscode:
   - apiVersion: v1
     appVersion: "0.1"
+    created: "2024-03-14T17:58:51.128268273Z"
+    description: A Helm chart for VS code in the browser
+    digest: d0184fcd7110f2f75f63bb76abc08e068765471e08938db20ded684d71f8c5cb
+    name: vscode
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/vscode-1.0.0/vscode-1.0.0.tgz
+    version: 1.0.0
+  - apiVersion: v1
+    appVersion: "0.1"
     created: "2024-03-14T16:33:26.682948972Z"
     description: A Helm chart for VS code in the browser
     digest: 7600698445c97bab33900e5882ae20663ac01c59c195da18d6cdbc90ef85f1f4
@@ -111,4 +138,4 @@ entries:
     urls:
     - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/vscode-0.0.1/vscode-0.0.1.tgz
     version: 0.0.1
-generated: "2024-03-14T16:33:26.682957828Z"
+generated: "2024-03-14T17:58:51.128290604Z"
