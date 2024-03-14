@@ -7,8 +7,10 @@ project:
 permission: public
 
 global:
-  protocol: TCP
-
+  protocol: TCP'
+  domain: studio.127.0.0.1.nip.io
+  auth_domain: studio.127.0.0.1.nip.io
+  
 appconfig:
   port: 8000
   image: 

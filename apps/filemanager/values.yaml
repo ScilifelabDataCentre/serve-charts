@@ -1,12 +1,30 @@
 namespace: default
-volumes: {}
+appname: filemanager
+project:
+  name: project
+  slug: project-slug
+
+permission: public
+
+global:
+  protocol: TCP'
+  domain: studio.127.0.0.1.nip.io
+  auth_domain: studio.127.0.0.1.nip.io
 
 ingress:
   v1beta1: false
   secretName: prod-ingress
 
+apps:
+  volumeK8s: {}
+
 appconfig:
   image: ghcr.io/scilifelabdatacentre/serve-filemanager:240221-0930
+
+service:
+  name: filemanager-svc
+  port: 8080
+  targetPort: 8080
 
 podSecurityContext:
   seccompProfile:
