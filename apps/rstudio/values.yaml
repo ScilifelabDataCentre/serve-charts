@@ -1,5 +1,5 @@
 namespace: default
-appname: tissuumaps
+appname: rstudio
 project:
   name: project
   slug: project-slug
@@ -11,22 +11,21 @@ apps:
   volumek8s:
 
 appconfig:
-  #port: 80 Instead uses the port and target port defined in the fixture
-  image: docker.io/cavenel/tissuumaps:3
-  path: /mnt/data/
+  port: 8787
+  image: ghcr.io/scilifelabdatacentre/serve-rstudio:231030-1146
 
 service:
-  name: tissuumaps-svc
+  name: rstudio-svc
+  port: 80
 
 imagePullSecrets:
   - name: regcred
 
 ingress:
+  v1beta1: false
   secretName: prod-ingress
 
 podSecurityContext:
-  seccompProfile:
-    type: RuntimeDefault
   fsGroup: 1000
 
 securityContext:
@@ -38,3 +37,5 @@ securityContext:
   capabilities:
     drop:
       - all
+
+flavor: {}

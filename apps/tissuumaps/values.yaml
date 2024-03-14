@@ -1,5 +1,5 @@
 namespace: default
-appname: rstudio
+appname: tissuumaps
 project:
   name: project
   slug: project-slug
@@ -8,30 +8,25 @@ global:
   protocol: TCP
 
 apps:
-  volumek8s:
+  volumeK8s:
 
 appconfig:
-  port: 8787
-  image: ghcr.io/scilifelabdatacentre/serve-rstudio:231030-1146
+  image: docker.io/cavenel/tissuumaps:3
+  path: /mnt/data/
 
-affinity:
-  nodeAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: acceleration
-          operator: In
-          values:
-          - gpu
+service:
+  name: tissuumaps-svc
+  targetport: 80
 
 imagePullSecrets:
   - name: regcred
 
 ingress:
-  v1beta1: false
   secretName: prod-ingress
 
 podSecurityContext:
+  seccompProfile:
+    type: RuntimeDefault
   fsGroup: 1000
 
 securityContext:
@@ -43,3 +38,5 @@ securityContext:
   capabilities:
     drop:
       - all
+
+flavor: {}

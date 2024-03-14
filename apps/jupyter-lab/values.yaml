@@ -65,3 +65,15 @@ securityContext:
   capabilities:
     drop:
       - all
+
+flavor:
+  limits:
+    cpu: 1
+    ephemeral-storage: 800Mi
+    memory: 1Gi
+    nvidia.com/gpu:
+  requests:
+    cpu: 500m
+    ephemeral-storage: 500Mi
+    memory: 500Mi
+    nvidia.com/gpu:

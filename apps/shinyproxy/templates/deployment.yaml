@@ -32,10 +32,6 @@ spec:
     spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-    {{ if index .Values.flavor.limits "nvidia.com/gpu" }}
-      affinity:
-        {{ .Values.affinity | toYaml | nindent 8 | trim }}
-    {{ end }}
       serviceAccountName: {{ .Values.namespace }}-shinyproxy
       containers:
       - name: serve
