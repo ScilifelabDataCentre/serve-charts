@@ -26,3 +26,4 @@ spec:
     - secretName: {{ .Values.ingress.secretName }}
       hosts:
         - {{ .Values.global.domain }}
+        
