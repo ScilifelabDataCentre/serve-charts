@@ -4,14 +4,14 @@ project:
   name: project
   slug: project-slug
 
+permission: public
+
 global:
   protocol: TCP
 
-apps:
-  volumek8s:
-
 appconfig:
   port: 8000
+  image: 
 
 service:
   name: dashapp-svc
@@ -36,3 +36,13 @@ securityContext:
   capabilities:
     drop:
       - all
+
+flavor:
+  limits:
+    cpu: 1
+    ephemeral-storage: 800Mi
+    memory: 1Gi
+  requests:
+    cpu: 500m
+    ephemeral-storage: 500Mi
+    memory: 500Mi

@@ -12,7 +12,7 @@ global:
   auth_domain: studio.127.0.0.1.nip.io
 
 apps:
-  volumek8s:
+  volumeK8s:
 
 appconfig:
   port: 8501
@@ -27,7 +27,6 @@ imagePullSecrets:
   - name: regcred
 
 ingress:
-  enabled: false
   secretName: prod-ingress
 
 podSecurityContext:
