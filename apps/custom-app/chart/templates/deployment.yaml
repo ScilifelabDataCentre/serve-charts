@@ -35,11 +35,8 @@ spec:
       securityContext:
         seccompProfile:
           type: RuntimeDefault
-        {{- if .Values.appconfig.userid }}
-        fsGroup: {{ .Values.appconfig.userid }}
-        {{- else }}
-        fsGroup: 1000
-        {{- end }}
+        fsGroup: {{ .Values.appconfig.userid | default 1000 }}
+
       {{- if .Values.apps.volumeK8s }}
       initContainers:
       - name: copy-to-pvc
@@ -74,13 +71,8 @@ spec:
           - containerPort: {{ .Values.appconfig.port }}
         securityContext:
           runAsNonRoot: true
-          {{- if .Values.appconfig.userid }}
-          runAsUser:  {{ .Values.appconfig.userid }}
-          runAsGroup: {{ .Values.appconfig.userid }}
-          {{- else }}
-          runAsUser:  1000
-          runAsGroup: 1000
-          {{- end }}
+          runAsUser:  {{ .Values.appconfig.userid | default 1000 }}
+          runAsGroup: {{ .Values.appconfig.userid | default 1000 }}
           allowPrivilegeEscalation: false
           privileged: false
           capabilities:

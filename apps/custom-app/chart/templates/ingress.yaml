@@ -18,7 +18,7 @@ spec:
         - path: /
           backend:
             service:
-              name: {{ .Values.service.name }}
+              name: {{ .Release.Name }}-{{ .Values.service.name }}
               port:
                 number: {{ .Values.service.port }}
           pathType: ImplementationSpecific
