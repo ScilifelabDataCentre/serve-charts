@@ -11,5 +11,3 @@ volume:
   size: 10Mi
   storageClass: false
   accessModes: ReadWriteMany
-
-
