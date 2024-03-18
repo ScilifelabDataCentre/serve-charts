@@ -22,8 +22,8 @@ spec:
                 number: {{ .Values.service.port }}
           pathType: ImplementationSpecific
 
-#  tls:
-#    - secretName: {{ .Values.ingress.secretName }}
-#      hosts:
-#        - {{ .Values.global.domain }}
+  tls:
+    - secretName: {{ .Values.ingress.secretName }}
+      hosts:
+        - {{ .Values.global.domain }}
         
