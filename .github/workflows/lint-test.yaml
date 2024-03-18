@@ -43,4 +43,4 @@ jobs:
 
       - name: Run chart-testing (install)
         if: steps.list-changed.outputs.changed == 'true'
-        run: ct install --chart-dirs apps --all --target-branch main --excluded-charts shinyproxy
+        run: ct install --chart-dirs apps --all --target-branch main --excluded-charts shinyproxy,volumek8s
