@@ -1,4 +1,3 @@
-
 appname: shinyapp
 project:
   name: project
@@ -14,7 +13,7 @@ apps:
 
 appconfig:
   port: 8501
-  image: ghcr.io/scilifelabdatacentre/shiny-adhd-medication-sweden:20240117-062031 
+  image: ghcr.io/scilifelabdatacentre/shiny-adhd-medication-sweden:20240117-062031
 
 service:
   name: shiny-svc
