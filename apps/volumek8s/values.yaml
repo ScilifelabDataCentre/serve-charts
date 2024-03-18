@@ -1,7 +1,6 @@
 accessModes: ReadWriteMany
 storageClass: default
 
-
 appname: volumek8s
 project:
   name: project
