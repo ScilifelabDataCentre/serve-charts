@@ -43,4 +43,4 @@ jobs:
 
       - name: Run chart-testing (install)
         #if: steps.list-changed.outputs.changed == 'true'
-        run: ct install --chart-dirs apps -all --target-branch add-tests --validate-maintainers=false
+        run: ct install --chart-dirs apps --all --target-branch add-tests --validate-maintainers=false
