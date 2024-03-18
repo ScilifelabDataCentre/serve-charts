@@ -11,3 +11,7 @@ volume:
   size: 2Gi
   storageClass: false
   accessModes: ReadWriteMany
+
+maintainers:
+  - name: Team Whale
+    email: serve@scilifelab.se
