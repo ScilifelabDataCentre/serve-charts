@@ -1,5 +1,8 @@
 apiVersion: v1
 appVersion: "0.1"
 description: A Helm chart for Volumes
-name: volumes
+name: volumek8s
 version: 1.0.0
+maintainers:
+  - name: Team Whale
+    email: serve@scilifelab.se
