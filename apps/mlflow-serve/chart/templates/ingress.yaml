@@ -13,7 +13,7 @@ metadata:
     nginx.ingress.kubernetes.io/auth-signin: "https://{{ .Values.global.domain }}/accounts/login/?next=$scheme%3A%2F%2F$host"
     # nginx.ingress.kubernetes.io/rewrite-target: /$1
   name: {{ .Release.Name }}-ingress
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Values.namespace }}
 spec:
   rules:
     - host: {{ .Release.Name }}.{{ .Values.global.domain }}
@@ -42,7 +42,7 @@ metadata:
     nginx.ingress.kubernetes.io/auth-signin: "https://{{ .Values.global.domain }}/accounts/login/?next=$scheme%3A%2F%2F$host"
     # nginx.ingress.kubernetes.io/rewrite-target: /$1
   name: {{ .Release.Name }}-ingress
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Values.namespace }}
 spec:
   rules:
     - host: {{ .Release.Name }}.{{ .Values.global.domain }}
