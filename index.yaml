@@ -29,6 +29,18 @@ entries:
   filemanager:
   - apiVersion: v1
     appVersion: "0.1"
+    created: "2024-03-18T12:10:50.991058564Z"
+    description: A Helm chart for the serve File Manager
+    digest: a6417b26ed97875abc38eee3b27b913f612aeb71314de673c2284004d62bee58
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: filemanager
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/filemanager-1.0.1/filemanager-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v1
+    appVersion: "0.1"
     created: "2024-03-18T12:07:15.413178902Z"
     description: A Helm chart for the serve File Manager
     digest: fcc5d3b115ed0a21f14452aa31016996c9b4be26187ba3f2ed264a569c361ae9
@@ -144,4 +156,4 @@ entries:
     urls:
     - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/vscode-1.0.0/vscode-1.0.0.tgz
     version: 1.0.0
-generated: "2024-03-18T12:07:16.458222146Z"
+generated: "2024-03-18T12:10:50.99107234Z"
