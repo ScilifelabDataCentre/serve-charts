@@ -1,4 +1,4 @@
-namespace: default
+
 appname: mlflow
 project:
   name: project

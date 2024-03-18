@@ -1,4 +1,4 @@
-namespace: default
+
 appname: shinyapp
 project:
   name: project

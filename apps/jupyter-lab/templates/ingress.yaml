@@ -3,7 +3,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ .Release.Name }}-ingress
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
   labels:
     io.kompose.service: {{ .Release.Name }}-ingress
   annotations:
@@ -31,7 +31,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .Release.Name }}-ingress
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "5500m"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"

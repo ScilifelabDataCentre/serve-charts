@@ -1,20 +1,24 @@
-namespace: default
+
 appname: shinyapp
 project:
   name: project
   slug: project-slug
 
 global:
-  protocol: TCP
+  protocol: TCP'
+  domain: studio.127.0.0.1.nip.io
+  auth_domain: studio.127.0.0.1.nip.io
 
 apps:
   volumek8s:
 
 appconfig:
   port: 8501
+  image: ghcr.io/scilifelabdatacentre/shiny-adhd-medication-sweden:20240117-062031 
 
 service:
-  name: customapp-svc
+  name: shiny-svc
+  port: 80
 
 imagePullSecrets:
   - name: regcred

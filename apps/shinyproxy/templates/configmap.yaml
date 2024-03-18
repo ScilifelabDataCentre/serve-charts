@@ -18,7 +18,7 @@ data:
       heartbeat-timeout: 60000
       kubernetes:
         internal-networking: true
-        namespace: {{ .Values.namespace }}
+        namespace: {{ .Release.Namespace }}
         image-pull-policy: IfNotPresent
       hide-navbar: true
       landing-page: /app/{{ .Release.Name }}

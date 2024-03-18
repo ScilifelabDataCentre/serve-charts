@@ -20,8 +20,8 @@ rules:
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: {{ .Values.namespace }}-shinyproxy-role
-  namespace: {{ .Values.namespace }}
+  name: {{ .Release.Namespace }}-shinyproxy-role
+  namespace: {{ .Release.Namespace }}
 rules:
   - apiGroups: [""]       # "" indicates the core API group
     resources: ["pods","persistentvolumeclaims"]

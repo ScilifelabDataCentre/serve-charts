@@ -11,7 +11,7 @@ metadata:
     nginx.ingress.kubernetes.io/auth-signin: "https://{{ .Values.global.domain }}/accounts/login/?next=$scheme%3A%2F%2F$host"
     {{- end }}
   name: {{ .Release.Name }}-ingress
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
 spec:
   rules:
     - host: {{ .Release.Name }}.{{ .Values.global.domain }}

@@ -1,4 +1,4 @@
-namespace: default
+
 appname: jupyter-lab
 project:
   name: project
@@ -34,6 +34,7 @@ appconfig:
 
 service:
   name: jupyterlab-svc
+  port: 80
 
 ingress:
   v1beta1: false

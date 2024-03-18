@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Values.appname }}
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
 spec:
   replicas: 1
   selector:
@@ -47,7 +47,7 @@ spec:
           - -c
           - code-server --auth=none --bind-addr 0.0.0.0:8080
         ports:
-          - containerPort: {{ .Values.appconfig.port }}
+          - containerPort: {{ .Values.service.targetport }}
         securityContext:
           {{- toYaml .Values.securityContext | nindent 10 }}
         resources:

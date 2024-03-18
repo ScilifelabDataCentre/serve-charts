@@ -17,18 +17,18 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: {{ include "common.names.fullname" .}}
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: {{ .Values.namespace }}-shinyproxy-role-binding
-  namespace: {{ .Values.namespace }}
+  name: {{ .Release.Namespace }}-shinyproxy-role-binding
+  namespace: {{ .Release.Namespace }}
 subjects:
   - kind: ServiceAccount
-    name: {{ .Values.namespace }}-shinyproxy
-    namespace: {{ .Values.namespace }}
+    name: {{ .Release.Namespace }}-shinyproxy
+    namespace: {{ .Release.Namespace }}
 roleRef:
   kind: Role
   apiGroup: rbac.authorization.k8s.io
-  name: {{ .Values.namespace }}-shinyproxy-role
+  name: {{ .Release.Namespace }}-shinyproxy-role

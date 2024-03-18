@@ -1,4 +1,4 @@
-namespace: default
+
 appname: vscode
 project:
   name: project
@@ -7,11 +7,13 @@ project:
 global:
   protocol: TCP
 
+  domain: studio.127.0.0.1.nip.io
+  auth_domain: studio.127.0.0.1.nip.io
+
 apps:
   volumek8s:
 
 appconfig:
-  port: 8080
   image: codercom/code-server:latest
 
 affinity:
@@ -26,6 +28,8 @@ affinity:
 
 service:
   name: vscode-svc
+  port: 80
+  targetport: 8080
 
 imagePullSecrets:
   - name: regcred

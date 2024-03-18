@@ -1,11 +1,14 @@
-namespace: default
+
 appname: tissuumaps
 project:
   name: project
   slug: project-slug
 
 global:
-  protocol: TCP
+  protocol: TCP'
+  domain: studio.127.0.0.1.nip.io
+  auth_domain: studio.127.0.0.1.nip.io
+
 
 apps:
   volumeK8s:
@@ -17,6 +20,7 @@ appconfig:
 service:
   name: tissuumaps-svc
   targetport: 80
+  port: 80
 
 imagePullSecrets:
   - name: regcred

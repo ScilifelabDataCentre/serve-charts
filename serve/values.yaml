@@ -25,7 +25,7 @@ global:
       storageClass:
 
 
-namespace: default
+
 existingSecret: ""
 serviceAccount:
   create: true
@@ -265,7 +265,7 @@ grafana:
 
 reloader:
   enabled: true
-  namespace: default
+  
   reloader:
     watchGlobally: false
 

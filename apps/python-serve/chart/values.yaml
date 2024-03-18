@@ -1,4 +1,4 @@
-namespace: default
+
 appname: python-serve
 project:
   name: project

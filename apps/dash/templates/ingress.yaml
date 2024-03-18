@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .Release.Name }}-ingress
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
   labels:
     io.kompose.service: {{ .Release.Name }}-ingress
   annotations:
@@ -22,7 +22,7 @@ spec:
               port:
                 number: {{ .Values.service.port }}
           pathType: ImplementationSpecific
-  tls:
-    - secretName: {{ .Values.ingress.secretName }}
-      hosts:
-        - {{ .Values.global.domain }}
+#  tls:
+#    - secretName: {{ .Values.ingress.secretName }}
+#      hosts:
+#        - {{ .Values.global.domain }}

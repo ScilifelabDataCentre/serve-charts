@@ -1,6 +1,6 @@
 replicas: 1
 appname: pytorch-serve
-namespace: default
+
 visibility: private
 
 global:

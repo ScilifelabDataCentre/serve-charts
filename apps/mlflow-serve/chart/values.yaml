@@ -1,6 +1,6 @@
 replicas: 1
 appname: mlflow-serve
-namespace: default
+
 visibility: private
 
 
