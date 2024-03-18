@@ -35,9 +35,6 @@ appconfig:
 service:
   name: jupyterlab-svc
 
-imagePullSecrets:
-  - name: regcred
-
 ingress:
   v1beta1: false
   secretName: prod-ingress
@@ -53,7 +50,7 @@ mlflow:
 
 podSecurityContext:
   seccompProfile:
-      type: RuntimeDefault
+    type: RuntimeDefault
   fsGroup: 100
 
 securityContext:

@@ -36,7 +36,7 @@ ingress:
 
 podSecurityContext:
   seccompProfile:
-      type: RuntimeDefault
+    type: RuntimeDefault
   fsGroup: 1000
 
 securityContext:
@@ -48,3 +48,15 @@ securityContext:
   capabilities:
     drop:
       - all
+
+flavor:
+  limits:
+    cpu: 1
+    ephemeral-storage: 800Mi
+    memory: 1Gi
+    nvidia.com/gpu:
+  requests:
+    cpu: 500m
+    ephemeral-storage: 500Mi
+    memory: 500Mi
+    nvidia.com/gpu:

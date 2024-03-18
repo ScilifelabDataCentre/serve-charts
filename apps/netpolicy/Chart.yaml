@@ -3,3 +3,6 @@ appVersion: "0.1"
 description: A Helm chart for network policy
 name: netpolicy
 version: 1.0.0
+maintainers:
+  - name: Team Whale
+    email: serve@scilifelab.se
