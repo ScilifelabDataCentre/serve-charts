@@ -227,12 +227,15 @@ data:
     }
 
     # Session settings for managing automatic login expiration.
-    # The age of session cookies, in seconds. Set to 1 day = 86400 seconds:
+    # The age of session cookies, in seconds. Default set to 1 day = 86400 seconds:
     SESSION_COOKIE_AGE = {{ .Values.studio.session_cookie_age | default 86400 }}
     # Whether to save the session data on every request. For sliding expiration:
     SESSION_SAVE_EVERY_REQUEST = True
     # Whether to expire the session when the user closes their browser:
     SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+    # The expiration duration in seconds for authentication tokens. Default set to 1 day:
+    AUTH_TOKEN_EXPIRATION = {{ .Values.studio.auth_token_expiration | default 86400 }}
 
     # Settings for the Django Axes brute force login protection
     # Number of allowed login failures before action is taken
