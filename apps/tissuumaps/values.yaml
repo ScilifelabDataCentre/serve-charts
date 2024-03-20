@@ -1,0 +1,45 @@
+appname: tissuumaps
+project:
+  name: project
+  slug: project-slug
+
+global:
+  protocol: TCP
+  domain: studio.127.0.0.1.nip.io
+  auth_domain: studio.127.0.0.1.nip.io
+
+
+apps:
+  volumeK8s:
+
+appconfig:
+  image: docker.io/cavenel/tissuumaps:3
+  path: /mnt/data/
+
+service:
+  name: tissuumaps-svc
+  targetport: 80
+  port: 80
+
+imagePullSecrets:
+  - name: regcred
+
+ingress:
+  secretName: prod-ingress
+
+podSecurityContext:
+  seccompProfile:
+    type: RuntimeDefault
+  fsGroup: 1000
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  allowPrivilegeEscalation: false
+  privileged: false
+  capabilities:
+    drop:
+      - all
+
+flavor: {}

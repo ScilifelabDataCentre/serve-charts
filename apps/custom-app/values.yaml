@@ -1,0 +1,54 @@
+appname: customapp
+project:
+  name: project
+  slug: project-slug
+
+permission: public
+
+global:
+  protocol: TCP
+  domain: studio.127.0.0.1.nip.io
+  auth_domain: studio.127.0.0.1.nip.io
+
+apps:
+  volumeK8s:
+
+appconfig:
+  port: 8501
+  image: ghcr.io/scilifelabdatacentre/example-streamlit:240312-1531
+  path: /home
+
+service:
+  name: customapp-svc
+  port: 80
+
+imagePullSecrets:
+  - name: regcred
+
+ingress:
+  secretName: prod-ingress
+
+podSecurityContext:
+  seccompProfile:
+    type: RuntimeDefault
+  fsGroup: 1000
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  allowPrivilegeEscalation: false
+  privileged: false
+  capabilities:
+    drop:
+      - all
+
+flavor:
+  limits:
+    cpu: 1
+    ephemeral-storage: 800Mi
+    memory: 1Gi
+  requests:
+    cpu: 500m
+    ephemeral-storage: 500Mi
+    memory: 500Mi

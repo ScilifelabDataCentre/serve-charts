@@ -68,7 +68,7 @@ global:
         database: studio
       storageClass: local-path 
 
-namespace: default
+
 networkPolicy:
   enable: true
   kubernetes:
