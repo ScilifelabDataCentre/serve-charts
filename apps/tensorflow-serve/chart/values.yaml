@@ -1,6 +1,6 @@
 replicas: 1
 appname: tensorflow-serving
-namespace: default
+
 visibility: private
 
 global:
