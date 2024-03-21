@@ -1,0 +1,285 @@
+# This is a YAML-formatted file.
+# Declare variables to be passed into STACKn templates.
+
+# REQUIREMENT: 
+# - set a storage class with ability to serve ReadWriteMany
+#   Name: storageClassName, and/or set anchor &śtorage_class
+#   Description: Set a storage class for the resources that are reused for multi-mount-points in cluster. To reduce wasteful copying we allow to use the same dataset volume to be mounted multiple times.
+#   Default: microk8s-hostpath, use nfs-client for docker-for-desktop
+
+#Set global values to overide default
+global:
+  studio:
+    superUser: "" ##these are currently not handled by stackn: default: admin
+    superuserPassword: ""
+    superuserEmail: ""  ##these are currently not handled by stackn: default: admin@test.com
+    existingSecret: ""
+    storageClass: ""
+  postgresql:
+      auth:
+        username: studio
+        password: ""
+        postgresPassword: ""
+        database: studio
+        existingSecret: ""
+      storageClass:
+
+
+
+existingSecret: ""
+serviceAccount:
+  create: true
+  automountServiceAccountToken: true
+rbac:
+  create: true
+
+commonLabels: {}
+commonAnnotations: {}
+
+networkPolicy:
+  enable: false
+  kubernetes:
+    cidr: # To get kubernetes api server endpoints run: $ kubectl get endpoints kubernetes
+    port: 6443 
+  internal_cidr: # in-cluster IpBlock cidr, used in allow-internet-[egress|ingress] policy, e.g:
+    - 10.0.0.0/8
+    - 192.168.0.0/16
+    - 172.0.0.0/20
+  ingress_controller_namespace: kube-system
+
+
+studio:
+  servicename: studio
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  debug: false
+  init: true
+  reset_db: false
+  enable_project_extra_settings: false
+  inactive_users: False
+  custom_apps:
+    enabled: true
+    apps:
+    - "common"
+  custom_migrations:
+    enabled: false
+    apps:
+      user: "studio.migrations.user"
+      control: "studio.migrations.control"
+  auth_user_model:
+    override: false
+    model: "user.User"
+  csrf_trusted_origins: 
+  kubeconfig_file: /app/kubeconfig/config
+  kubeconfig_dir: /app/kubeconfig/
+  kube_api_request_timeout: 1
+  static:
+    replicas: 1
+    strategy:
+      type: Recreate
+    image: ghcr.io/scilifelabdatacentre/stackn/serve-ingress:develop-20240311
+    pullPolicy: IfNotPresent
+    resources:
+      limits:
+        cpu: 1
+        memory: "512Mi"
+      requests:
+        cpu: "100m"
+        memory: "256Mi"
+  image: 
+    repository: ghcr.io/scilifelabdatacentre/stackn/serve-studio:develop-20240311
+    pullPolicy: IfNotPresent
+  resources:
+    limits:
+      cpu: "1000m"
+      memory: "4Gi"
+    requests:
+      cpu: "400m"
+      memory: "2Gi"
+  storage:
+    storageClass: ""
+  media:
+    storage:
+      storageClass: ""
+      size: "5Gi"
+      accessModes: ReadWriteMany
+      claimName: studio-media
+      mountStudio: false
+    mount_path: /app/media/
+  superUser: admin
+  superuserPassword: ""
+  superuserEmail: admin@test.com
+  eventUser: ""
+  eventuserPassword: ""
+  eventuserEmail: ""
+  version: studio
+  securityContext:
+    enabled: true
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+    allowPrivilegeEscalation: false
+    privileged: false
+  readinessProbe:
+    enabled: true
+    tcpSocket:
+      port: 8080
+    initialDelaySeconds: 20
+    periodSeconds: 10
+  livenessProbe:
+    enabled: true
+    tcpSocket:
+      port: 8080
+    initialDelaySeconds: 20
+    periodSeconds: 20
+  djangoSecret: ''
+  emailService:
+    enabled: false
+    host: ''
+    port: 587
+    hostUser: ''
+    hostPassword: ''
+    smtpEmailFrom: ''
+    domainName: ''
+    apiEndpoint: ''
+    apiKey: ''
+    notifyOnAccountRegisterList:
+      - ''
+  disabledAppInstanceFields:
+    enabled: false
+    fields:
+      - ''
+
+#kubernetes config
+kubeconfig: ""
+
+#storage access mode
+accessmode: ReadWriteMany
+
+#the cluster domain name (default usually cluster.local)
+cluster_domain: cluster.local
+
+# Enable ingress if you want your to access the studio solution from a kubernetes host/localhost.
+domain: studio.127.0.0.1.nip.io
+session_cookie_domain: .127.0.0.1.nip.io
+ingress:
+  enabled: true
+  annotations: {}
+  hosts:
+    - host: studio.127.0.0.1.nip.io
+  # setup TLS if you have a platform certificate or use 'tls-acme' if you have certbot deployed and want to generate a certificate.
+  tls:
+    - secretName: prod-ingress
+      hosts:
+        - studio.127.0.0.1.nip.io
+
+### A Postgres database for STACKn ###
+# Here we use https://charts.bitnami.com/bitnami postgresql chart 
+
+# Postgres deploy with a single-pod database:
+postgresql:
+  enabled: true
+  fullnameOverride: studio-postgres
+  commonAnnotations: {"reloader.stakater.com/auto": "true"}
+  auth:
+    username:
+    password:
+    postgresPassword:
+    database: studio
+  primary:
+    service:
+      ports: 
+        postgresql: 5432
+    persistence:
+      enabled: true
+      size: "10Gi"
+      accessModes:
+        - ReadWriteMany
+      storageClass:
+    podLabels: {"app":"stackn-studio"}
+
+redis:
+  enabled: true
+  commonAnnotations: {"reloader.stakater.com/auto": "true"}
+  master:
+    podLabels: {"app":"stackn-studio"}
+  replica:
+    replicaCount: 1
+    podLabels: {"app":"stackn-studio"}
+
+rabbitmq:
+  enabled: true
+  commonAnnotations: {"reloader.stakater.com/auto": "true"}
+  podLabels: {"app":"stackn-studio","allow-api-access": "true"}
+  persistence:
+    enabled: true
+
+
+
+# Will be added in future realease, for now keep "enabled:false"
+postgresql-ha:
+  enabled: false
+
+### DEPLOY SECRETS WITH private helm chart 'secrets' from platform/secrets
+## Name: imagePullSecret
+## Description: Secret to pull images from our private repository.
+imagePullSecrets:
+  - name: regcred
+
+## to create a regcred
+## kubectl create secret docker-registry regcred --docker-server=<your-registry-server> --docker-username=<your-name> --docker-password=<your-pword>
+
+celeryWorkers:
+  replicas: 2
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "1Gi"
+    limits:
+      cpu: "1000m"
+      memory: "8Gi"
+
+celeryFlower:
+  enabled: true
+
+# default credentials for rabbitmq. override in production!
+rabbit:
+  image: rabbitmq:3-management
+  username: admin
+  password: ""
+
+chartcontroller:
+  enabled: false
+  #addSecret -- if true create chart-controller-secret from cluster_config, if false it must be added manually
+  addSecret: false
+
+docker-registry:
+  enabled: false
+
+prometheus:
+  enabled: false
+
+grafana:
+  enabled: false
+
+reloader:
+  enabled: true
+  
+  reloader:
+    watchGlobally: false
+
+eventListener:
+  image: ghcr.io/scilifelabdatacentre/serve-event-listener/event-listener:v0.1.5
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "1Gi"
+    limits:
+      cpu: "500m"
+      memory: "2Gi"
+
+loki:
+    enabled: true
+    namespace: loki-stack
+    host: http://loki-gateway.loki-stack.svc.cluster.local # assumes loki deployed separately in loki-stack namespace with loki helm chart
