@@ -1,7 +1,7 @@
 apiVersion: v1
 appVersion: "1.1.0-beta"
 description: A Helm chart for deploying Serve
-name: serve
+name: studio
 version: 1.0.0
 maintainers:
   - email: serve@scilifelab.se
