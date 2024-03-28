@@ -78,7 +78,7 @@ studio:
     replicas: 1
     strategy:
       type: Recreate
-    image: ghcr.io/scilifelabdatacentre/stackn/serve-ingress:develop-20240311
+    image: ghcr.io/scilifelabdatacentre/stackn/serve-ingress:develop-20240326
     pullPolicy: IfNotPresent
     resources:
       limits:
@@ -88,7 +88,7 @@ studio:
         cpu: "100m"
         memory: "256Mi"
   image: 
-    repository: ghcr.io/scilifelabdatacentre/stackn/serve-studio:develop-20240311
+    repository: ghcr.io/scilifelabdatacentre/stackn/serve-studio:develop-20240326
     pullPolicy: IfNotPresent
   resources:
     limits:
@@ -109,10 +109,10 @@ studio:
     mount_path: /app/media/
   superUser: admin
   superuserPassword: ""
-  superuserEmail: admin@test.com
+  superuserEmail: admin@serve.scilifelab.se
   eventUser: ""
   eventuserPassword: ""
-  eventuserEmail: ""
+  eventuserEmail: event_user@serve.scilifelab.se
   version: studio
   securityContext:
     enabled: true
