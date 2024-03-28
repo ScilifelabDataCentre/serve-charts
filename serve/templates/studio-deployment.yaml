@@ -81,6 +81,8 @@ spec:
             secretKeyRef:
               name: {{ include "stackn.secretName" . }}
               key: studio-superuser-password
+        - name: EVENT_USER_EMAIL
+          value: {{ include "stackn.studio.eventuser.email" . }}
         - name: EVENT_USER_PASSWORD
           valueFrom:
             secretKeyRef:
