@@ -9,22 +9,22 @@ maintainers:
 
 dependencies:
   - name: reloader
-    version: v1.0.15
+    version: v1.0.79
     repository: https://stakater.github.io/stakater-charts
     condition: reloader.enabled
 
   - name: postgresql
-    version: 12.2.7
+    version: 15.2.5
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
   
   - name: redis
-    version: 17.7.4
+    version: 19.1.0
     repository: https://charts.bitnami.com/bitnami
     condition: redis.enabled
   
   - name: rabbitmq
-    version: 11.9.1
+    version: 14.0.0
     repository: https://charts.bitnami.com/bitnami
     condition: rabbitmq.enabled
     
@@ -32,4 +32,5 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
     tags:
       - bitnami-common
-    version: 2.0.4
+    version: 2.19.1
+
