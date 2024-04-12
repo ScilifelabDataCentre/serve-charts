@@ -1,0 +1,145 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    reloader.stakater.com/auto: "true"
+  labels:
+    io.kompose.service: {{ .Release.Name }}-celery-worker
+    name: {{ .Release.Name }}-celery-worker
+  name: {{ .Release.Name }}-celery-worker
+spec:
+  replicas: {{ .Values.celeryWorkers.replicas | default 2 }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      name: {{ .Release.Name }}-celery-worker
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.20.0 ()
+      creationTimestamp: null
+      labels:
+        io.kompose.service: {{ .Release.Name }}-celery-worker
+        name: {{ .Release.Name }}-celery-worker
+        app: stackn-studio
+        networking/allow-internet-egress: "true"
+        allow-api-access: "true"
+    spec:
+      serviceAccountName: {{ include "common.names.fullname" .}}
+      initContainers:
+        - name: wait-for-db
+          image: postgres
+          command: ['sh', '-c', 'until pg_isready --host={{ .Values.postgresql.fullnameOverride }} --port={{ .Values.postgresql.primary.service.ports.postgresql }}; do echo waiting for database; sleep 5; done;']
+          resources:
+            limits:
+              cpu: "100m"
+              memory: "512Mi"
+            requests:
+              cpu: "100m"
+              memory: "512Mi"
+        - name: wait-for-studio
+          image: busybox:1.28.4
+          command: ['sh', '-c', "until nslookup {{ .Release.Name }}-{{ .Values.studio.servicename }}; do echo waiting for {{ .Release.Name }}-{{ .Values.studio.servicename }} service; sleep 5; done"]
+          resources:
+            limits:
+              cpu: "100m"
+              memory: "512Mi"
+            requests:
+              cpu: "100m"
+              memory: "512Mi"
+      containers:
+      - args:
+        - sh
+        - ./scripts/run_worker.sh
+        {{- if .Values.studio.securityContext.enabled }}
+        securityContext:
+          runAsUser: {{ .Values.studio.securityContext.runAsUser }}
+          runAsGroup: {{ .Values.studio.securityContext.runAsGroup }}
+          allowPrivilegeEscalation: {{ .Values.studio.securityContext.allowPrivilegeEscalation }}
+          privileged: {{ .Values.studio.securityContext.privileged }}
+          capabilities:
+            drop:
+              - all
+        {{- end }}
+        env:
+        - name: BASE_PATH
+          value: "/app"
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: DEBUG
+          value: "false"
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.postgres.secretName" . }}
+              key: password
+        - name: POSTGRES_USER
+          value: {{ .Values.postgresql.global.postgresql.auth.user }}
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.redis.secretName" . }}
+              key: {{ include "stackn.redis.secretPasswordKey" . }}
+        - name: RABBITMQ_DEFAULT_PASS
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.rabbit.secretName" . }}
+              key: rabbitmq-password
+        {{- if .Values.chartcontroller.addSecret }}
+        - name: KUBECONFIG
+          value: {{ .Values.studio.kubeconfig_file | quote }}
+        {{- end }}
+        - name: DJANGO_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.secretName" . }}
+              key: django-secret-key
+        {{ if .Values.studio.emailService.enabled }}
+        - name: EMAIL_HOST_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.secretName" . }}
+              key: email-host-user
+        - name: EMAIL_HOST_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.secretName" . }}
+              key: email-host-password
+        {{- end }}
+        image: {{ .Values.studio.image.repository }}
+        imagePullPolicy: {{ .Values.studio.image.pullPolicy }}
+        name: {{ .Release.Name }}-celery-worker
+        resources:
+          limits:
+            cpu: {{ .Values.celeryWorkers.resources.limits.cpu }}
+            memory: {{ .Values.celeryWorkers.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.celeryWorkers.resources.requests.cpu }}
+            memory: {{ .Values.celeryWorkers.resources.requests.memory }}
+        volumeMounts:
+          {{- if .Values.chartcontroller.addSecret }}
+          - name: config
+            mountPath: {{ .Values.studio.kubeconfig_dir | quote }}
+            readOnly: true
+          {{- end }}
+          - mountPath: /app/studio/settings.py
+            subPath: settings.py
+            name: {{ .Release.Name}}-settings-configmap
+      imagePullSecrets:
+        - name: ghcrsecret
+      restartPolicy: Always
+      volumes:
+      {{- if .Values.chartcontroller.addSecret }}
+      - name: config
+        secret:
+          secretName: {{ .Release.Name }}-chart-controller-secret
+      {{- end }}
+      - name: {{ .Release.Name}}-settings-configmap
+        configMap:
+          name: {{ .Release.Name}}-settings-configmap
+          items:
+          - key: settings.py
+            path: settings.py
+status: {}

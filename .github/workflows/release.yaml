@@ -1,60 +1,54 @@
-name: Release Helm charts
+name: Release Charts
 
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
+permissions:
+  contents: write
+  packages: write
 
 jobs:
-  sync-branch:
-    runs-on: ubuntu-20.04
+  release:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Merge base branch -> gh-pages
-        uses: devmasx/merge-branch@v1.3.1
+        uses: actions/checkout@v4
         with:
-          type: now
-          from_branch: ${{ github.base_ref }}
-          target_branch: gh-pages
-          github_token: ${{ github.token }}
-  
-  chart-releaser:
-    runs-on: ubuntu-20.04
-    needs: sync-branch
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: gh-pages
+          fetch-depth: 0
 
       - name: Configure Git
         run: |
-          echo "GITHUB_ACTOR: $GITHUB_ACTOR"
-          git config --global user.name "$GITHUB_ACTOR"
-          git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
       - name: Install Helm
-        run: |
-          curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-          chmod 700 get_helm.sh
-          ./get_helm.sh
+        uses: azure/setup-helm@v3.5
+        with:
+          version: 3.13.0
 
-      - name: Add chart dependencies
-        run: |
-          helm repo add stable https://charts.helm.sh/stable
-          
-      - name: Update index.yaml and helm package
-        run: |
-          cd scaleout/stackn
-          helm package .
-          helm repo index . --url https://scaleoutsystems.github.io/charts/scaleout/stackn --merge index.yaml
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.6.0
+        with:
+          charts_dir: apps
+          skip_existing: true
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Commit index.yaml and helm package to gh-pages
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Charts to GHCR
         run: |
-          git pull origin gh-pages
-          git add -A
-          git commit -m "Updated index.yaml and helm package"
-          git push origin gh-pages
-          
+          for pkg in .cr-release-packages/*; do
+            if [ -z "${pkg:-}" ]; then
+              break
+            fi
+            helm push "${pkg}" oci://ghcr.io/scilifelabdatacentre/serve-charts || true
+          done
