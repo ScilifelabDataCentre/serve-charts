@@ -1,0 +1,42 @@
+appname: rstudio
+project:
+  name: project
+  slug: project-slug
+
+global:
+  protocol: TCP
+  domain: studio.127.0.0.1.nip.io
+  auth_domain: studio.127.0.0.1.nip.io
+
+apps:
+  volumek8s:
+
+appconfig:
+  port: 8787
+  image: ghcr.io/scilifelabdatacentre/serve-rstudio:231030-1146
+
+service:
+  name: rstudio-svc
+  port: 80
+
+imagePullSecrets:
+  - name: regcred
+
+ingress:
+  v1beta1: false
+  secretName: prod-ingress
+
+podSecurityContext:
+  fsGroup: 1000
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  allowPrivilegeEscalation: false
+  privileged: false
+  capabilities:
+    drop:
+      - all
+
+flavor: {}

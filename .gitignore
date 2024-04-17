@@ -135,3 +135,6 @@ repos/
 
 #Other
 values-local*
+
+/tmpcharts
+requirements.lock
