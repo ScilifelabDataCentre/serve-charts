@@ -217,6 +217,7 @@ data:
                     'django.template.context_processors.request',
                     'django.contrib.auth.context_processors.auth',
                     'django.contrib.messages.context_processors.messages',
+                    'common.context_processors.maintenance_mode',
                 ]
                 + DJANGO_WIKI_CONTEXT_PROCESSOR,
                 'libraries': {
@@ -507,11 +508,11 @@ data:
         "loggers": {
             "": {
                 "handlers": ["console" if DEBUG else "json"],
-                "level": "WARNING" if DEBUG else "INFO",
+                "level": "DEBUG" if DEBUG else "INFO",
             },
             "django.server": {
                 "handlers": ["console" if DEBUG else "json"],
-                "level": "DEBUG" if DEBUG else "INFO",
+                "level": "WARNING",
                 "propagate": False,
             },
         },
