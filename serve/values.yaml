@@ -2,19 +2,27 @@
 # Declare variables to be passed into STACKn templates.
 
 # REQUIREMENT: 
-# - set a storage class with ability to serve ReadWriteMany
+# - set a storage class with ability to serve ReadWriteOnce
 #   Name: storageClassName, and/or set anchor &śtorage_class
 #   Description: Set a storage class for the resources that are reused for multi-mount-points in cluster. To reduce wasteful copying we allow to use the same dataset volume to be mounted multiple times.
-#   Default: microk8s-hostpath, use nfs-client for docker-for-desktop
+#   Default: microk8s-hostpath, use local-path for k3s/Rancher Desktop
 
 #Set global values to overide default
+environment: "local"
+source_code_path: "/Users/nikch187/Projects/sll/stackn"
+# https://helm.sh/docs/chart_template_guide/yaml_techniques/#yaml-anchors
+# for local development
+storageClass: &storage_class local-path
+#storage access mode
+access_mode: &access_mode ReadWriteOnce
+
 global:
   studio:
     superUser: "" ##these are currently not handled by stackn: default: admin
     superuserPassword: ""
     superuserEmail: ""  ##these are currently not handled by stackn: default: admin@test.com
     existingSecret: ""
-    storageClass: ""
+    storageClass: *storage_class
   postgresql:
       auth:
         username: studio
@@ -22,10 +30,9 @@ global:
         postgresPassword: ""
         database: studio
         existingSecret: ""
-      storageClass:
+      storageClass: *storage_class
 
-
-
+namespace: default
 existingSecret: ""
 serviceAccount:
   create: true
@@ -53,7 +60,8 @@ studio:
   replicas: 1
   strategy:
     type: RollingUpdate
-  debug: false
+  # Only locally
+  debug: true
   init: true
   reset_db: false
   enable_project_extra_settings: false
@@ -78,7 +86,7 @@ studio:
     replicas: 1
     strategy:
       type: Recreate
-    image: ghcr.io/scilifelabdatacentre/stackn/serve-ingress:develop-20240326
+    image: ghcr.io/scilifelabdatacentre/stackn/serve-ingress:develop-20240417
     pullPolicy: IfNotPresent
     resources:
       limits:
@@ -88,7 +96,7 @@ studio:
         cpu: "100m"
         memory: "256Mi"
   image: 
-    repository: ghcr.io/scilifelabdatacentre/stackn/serve-studio:develop-20240326
+    repository: ghcr.io/scilifelabdatacentre/stackn/serve-studio:develop-20240417
     pullPolicy: IfNotPresent
   resources:
     limits:
@@ -98,12 +106,12 @@ studio:
       cpu: "400m"
       memory: "2Gi"
   storage:
-    storageClass: ""
+    storageClass: *storage_class
   media:
     storage:
-      storageClass: ""
+      storageClass: *storage_class
       size: "5Gi"
-      accessModes: ReadWriteMany
+      accessModes: *access_mode
       claimName: studio-media
       mountStudio: false
     mount_path: /app/media/
@@ -122,13 +130,13 @@ studio:
     allowPrivilegeEscalation: false
     privileged: false
   readinessProbe:
-    enabled: true
+    enabled: false
     tcpSocket:
       port: 8080
     initialDelaySeconds: 20
     periodSeconds: 10
   livenessProbe:
-    enabled: true
+    enabled: false
     tcpSocket:
       port: 8080
     initialDelaySeconds: 20
@@ -154,13 +162,10 @@ studio:
 #kubernetes config
 kubeconfig: ""
 
-#storage access mode
-accessmode: ReadWriteMany
-
 #the cluster domain name (default usually cluster.local)
 cluster_domain: cluster.local
 
-# Enable ingress if you want your to access the studio solution from a kubernetes host/localhost.
+# Enable ingress if you want to access the studio solution from a kubernetes host/localhost.
 domain: studio.127.0.0.1.nip.io
 session_cookie_domain: .127.0.0.1.nip.io
 ingress:
@@ -195,8 +200,8 @@ postgresql:
       enabled: true
       size: "10Gi"
       accessModes:
-        - ReadWriteMany
-      storageClass:
+        - *access_mode
+      storageClass: *storage_class
     podLabels: {"app":"stackn-studio"}
 
 redis:
@@ -215,20 +220,9 @@ rabbitmq:
   persistence:
     enabled: true
 
-
-
-# Will be added in future realease, for now keep "enabled:false"
+# Will be added in future release, for now keep "enabled:false"
 postgresql-ha:
   enabled: false
-
-### DEPLOY SECRETS WITH private helm chart 'secrets' from platform/secrets
-## Name: imagePullSecret
-## Description: Secret to pull images from our private repository.
-imagePullSecrets:
-  - name: regcred
-
-## to create a regcred
-## kubectl create secret docker-registry regcred --docker-server=<your-registry-server> --docker-username=<your-name> --docker-password=<your-pword>
 
 celeryWorkers:
   replicas: 2
@@ -258,6 +252,7 @@ docker-registry:
   enabled: false
 
 prometheus:
+# Only locally
   enabled: false
 
 grafana:

@@ -71,8 +71,6 @@ spec:
           requests:
             cpu: {{ .Values.eventListener.resources.requests.cpu }}
             memory: {{ .Values.eventListener.resources.requests.memory }}
-      imagePullSecrets:
-        - name: ghcrsecret
       restartPolicy: Always
       volumes:
 status: {}

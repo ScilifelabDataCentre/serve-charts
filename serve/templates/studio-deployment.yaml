@@ -144,6 +144,10 @@ spec:
           - name: mediavol
             mountPath: {{ .Values.studio.media.mount_path }}
           {{ end }}
+          {{ if eq .Values.environment "local" }}
+          - mountPath: /app
+            name: sourcecode
+          {{ end }}
         resources:
           limits:
             cpu: {{ .Values.studio.resources.limits.cpu }}
@@ -175,9 +179,7 @@ spec:
           initialDelaySeconds: {{ .Values.studio.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.studio.livenessProbe.periodSeconds }}
         {{- end }}
-      imagePullSecrets:
-        - name: ghcrsecret
-    
+
       restartPolicy: Always
       volumes:
       {{- if .Values.chartcontroller.addSecret }}
@@ -195,4 +197,10 @@ spec:
       - name: mediavol
         persistentVolumeClaim:
           claimName: {{ .Release.Name }}-{{ .Values.studio.media.storage.claimName }}
+      {{ end }}
+      {{ if eq .Values.environment "local" }}
+      - hostPath:
+          path: {{ .Values.source_code_path }}
+          type: Directory
+        name: sourcecode
       {{ end }}

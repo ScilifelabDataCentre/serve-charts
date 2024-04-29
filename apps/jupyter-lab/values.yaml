@@ -19,9 +19,6 @@ global:
 apps:
   volumek8s:
 
-imagePullSecrets:
-  - name: regcred
-
 minio:
   access_key: minio
   secret_key: minio123
