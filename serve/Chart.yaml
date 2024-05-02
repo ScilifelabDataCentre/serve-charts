@@ -24,10 +24,10 @@ dependencies:
     condition: redis.enabled
   
   - name: rabbitmq
-    version: 11.9.1
+    version: 11.16.2
     repository: https://charts.bitnami.com/bitnami
     condition: rabbitmq.enabled
-    
+
   - name: common
     repository: https://charts.bitnami.com/bitnami
     tags:

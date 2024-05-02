@@ -60,6 +60,4 @@ spec:
           requests:
             cpu: {{ .Values.studio.static.resources.requests.cpu }}
             memory: {{ .Values.studio.static.resources.requests.memory }}
-      imagePullSecrets:
-        - name: ghcrsecret
 
