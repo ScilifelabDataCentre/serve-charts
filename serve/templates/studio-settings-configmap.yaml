@@ -105,17 +105,15 @@ data:
         'django_structlog',
         'tagulous',
         'guardian',
+        "crispy_forms",
+        "crispy_bootstrap5",
         "portal",
         "projects",
         "models",
-        "monitor",
         "apps",
         "api",
-        "customtags",
-        "news",
         "axes",  # django-axes for brute force login protection
         "django_password_validators",  # django-password-validators for password validation
-        "collections_module",
     ] + DJANGO_WIKI_APPS
 
     {{ if .Values.studio.custom_apps.enabled }}
@@ -176,6 +174,9 @@ data:
 
     # Main Url conf for loading all the routing path in Studio
     ROOT_URLCONF = 'studio.urls'
+
+    CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+    CRISPY_TEMPLATE_PACK = "bootstrap5"
 
     # Tagulous serialization settings
     SERIALIZATION_MODULES = {
@@ -310,8 +311,6 @@ data:
     LANGUAGE_CODE = 'en-us'
     TIME_ZONE = 'UTC'
     USE_I18N = True
-    USE_L10N = True
-    USE_TZ = True
 
     # Media Files for Studio apps
     #MEDIA_URL = {{ .Values.studio.media.mount_path | quote }}
@@ -356,7 +355,7 @@ data:
 
     # Apps
     APPS_MODEL = "apps.Apps"
-    APPINSTANCE_MODEL = "apps.AppInstance"
+    APPINSTANCE_MODEL = "apps.BaseAppInstance"
     APPCATEGORIES_MODEL ="apps.AppCategories"
 
     # Models
@@ -366,7 +365,7 @@ data:
     PROJECTS_MODEL = "projects.Project"
     PROJECTLOG_MODEL = "projects.ProjectLog"
     ENVIRONMENT_MODEL = "projects.Environment"
-    RELEASENAME_MODEL = "projects.ReleaseName"
+    
     # Portal
     PUBLISHEDMODEL_MODEL = "portal.PublishedModel"
     PUBLICMODELOBJECT_MODEL = "portal.PublicModelObject"
@@ -417,12 +416,9 @@ data:
     MIGRATION_MODULES = {
         'apps': 'studio.migrations.apps',
         'models': 'studio.migrations.models',
-        'monitor': 'studio.migrations.monitor',
         'portal': 'studio.migrations.portal',
         'projects': 'studio.migrations.projects',
         "common": "common.migrations",
-        "news": "news.migrations",
-        "collections_module": "collections_module.migrations",
     }
 
     {{ if .Values.studio.custom_migrations.enabled }}
@@ -453,6 +449,7 @@ data:
     "combiner": 0,
     "mongodb": 0,
     "netpolicy": 0,
+    "filemanager": 1,
     }
     {{ if .Values.loki.enabled }}
     LOKI_SVC = {{ .Values.loki.host | quote}}
