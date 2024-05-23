@@ -44,5 +44,16 @@ spec:
           {{- toYaml .Values.flavor | nindent 10 }}
         ports:
           - containerPort: {{ .Values.appconfig.port }}
+        volumeMounts:
+        - name: {{ .Release.Name }}-shiny-configmap
+          mountPath: /etc/shiny-server/shiny-server.conf
+          subPath: shiny-server.conf
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst
+      volumes:
+      - name: {{ .Release.Name }}-shiny-configmap
+        configMap:
+          name: {{ .Release.Name }}-shiny-configmap
+          items:
+          - key: shiny-server.conf
+            path: shiny-server.conf
