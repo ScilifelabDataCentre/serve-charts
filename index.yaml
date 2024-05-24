@@ -153,6 +153,18 @@ entries:
   shinyapp:
   - apiVersion: v1
     appVersion: "0.1"
+    created: "2024-05-24T06:49:17.859805061Z"
+    description: A Helm chart Shiny apps
+    digest: 3fc5e39b6719f5ecb158cbe77f630b6ecc72f82e1c320d709534b95e4c21da7b
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: shinyapp
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/shinyapp-1.0.2/shinyapp-1.0.2.tgz
+    version: 1.0.2
+  - apiVersion: v1
+    appVersion: "0.1"
     created: "2024-03-20T07:18:16.915847809Z"
     description: A Helm chart Shiny apps
     digest: 4aaed2668259674017a389202402e2cf3c52faadeef9df2836aeb9e79a69e067
@@ -253,4 +265,4 @@ entries:
     urls:
     - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/vscode-1.0.0/vscode-1.0.0.tgz
     version: 1.0.0
-generated: "2024-05-23T08:51:49.594922295Z"
+generated: "2024-05-24T06:49:17.85984704Z"
