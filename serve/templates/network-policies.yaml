@@ -362,7 +362,7 @@ spec:
     - to:
         - namespaceSelector:
             matchExpressions:
-              - key: name
+              - key: kubernetes.io/metadata.name
                 operator: In
                 values:
                   - loki-stack
