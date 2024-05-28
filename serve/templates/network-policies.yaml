@@ -367,7 +367,7 @@ spec:
                 values:
                   - loki-stack
             matchLabels:
-              name: loki-stack
+              kubernetes.io/metadata.name: loki-stack
   podSelector:
     matchLabels:
       web: studio-web
