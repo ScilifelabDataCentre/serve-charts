@@ -26,7 +26,7 @@ spec:
   - to:
     - namespaceSelector:
         matchLabels:
-          name: kube-system
+          kubernetes.io/metadata.name: kube-system
     ports:
     - protocol: UDP
       port: 53
@@ -362,12 +362,12 @@ spec:
     - to:
         - namespaceSelector:
             matchExpressions:
-              - key: name
+              - key: kubernetes.io/metadata.name
                 operator: In
                 values:
                   - loki-stack
             matchLabels:
-              name: loki-stack
+              kubernetes.io/metadata.name: loki-stack
   podSelector:
     matchLabels:
       web: studio-web
