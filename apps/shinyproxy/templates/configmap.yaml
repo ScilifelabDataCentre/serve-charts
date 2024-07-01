@@ -14,8 +14,9 @@ data:
     proxy:
       authentication: none
       container-backend: kubernetes
-      heartbeat-rate: 10000
-      heartbeat-timeout: 60000
+      heartbeat-rate: {{ .Values.appconfig.proxyheartbeatrate | default 10000 }}
+      heartbeat-timeout: {{ .Values.appconfig.proxyheartbeattimeout | default 60000 }}
+      container-wait-time: {{ .Values.appconfig.proxycontainerwaittime | default 30000 }}
       kubernetes:
         internal-networking: true
         namespace: {{ .Release.Namespace }}
@@ -37,8 +38,8 @@ data:
         container-memory-request: {{ .Values.flavor.requests.memory }}
         port: {{ .Values.appconfig.port }}
         id:  {{ .Release.Name }}
-        display-name: {{ .Values.app_name }}
-        description: {{ .Values.app_description }}
+        display-name: {{ .Values.app_name | quote }}
+        description: {{ .Values.app_description | quote }}
         labels:
           sp.instance: {{ .Release.Name }}
           allow-internet-egress: "true"
