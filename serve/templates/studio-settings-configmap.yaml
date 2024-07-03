@@ -454,7 +454,7 @@ data:
     {{ if .Values.loki.enabled }}
     LOKI_SVC = {{ .Values.loki.host | quote}}
     {{ end }}
-    PROJECTS_PER_USER_LIMIT = 5
+    PROJECTS_PER_USER_LIMIT = 10
     STUDIO_ACCESSMODE = os.environ.get("STUDIO_ACCESSMODE", "")
     {{ if .Values.studio.enable_project_extra_settings }}
     ENABLE_PROJECT_EXTRA_SETTINGS = True
