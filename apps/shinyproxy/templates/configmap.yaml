@@ -40,6 +40,9 @@ data:
         id:  {{ .Release.Name }}
         display-name: {{ .Values.app_name | quote }}
         description: {{ .Values.app_description | quote }}
+        minimum-seats-available: 3
+        seats-per-container: 3
+        allow-container-re-use: true
         labels:
           sp.instance: {{ .Release.Name }}
           allow-internet-egress: "true"
