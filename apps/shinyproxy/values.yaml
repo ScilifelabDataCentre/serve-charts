@@ -8,6 +8,9 @@ appconfig:
   proxyport: 8080
   port: 3838
   image:
+  minimumSeatsAvailable: 2
+  seatsPerContainer: 3
+  allowContainerReuse: true
 
 
 global:

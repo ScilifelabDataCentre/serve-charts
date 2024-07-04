@@ -40,9 +40,9 @@ data:
         id:  {{ .Release.Name }}
         display-name: {{ .Values.app_name | quote }}
         description: {{ .Values.app_description | quote }}
-        minimum-seats-available: 2
-        seats-per-container: 3
-        allow-container-re-use: true
+        minimum-seats-available: {{ .Values.appconfig.minimumSeatsAvailable }}
+        seats-per-container: {{ .Values.appconfig.seatsPerContainer }}
+        allow-container-re-use: {{ .Values.appconfig.allowContainerReuse }}
         labels:
           sp.instance: {{ .Release.Name }}
           allow-internet-egress: "true"
