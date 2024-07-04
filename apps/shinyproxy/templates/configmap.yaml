@@ -40,7 +40,7 @@ data:
         id:  {{ .Release.Name }}
         display-name: {{ .Values.app_name | quote }}
         description: {{ .Values.app_description | quote }}
-        minimum-seats-available: 3
+        minimum-seats-available: 2
         seats-per-container: 3
         allow-container-re-use: true
         labels:
