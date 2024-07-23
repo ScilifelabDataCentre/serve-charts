@@ -8,13 +8,14 @@
 #   Default: microk8s-hostpath, use local-path for k3s/Rancher Desktop
 
 #Set global values to overide default
-environment: "local"
-source_code_path: "/Users/nikch187/Projects/sll/stackn"
-# https://helm.sh/docs/chart_template_guide/yaml_techniques/#yaml-anchors
-# for local development
-storageClass: &storage_class local-path
+environment: "remote"
+# Template for remote development
+# Storage class used by the KTH cluster
+storageClass: &storage_class ontap-nas
+#storageClass: &storage_class local-path
 #storage access mode
-access_mode: &access_mode ReadWriteOnce
+access_mode: &access_mode ReadWriteMany
+#access_mode: &access_mode ReadWriteOnce
 
 global:
   studio:
@@ -60,8 +61,7 @@ studio:
   replicas: 1
   strategy:
     type: RollingUpdate
-  # Only locally
-  debug: true
+  debug: false
   init: true
   reset_db: false
   enable_project_extra_settings: false
@@ -95,7 +95,7 @@ studio:
       requests:
         cpu: "100m"
         memory: "256Mi"
-  image: 
+  image:
     repository: ghcr.io/scilifelabdatacentre/stackn/serve-studio:develop-20240417
     pullPolicy: IfNotPresent
   resources:
@@ -130,13 +130,13 @@ studio:
     allowPrivilegeEscalation: false
     privileged: false
   readinessProbe:
-    enabled: false
+    enabled: true
     tcpSocket:
       port: 8080
     initialDelaySeconds: 20
     periodSeconds: 10
   livenessProbe:
-    enabled: false
+    enabled: true
     tcpSocket:
       port: 8080
     initialDelaySeconds: 20
@@ -162,6 +162,7 @@ studio:
 #kubernetes config
 kubeconfig: ""
 
+accessmode: *access_mode
 #the cluster domain name (default usually cluster.local)
 cluster_domain: cluster.local
 
@@ -252,7 +253,6 @@ docker-registry:
   enabled: false
 
 prometheus:
-# Only locally
   enabled: false
 
 grafana:
