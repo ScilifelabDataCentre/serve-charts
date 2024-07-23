@@ -16,9 +16,72 @@ git clone https://github.com/ScilifelabDataCentre/serve-charts.git
 
 Then navigate to the `serve-charts/serve` folder, and run
 
+If you want to run this locally, override values the following way:
+
+```yaml
+environment: "local"
+# Path will be mounted using rancher desktop to the /app path in the container
+source_code_path: "/Users/nikch187/Projects/sll/stackn"
+# https://helm.sh/docs/chart_template_guide/yaml_techniques/#yaml-anchors
+# for local development
+storageClass: &storage_class local-path
+#storage access mode
+access_mode: &access_mode ReadWriteOnce
+accessmode: *access_mode
+
+global:
+  studio:
+    superuserPassword: "Test@12345"
+    superuserEmail: "admin@sll.se"
+    storageClass: *storage_class
+  postgresql:
+    storageClass: *storage_class
+
+studio:
+  # Only locally on a debug environment
+  debug: true
+  storage:
+    storageClass: *storage_class
+  media:
+    storage:
+      storageClass: *storage_class
+      accessModes: *access_mode
+
+  # We use pull policy Never because see the following link:
+  # https://github.com/rancher-sandbox/rancher-desktop/issues/952#issuecomment-993135128
+  static:
+    image: mystudio
+    pullPolicy: Never
+
+  image:
+    repository: mystudio
+    pullPolicy: Never
+
+  securityContext:
+    # Disables security context for local development
+    # Essentially allow the container to run as root
+    enabled: false
+
+  readinessProbe:
+    enabled: false
+
+  livenessProbe:
+    enabled: false
+
+postgresql:
+  primary:
+    persistence:
+      storageClass: *storage_class
+      accessModes:
+        - *access_mode
+
+```
+
+And then run the following commands:
+
 ```
 helm dependency update
-helm install serve .
+helm install serve . -f values.yaml -f values-local.yaml
 ```
 
 Depending on your storageclass, you might have to set this aswell. 
