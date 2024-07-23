@@ -54,9 +54,17 @@ spec:
       containers:
       - args:
         - sh
+        {{ if eq .Values.environment "local" }}
+        - -c
+        - "/usr/sbin/sshd -D"
+        {{ else }}
         - scripts/run_web.sh
+        {{ end }}
         ports:
         - containerPort: 8080
+        {{- if eq .Values.environment "local" }}
+        - containerPort: 22
+        {{- end }}
         env:
         - name: DEBUG
         {{- if .Values.studio.debug }}

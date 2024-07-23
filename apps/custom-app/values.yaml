@@ -22,9 +22,6 @@ service:
   name: customapp-svc
   port: 80
 
-imagePullSecrets:
-  - name: regcred
-
 ingress:
   secretName: prod-ingress
 

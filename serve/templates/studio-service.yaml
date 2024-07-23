@@ -7,6 +7,11 @@ spec:
   - name: "8080"
     port: 8080
     targetPort: 8080
+  {{- if eq .Values.environment "local" }}
+  - name: ssh
+    port: 22
+    targetPort: 22
+  {{- end }}
   selector:
     name: {{ .Release.Name }}-{{ .Values.studio.servicename }}
 status:

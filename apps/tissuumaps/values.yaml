@@ -21,12 +21,6 @@ service:
   targetport: 80
   port: 80
 
-imagePullSecrets:
-  - name: regcred
-
-ingress:
-  secretName: prod-ingress
-
 podSecurityContext:
   seccompProfile:
     type: RuntimeDefault

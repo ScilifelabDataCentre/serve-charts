@@ -30,9 +30,6 @@ service:
   port: 80
   targetport: 8080
 
-imagePullSecrets:
-  - name: regcred
-
 ingress:
   v1beta1: false
   secretName: prod-ingress

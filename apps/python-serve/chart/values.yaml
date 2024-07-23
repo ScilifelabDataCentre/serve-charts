@@ -16,9 +16,6 @@ appconfig:
 service:
   name: pythonserve-svc
 
-imagePullSecrets:
-  - name: regcred
-
 ingress:
   secretName: prod-ingress
 
