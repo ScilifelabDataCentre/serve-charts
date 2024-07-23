@@ -104,18 +104,16 @@ data:
         'django_filters',
         'django_structlog',
         'tagulous',
+        "crispy_forms",
+        "crispy_bootstrap5",
         'guardian',
         "portal",
         "projects",
         "models",
-        "monitor",
         "apps",
         "api",
-        "customtags",
-        "news",
         "axes",  # django-axes for brute force login protection
         "django_password_validators",  # django-password-validators for password validation
-        "collections_module",
     ] + DJANGO_WIKI_APPS
 
     {{ if .Values.studio.custom_apps.enabled }}
@@ -176,6 +174,9 @@ data:
 
     # Main Url conf for loading all the routing path in Studio
     ROOT_URLCONF = 'studio.urls'
+
+    CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+    CRISPY_TEMPLATE_PACK = "bootstrap5"
 
     # Tagulous serialization settings
     SERIALIZATION_MODULES = {
@@ -356,7 +357,7 @@ data:
 
     # Apps
     APPS_MODEL = "apps.Apps"
-    APPINSTANCE_MODEL = "apps.AppInstance"
+    APPINSTANCE_MODEL = "apps.BaseAppInstance"
     APPCATEGORIES_MODEL ="apps.AppCategories"
 
     # Models
@@ -415,14 +416,11 @@ data:
     VERSION = {{ .Values.studio.version | quote  }}
 
     MIGRATION_MODULES = {
-        'apps': 'studio.migrations.apps',
-        'models': 'studio.migrations.models',
-        'monitor': 'studio.migrations.monitor',
-        'portal': 'studio.migrations.portal',
-        'projects': 'studio.migrations.projects',
+        "apps": "apps.migrations",
+        "models": "models.migrations",
+        "portal": "portal.migrations",
+        "projects": "projects.migrations",
         "common": "common.migrations",
-        "news": "news.migrations",
-        "collections_module": "collections_module.migrations",
     }
 
     {{ if .Values.studio.custom_migrations.enabled }}
