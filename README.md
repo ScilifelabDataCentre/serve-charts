@@ -9,16 +9,135 @@ This repository contains Helm charts for SciLifeLab Serve. It is  based on the o
 If you are using SciLifeLab Serve and notice a bug or if there is a feature you would like to be added feel free to [create an issue](https://github.com/ScilifelabDataCentre/stackn/issues/new/choose) with a bug report or feature request.
 
 ## How to deploy
+
+### Prerequisites
+
+- A Kubernetes cluster version **1.28.6**
+- Helm 3
+- A storage class for dynamic provisioning of persistent volumes
+
+If you are going to run this on a remote cluster, then you probably don't need to think about this
+as these things will be provided by your cloud provider.
+
+But in case of a local deployment, navigate to the next section.
+
+#### Setup for local deployment
+
+If you are going to run this locally, you need to have a Kubernetes cluster running on your machine. 
+You can use [Rancher Desktop](https://rancherdesktop.io/) for this purpose.
+
+Follow their instruction to install Rancher Desktop, and then start it.
+
+Recommended settings for Rancher Desktop:
+- `Preferences > Kubernetes` select kubernetes version `1.28.6`.
+- `Preferences > Container Engine` select `containerd` as the container engine.
+- `Preferences > Virtual Machine > Emulation` select `QEMU`
+  - If you are running on an M3 Mac select `VZ`
+- `Preferences > Virtual Machine > Hardware` select `4 CPUs` and `16 GB` of memory.
+
+##### Stackn image
+
+By default, the image is pulled from the public registry. This image is the one we are using in production.
+So you don't need to build the image yourself if you want to just try it out locally.
+
+But if you want to develop, you need to build the image yourself.
+
+**Building image for Rancher Desktop**
+
+Rancher Desktop brings a number of tools when you install it. 
+One of them is `nerdctl` which is a drop-in replacement for `docker` and `docker-compose`.
+
+Rancher Desktop also brings a local registry that you can use to push images to. 
+And this registry can be accessed from your Kubernetes cluster and used as if you were using docker.
+
+See [Stackn](https://github.com/ScilifelabDataCentre/stackn/) repository for up-to-date instructions on 
+how to build the image for local development.
+
+But this setup expects that you have an image tagged `mystudio` built using `nerdctl` and pushed to the `k8s.io` namespace.
+
+### Deploying
+
+> Using the following you'll make sure that your Rancher Desktop installation is working as expected using the default settings.
+> These instructions are almost the same as the ones you would use for a remote cluster except for the storage class.
+> If it doesn't work you should debug your installation and contact team members for help.
+
+**Outcomes of this section**
+- You'll prepare your environment for the proper local deployment of Serve;
+- Running instance of Serve on your local machine available on [http://studio.127.0.0.1.nip.io/](http://studio.127.0.0.1.nip.io/).
+
+
+
 First, clone this repository
+
+```bash
+$ git clone https://github.com/ScilifelabDataCentre/serve-charts.git
 ```
-git clone https://github.com/ScilifelabDataCentre/serve-charts.git
+
+Then navigate to the `serve-charts/serve` folder
+
+```bash
+$ cd serve-charts/serve
 ```
 
-Then navigate to the `serve-charts/serve` folder, and run
+Now you need to create an override file for the `values.yaml` file.
 
-If you want to run this locally, override values the following way:
+Create a file called `values-local.yaml` and add the following content:
 
-```yaml
+```yaml filename="values-local.yaml"
+# https://helm.sh/docs/chart_template_guide/yaml_techniques/#yaml-anchors
+# for local development
+storageClass: &storage_class local-path
+#storage access mode
+access_mode: &access_mode ReadWriteOnce
+accessmode: *access_mode
+
+global:
+  studio:
+    superuserPassword: "Test@12345"
+    superuserEmail: "admin@sll.se"
+    storageClass: *storage_class
+  postgresql:
+    storageClass: *storage_class
+
+studio:
+  # Only locally on a debug environment
+  debug: true
+  storage:
+    storageClass: *storage_class
+  media:
+    storage:
+      storageClass: *storage_class
+      accessModes: *access_mode
+
+postgresql:
+  primary:
+    persistence:
+      storageClass: *storage_class
+      accessModes:
+        - *access_mode
+```
+
+This is necessary because the default values are set for a production environment. Specifically, the storage class 
+has to change because the default storage class is not available in a Rancher Desktop environment.
+
+```bash
+$ helm dependency update
+# The following command will install the chart with the values from values.yaml and values-local.yaml
+# values-local.yaml will override the values from values.yaml
+$ helm install serve . -f values.yaml -f values-local.yaml
+```
+
+As a result you should have a running instance of Serve on your local machine available on [http://studio.127.0.0.1.nip.io/](http://studio.127.0.0.1.nip.io/).
+
+#### Swapping default docker image with the one built locally
+
+<details>
+  <summary>TJ;DR Just commands</summary>
+
+  ```bash
+  $ git clone https://github.com/ScilifelabDataCentre/serve-charts.git
+  $ cd serve-charts/serve
+  $ cat <<EOF > values-local.yaml
 environment: "local"
 # Path will be mounted using rancher desktop to the /app path in the container
 source_code_path: "/Users/nikch187/Projects/sll/stackn"
@@ -73,29 +192,138 @@ postgresql:
     persistence:
       storageClass: *storage_class
       accessModes:
-        - *access_mode
+        - *access_mode 
+  EOF
+  $ helm upgrade serve . -f values.yaml -f values-local.yaml
+  ```
+</details>
 
+**Outcomes of this section:**
+- Instead of a Django server, you'll have an ssh server running for the [PyCharm setup](TODO: link);
+- You'll have a host machine's folder with the [Stackn](https://github.com/ScilifelabDataCentre/stackn/) code mounted to the container;
+
+Now that everything is running, you can swap the default image with the one you built locally.
+
+> See the [Stackn image section](#stackn-image) for instructions on how to build the image.
+
+Go back to the `values-local.yaml` file update it with the following content:
+
+```yaml filename="values-local.yaml"
+environment: "local"
+
+# Path will be mounted using rancher desktop to the /app path in the container
+source_code_path: "/absolute/path/to/your/stackn"
+# https://helm.sh/docs/chart_template_guide/yaml_techniques/#yaml-anchors
+# ...
+studio:
+  # Append the following to the end of the studio section
+  
+  # We use pull policy Never because see the following link:
+  # https://github.com/rancher-sandbox/rancher-desktop/issues/952#issuecomment-993135128
+  static:
+    image: mystudio
+    pullPolicy: Never
+
+  image:
+    repository: mystudio
+    pullPolicy: Never
+
+  securityContext:
+    # Disables security context for local development
+    # Essentially allow the container to run as root
+    enabled: false
+
+  readinessProbe:
+    enabled: false
+
+  livenessProbe:
+    enabled: false 
 ```
 
-And then run the following commands:
+<details>
+  <summary>Full content of the values-local.yaml file</summary>
+  
+```yaml
+  environment: "local"
+  # Path will be mounted using rancher desktop to the /app path in the container
+  source_code_path: "/Users/nikch187/Projects/sll/stackn"
+  # https://helm.sh/docs/chart_template_guide/yaml_techniques/#yaml-anchors
+  # for local development
+  storageClass: &storage_class local-path
+  #storage access mode
+  access_mode: &access_mode ReadWriteOnce
+  accessmode: *access_mode
 
+  global:
+    studio:
+      superuserPassword: "Test@12345"
+      superuserEmail: "admin@sll.se"
+      storageClass: *storage_class
+    postgresql:
+      storageClass: *storage_class
+
+  studio:
+    # Only locally on a debug environment
+    debug: true
+    storage:
+      storageClass: *storage_class
+    media:
+      storage:
+        storageClass: *storage_class
+        accessModes: *access_mode
+
+    # We use pull policy Never because see the following link:
+    # https://github.com/rancher-sandbox/rancher-desktop/issues/952#issuecomment-993135128
+    static:
+      image: mystudio
+      pullPolicy: Never
+
+    image:
+      repository: mystudio
+      pullPolicy: Never
+
+    securityContext:
+      # Disables security context for local development
+      # Essentially allow the container to run as root
+      enabled: false
+
+    readinessProbe:
+      enabled: false
+
+    livenessProbe:
+      enabled: false
+
+  postgresql:
+    primary:
+      persistence:
+        storageClass: *storage_class
+        accessModes:
+          - *access_mode
+  ```
+
+</details>
+
+After doing this run the following command to upgrade the deployment:
+
+```bash
+helm upgrade serve . -f values.yaml -f values-local.yaml
 ```
-helm dependency update
-helm install serve . -f values.yaml -f values-local.yaml
+
+Now you can proceed to set up PyCharm.
+
+If you don't want to set up PyCharm, you can just run Django from the container.
+
+```bash
+$ kubectl get po
+# Get the name of the studio pod
+$ kubectl exec -it <studio-pod-name> -- /bin/bash
+# Now you are inside the container 
+$ sh scripts/run_web.sh
 ```
 
-Depending on your storageclass, you might have to set this aswell. 
-For instance, if you use `microk8s`, them you run
+Please note, that the folder you are in, `/app`, is the folder where the code is mounted.
 
-```
-helm install --set global.postgresql.storageClass=microk8s-hostpath serve .
-```
-
-All resources will by default be created in the default namespace.
-Serve will be avaliable at https://studio.127.0.0.1.nip.io
-Obs that you might have to make changes to your particular ingress controller (nginx is supported in this chart) to connect to the URL.
-If the ingress does not work for any reason, you can try to port-forward the studio service port to your localhost. 
-
+It means that you can make changes to the code on your host machine and see the changes in the container.
 
 ## Deploy an SSL certificate
 
