@@ -199,12 +199,12 @@ postgresql:
 </details>
 
 **Outcomes of this section:**
-- Instead of a Django server, you'll have an ssh server running for the [PyCharm setup](TODO: link);
+- Instead of a Django server, you'll have an ssh server running for the [PyCharm setup](https://github.com/ScilifelabDataCentre/stackn/?tab=readme-ov-file#deploy-serve-for-local-development-with-rancher-desktop)
 - You'll have a host machine's folder with the [Stackn](https://github.com/ScilifelabDataCentre/stackn/) code mounted to the container;
 
 Now that everything is running, you can swap the default image with the one you built locally.
 
-> See the [Stackn image section](#stackn-image) for instructions on how to build the image.
+> See the [Stackn image section](https://github.com/ScilifelabDataCentre/stackn/?tab=readme-ov-file#deploy-serve-for-local-development-with-rancher-desktop) for instructions on how to build the image.
 
 Go back to the `values-local.yaml` file update it with the following content:
 
@@ -309,7 +309,7 @@ After doing this run the following command to upgrade the deployment:
 helm upgrade serve . -f values.yaml -f values-local.yaml
 ```
 
-Now you can proceed to set up PyCharm.
+Now you can proceed to [set up PyCharm](https://github.com/ScilifelabDataCentre/stackn?tab=readme-ov-file#pycharm-setup)
 
 If you don't want to set up PyCharm, you can just run Django from the container.
 
