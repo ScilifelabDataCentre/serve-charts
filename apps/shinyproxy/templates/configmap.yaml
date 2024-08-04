@@ -40,6 +40,9 @@ data:
         id:  {{ .Release.Name }}
         display-name: {{ .Values.app_name | quote }}
         description: {{ .Values.app_description | quote }}
+        minimum-seats-available: {{ .Values.appconfig.minimumSeatsAvailable }}
+        seats-per-container: {{ .Values.appconfig.seatsPerContainer }}
+        allow-container-re-use: {{ .Values.appconfig.allowContainerReuse }}
         labels:
           sp.instance: {{ .Release.Name }}
           allow-internet-egress: "true"
@@ -53,4 +56,19 @@ data:
               runAsNonRoot: true
               allowPrivilegeEscalation: false
               privileged: false
+          - op: add
+            path: /spec/volumes
+            value:
+            - name: {{ .Release.Name }}-shiny-configmap
+              configMap:
+                name: {{ .Release.Name }}-shiny-configmap
+                items:
+                - key: shiny-server.conf
+                  path: shiny-server.conf
+          - op: add
+            path: /spec/containers/0/volumeMounts
+            value:
+            - mountPath: /etc/shiny-server/shiny-server.conf
+              subPath: shiny-server.conf
+              name: {{ .Release.Name }}-shiny-configmap
       title: Serve Shiny Proxy
