@@ -107,6 +107,8 @@ data:
         "crispy_forms",
         "crispy_bootstrap5",
         'guardian',
+        "crispy_forms",
+        "crispy_bootstrap5",
         "portal",
         "projects",
         "models",
@@ -311,8 +313,6 @@ data:
     LANGUAGE_CODE = 'en-us'
     TIME_ZONE = 'UTC'
     USE_I18N = True
-    USE_L10N = True
-    USE_TZ = True
 
     # Media Files for Studio apps
     #MEDIA_URL = {{ .Values.studio.media.mount_path | quote }}
@@ -367,7 +367,7 @@ data:
     PROJECTS_MODEL = "projects.Project"
     PROJECTLOG_MODEL = "projects.ProjectLog"
     ENVIRONMENT_MODEL = "projects.Environment"
-    RELEASENAME_MODEL = "projects.ReleaseName"
+    
     # Portal
     PUBLISHEDMODEL_MODEL = "portal.PublishedModel"
     PUBLICMODELOBJECT_MODEL = "portal.PublicModelObject"
@@ -451,6 +451,7 @@ data:
     "combiner": 0,
     "mongodb": 0,
     "netpolicy": 0,
+    "filemanager": 1,
     }
     {{ if .Values.loki.enabled }}
     LOKI_SVC = {{ .Values.loki.host | quote}}
