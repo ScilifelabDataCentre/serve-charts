@@ -16,6 +16,9 @@ appconfig:
 global:
   domain: localhost
 
+apps:
+  volumeK8s:
+
 service:
   name: shinyproxy-svc
 

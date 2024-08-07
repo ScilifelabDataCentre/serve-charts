@@ -71,4 +71,16 @@ data:
             - mountPath: /etc/shiny-server/shiny-server.conf
               subPath: shiny-server.conf
               name: {{ .Release.Name }}-shiny-configmap
+          {{ if .Values.apps.volumeK8s }}
+          - op: add
+            path: /spec/volumes/-
+            value:
+              - name: data-volume
+                emptyDir: {}
+          - op: add
+            path: /spec/containers/0/volumeMounts/-
+            value:
+              - mountPath: /home/shiny/data
+                name: data-volume
+          {{ end }}
       title: Serve Shiny Proxy
