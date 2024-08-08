@@ -75,12 +75,17 @@ data:
           - op: add
             path: /spec/volumes/-
             value:
-              - name: data-volume
-                emptyDir: {}
+              {{- range $key, $value := .Values.apps.volumeK8s }}
+              - name: {{ $key }}
+                persistentVolumeClaim:
+                  claimName: {{ $value.release }}
+              {{ end }}
           - op: add
             path: /spec/containers/0/volumeMounts/-
             value:
+              {{- range $key, $value := .Values.apps.volumeK8s }}
               - mountPath: {{ $.Values.appconfig.path }}
-                name: data-volume
+                name: {{ $key }}
+              {{ end }}
           {{ end }}
       title: Serve Shiny Proxy
