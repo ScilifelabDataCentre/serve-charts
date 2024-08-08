@@ -80,7 +80,7 @@ data:
           - op: add
             path: /spec/containers/0/volumeMounts/-
             value:
-              - mountPath: /home/shiny/data
+              - mountPath: {{ $.Values.appconfig.path }}
                 name: data-volume
           {{ end }}
       title: Serve Shiny Proxy
