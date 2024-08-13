@@ -9,9 +9,9 @@ appconfig:
   port: 3838
   image:
   path: /home
-  minimumSeatsAvailable: 2
-  seatsPerContainer: 3
-  allowContainerReuse: true
+  minimumSeatsAvailable: 1
+  seatsPerContainer: 1
+  allowContainerReuse: false
 
 
 global:
