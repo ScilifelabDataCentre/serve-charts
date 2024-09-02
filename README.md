@@ -2,11 +2,11 @@
 
 SciLifeLab Serve ([https://serve.scilifelab.se](https://serve.scilifelab.se)) is a platform offering machine learning model serving, app hosting (Shiny, Streamlit, Dash, etc.), web-based integrated development environments, and other tools to life science researchers affiliated with a Swedish research institute. It is developed and operated by the [SciLifeLab Data Centre](https://github.com/ScilifelabDataCentre), part of [SciLifeLab](https://scilifelab.se/). See [this page for information about funders and mandate](https://serve.scilifelab.se/about/).
 
-This repository contains Helm charts for SciLifeLab Serve. It is  based on the open-source platform [Stackn](https://github.com/scaleoutsystems/stackn).
+This repository contains Helm charts for SciLifeLab Serve.
 
 ## Reporting bugs and requesting features
 
-If you are using SciLifeLab Serve and notice a bug or if there is a feature you would like to be added feel free to [create an issue](https://github.com/ScilifelabDataCentre/stackn/issues/new/choose) with a bug report or feature request.
+If you are using SciLifeLab Serve and notice a bug or if there is a feature you would like to be added feel free to [create an issue](https://github.com/ScilifelabDataCentre/serve/issues/new/choose) with a bug report or feature request.
 
 ## How to deploy
 First, clone this repository
