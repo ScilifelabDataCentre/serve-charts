@@ -35,7 +35,7 @@ Recommended settings for Rancher Desktop:
   - If you are running on an M3 Mac select `VZ`
 - `Preferences > Virtual Machine > Hardware` select `4 CPUs` and `16 GB` of memory.
 
-##### Stackn image
+##### Serve image
 
 By default, the image is pulled from the public registry. This image is the one we are using in production.
 So you don't need to build the image yourself if you want to just try it out locally.
@@ -50,7 +50,7 @@ One of them is `nerdctl` which is a drop-in replacement for `docker` and `docker
 Rancher Desktop also brings a local registry that you can use to push images to. 
 And this registry can be accessed from your Kubernetes cluster and used as if you were using docker.
 
-See [Stackn](https://github.com/ScilifelabDataCentre/stackn/) repository for up-to-date instructions on 
+See [Serve](https://github.com/ScilifelabDataCentre/serve/) repository for up-to-date instructions on 
 how to build the image for local development.
 
 But this setup expects that you have an image tagged `mystudio` built using `nerdctl` and pushed to the `k8s.io` namespace.
@@ -140,7 +140,7 @@ As a result you should have a running instance of Serve on your local machine av
   $ cat <<EOF > values-local.yaml
 environment: "local"
 # Path will be mounted using rancher desktop to the /app path in the container
-source_code_path: "/Users/nikch187/Projects/sll/stackn"
+source_code_path: "/Users/nikch187/Projects/sll/serve"
 # https://helm.sh/docs/chart_template_guide/yaml_techniques/#yaml-anchors
 # for local development
 storageClass: &storage_class local-path
@@ -199,12 +199,12 @@ postgresql:
 </details>
 
 **Outcomes of this section:**
-- Instead of a Django server, you'll have an ssh server running for the [PyCharm setup](https://github.com/ScilifelabDataCentre/stackn/?tab=readme-ov-file#deploy-serve-for-local-development-with-rancher-desktop)
-- You'll have a host machine's folder with the [Stackn](https://github.com/ScilifelabDataCentre/stackn/) code mounted to the container;
+- Instead of a Django server, you'll have an ssh server running for the [PyCharm setup](https://github.com/ScilifelabDataCentre/serve/?tab=readme-ov-file#deploy-serve-for-local-development-with-rancher-desktop)
+- You'll have a host machine's folder with the [Serve](https://github.com/ScilifelabDataCentre/serve/) code mounted to the container;
 
 Now that everything is running, you can swap the default image with the one you built locally.
 
-> See the [Stackn image section](https://github.com/ScilifelabDataCentre/stackn/?tab=readme-ov-file#deploy-serve-for-local-development-with-rancher-desktop) for instructions on how to build the image.
+> See the [Serve image section](https://github.com/ScilifelabDataCentre/serve/?tab=readme-ov-file#deploy-serve-for-local-development-with-rancher-desktop) for instructions on how to build the image.
 
 Go back to the `values-local.yaml` file update it with the following content:
 
@@ -212,7 +212,7 @@ Go back to the `values-local.yaml` file update it with the following content:
 environment: "local"
 
 # Path will be mounted using rancher desktop to the /app path in the container
-source_code_path: "/absolute/path/to/your/stackn"
+source_code_path: "/absolute/path/to/your/serve"
 # https://helm.sh/docs/chart_template_guide/yaml_techniques/#yaml-anchors
 # ...
 studio:
@@ -246,7 +246,7 @@ studio:
 ```yaml
   environment: "local"
   # Path will be mounted using rancher desktop to the /app path in the container
-  source_code_path: "/Users/nikch187/Projects/sll/stackn"
+  source_code_path: "/Users/nikch187/Projects/sll/serve"
   # https://helm.sh/docs/chart_template_guide/yaml_techniques/#yaml-anchors
   # for local development
   storageClass: &storage_class local-path
@@ -309,7 +309,7 @@ After doing this run the following command to upgrade the deployment:
 helm upgrade serve . -f values.yaml -f values-local.yaml
 ```
 
-Now you can proceed to [set up PyCharm](https://github.com/ScilifelabDataCentre/stackn?tab=readme-ov-file#pycharm-setup)
+Now you can proceed to [set up PyCharm](https://github.com/ScilifelabDataCentre/serve?tab=readme-ov-file#pycharm-setup)
 
 If you don't want to set up PyCharm, you can just run Django from the container.
 
@@ -375,10 +375,10 @@ studio:
   inactive_users: false #Users that sign-up can be inactive by default if desired
   csrf_trusted_origins: "https://studio.127.0.0.1.nip.io:8082" #extra trusted origin for django server, for example if you port-forward to port 8082
   image: # using a local image registry with hostname k3d-registry
-    repository: k3d-registry:35187/stackn:develop #This image can be built from Dockerfile (https://github.com/scaleoutsystems/stackn)
+    repository: k3d-registry:35187/serve:develop #This image can be built from Dockerfile (https://github.com/scaleoutsystems/serve)
     pullPolicy: Always # used to ensure that each time we redeploy always pull the latest image
   static:
-    image: k3d-registry:35187/stackn-nginx:develop #This image can be built from Dockerfile.nginx (https://github.com/scaleoutsystems/stackn)
+    image: k3d-registry:35187/serve-nginx:develop #This image can be built from Dockerfile.nginx (https://github.com/scaleoutsystems/serve)
   media:
     storage:
       accessModes: ReadWriteOnce
