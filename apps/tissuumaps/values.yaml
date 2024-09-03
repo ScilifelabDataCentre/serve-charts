@@ -21,6 +21,9 @@ service:
   targetport: 80
   port: 80
 
+ingress:
+  secretName: prod-ingress
+
 podSecurityContext:
   seccompProfile:
     type: RuntimeDefault
