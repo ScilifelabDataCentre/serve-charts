@@ -8,13 +8,18 @@ appconfig:
   proxyport: 8080
   port: 3838
   image:
-  minimumSeatsAvailable: 2
-  seatsPerContainer: 3
-  allowContainerReuse: true
+  path: /home
+  minimumSeatsAvailable: 1
+  seatsPerContainer: 1
+  allowContainerReuse: false
+  site_dir: /srv/shiny-server
 
 
 global:
   domain: localhost
+
+apps:
+  volumeK8s:
 
 service:
   name: shinyproxy-svc
