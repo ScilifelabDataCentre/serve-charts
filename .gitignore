@@ -133,8 +133,11 @@ static/open-iconic/
 
 repos/
 
+# Downloaded charts
+/tmpcharts
+serve/charts/*.tgz
+
 #Other
 values-local*
 
-/tmpcharts
 requirements.lock
