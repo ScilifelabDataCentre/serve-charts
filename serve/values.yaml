@@ -191,6 +191,9 @@ postgresql:
     service:
       ports: 
         postgresql: 5432
+    extraEnvVars:
+      - name: POSTGRESQL_MAX_CONNECTIONS
+        value: "300"
     persistence:
       enabled: true
       size: "10Gi"
