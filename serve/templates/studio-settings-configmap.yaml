@@ -236,7 +236,14 @@ data:
 
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            "ENGINE": "django.db.backends.postgresql",
+            "OPTIONS": {
+                "pool": {
+                    "min_size": 2,
+                    "max_size": 4,
+                    "timeout": 10,
+                }
+            },
             'NAME': '{{ .Values.postgresql.global.postgresql.auth.database }}',
             'USER': '{{ .Values.postgresql.global.postgresql.auth.username }}',
             'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
