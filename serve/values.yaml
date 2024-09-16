@@ -150,6 +150,10 @@ studio:
     enabled: false
     fields:
       - ''
+  connectionPool:
+    minSize: 2
+    maxSize: 4
+    timeout: 10
 
 #kubernetes config
 kubeconfig: ""

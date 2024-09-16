@@ -239,9 +239,9 @@ data:
             "ENGINE": "django.db.backends.postgresql",
             "OPTIONS": {
                 "pool": {
-                    "min_size": 2,
-                    "max_size": 4,
-                    "timeout": 10,
+                    "min_size": {{ .Values.studio.connectionPool.minSize | default 2 }},
+                    "max_size": {{ .Values.studio.connectionPool.maxSize | default 4 }},
+                    "timeout": {{ .Values.studio.connectionPool.timeout | default 10 }},
                 }
             },
             'NAME': '{{ .Values.postgresql.global.postgresql.auth.database }}',
