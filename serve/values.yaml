@@ -150,6 +150,10 @@ studio:
     enabled: false
     fields:
       - ''
+  connectionPool:
+    minSize: 2
+    maxSize: 4
+    timeout: 10
 
 #kubernetes config
 kubeconfig: ""
@@ -191,6 +195,9 @@ postgresql:
     service:
       ports: 
         postgresql: 5432
+    extraEnvVars:
+      - name: POSTGRESQL_MAX_CONNECTIONS
+        value: "300"
     persistence:
       enabled: true
       size: "10Gi"
