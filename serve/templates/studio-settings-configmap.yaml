@@ -237,6 +237,7 @@ data:
     DATABASES = {
         'default': {
             "ENGINE": "django.db.backends.postgresql",
+            {{ if .Values.studio.connectionPool.enabled }}
             "OPTIONS": {
                 "pool": {
                     "min_size": {{ .Values.studio.connectionPool.minSize | default 2 }},
@@ -244,6 +245,7 @@ data:
                     "timeout": {{ .Values.studio.connectionPool.timeout | default 10 }},
                 }
             },
+            {{ end }}
             'NAME': '{{ .Values.postgresql.global.postgresql.auth.database }}',
             'USER': '{{ .Values.postgresql.global.postgresql.auth.username }}',
             'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
