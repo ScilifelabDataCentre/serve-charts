@@ -20,7 +20,6 @@ spec:
     metadata:
       labels:
         release: {{ .Release.Name }}
-        access: {{ .Values.permission }}
         app: filemanager
         project: {{ .Values.project.slug }}
         networking/allow-internet-egress: "false"
