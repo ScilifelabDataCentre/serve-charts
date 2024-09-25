@@ -158,6 +158,11 @@ studio:
     enabled: false
     fields:
       - ''
+  connectionPool:
+    enabled: true
+    minSize: 2
+    maxSize: 4
+    timeout: 10
 
 #kubernetes config
 kubeconfig: ""
@@ -197,6 +202,9 @@ postgresql:
     service:
       ports: 
         postgresql: 5432
+    extraEnvVars:
+      - name: POSTGRESQL_MAX_CONNECTIONS
+        value: "300"
     persistence:
       enabled: true
       size: "10Gi"
@@ -265,7 +273,7 @@ reloader:
     watchGlobally: false
 
 eventListener:
-  image: ghcr.io/scilifelabdatacentre/serve-event-listener/event-listener:v0.1.5
+  image: ghcr.io/scilifelabdatacentre/serve-event-listener/event-listener:v0.1.8
   resources:
     requests:
       cpu: "100m"

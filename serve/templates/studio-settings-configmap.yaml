@@ -236,7 +236,16 @@ data:
 
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            "ENGINE": "django.db.backends.postgresql",
+            {{ if .Values.studio.connectionPool.enabled }}
+            "OPTIONS": {
+                "pool": {
+                    "min_size": {{ .Values.studio.connectionPool.minSize | default 2 }},
+                    "max_size": {{ .Values.studio.connectionPool.maxSize | default 4 }},
+                    "timeout": {{ .Values.studio.connectionPool.timeout | default 10 }},
+                }
+            },
+            {{ end }}
             'NAME': '{{ .Values.postgresql.global.postgresql.auth.database }}',
             'USER': '{{ .Values.postgresql.global.postgresql.auth.username }}',
             'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
@@ -373,7 +382,7 @@ data:
     # App statuses
     APPS_STATUS_SUCCESS = ['Running', 'Succeeded', 'Success']
     APPS_STATUS_WARNING = ['Pending', 'Installed',
-                        'Waiting', 'Installing', 'Created']
+                        'Waiting', 'Installing', 'Created', 'Creating']
 
     DOMAIN = {{ .Values.domain | quote }}
     AUTH_DOMAIN = '{{ .Release.Name }}-studio.{{ .Values.namespace | default "default" }}.svc.{{ .Values.cluster_domain | default "cluster.local"}}'
