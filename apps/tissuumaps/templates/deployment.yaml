@@ -28,10 +28,6 @@ spec:
         type: app
         pod: {{ .Values.appname }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       automountServiceAccountToken: false
       securityContext:
       {{- toYaml .Values.podSecurityContext | nindent 8 }}

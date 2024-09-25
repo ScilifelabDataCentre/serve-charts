@@ -19,9 +19,6 @@ service:
   name: shiny-svc
   port: 80
 
-imagePullSecrets:
-  - name: regcred
-
 ingress:
   secretName: prod-ingress
 

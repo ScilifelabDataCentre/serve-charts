@@ -423,10 +423,10 @@ data:
     VERSION = {{ .Values.studio.version | quote  }}
 
     MIGRATION_MODULES = {
-        'apps': 'apps.migrations',
-        'models': 'models.migrations',
-        'portal': 'portal.migrations',
-        'projects': 'projects.migrations',
+        "apps": "apps.migrations",
+        "models": "models.migrations",
+        "portal": "portal.migrations",
+        "projects": "projects.migrations",
         "common": "common.migrations",
     }
 

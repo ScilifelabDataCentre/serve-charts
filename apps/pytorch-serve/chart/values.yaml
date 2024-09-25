@@ -42,9 +42,6 @@ model_card:
   enabled: false
   path: model-card
 
-imagePullSecrets:
-  - name: regcred
-
 ingress:
 
 podSecurityContext:

@@ -121,8 +121,6 @@ spec:
           - mountPath: /app/studio/settings.py
             subPath: settings.py
             name: {{ .Release.Name}}-settings-configmap
-      imagePullSecrets:
-        - name: ghcrsecret
       restartPolicy: Always
       volumes:
       - name: {{ .Release.Name}}-settings-configmap

@@ -6,7 +6,7 @@ metadata:
     "helm.sh/resource-policy": keep
 spec:
   accessModes:
-  - {{ .Values.studio.media.storage.accessModes  | default "ReadWriteMany"}}
+  - {{ .Values.studio.media.storage.accessModes  }}
   storageClassName: {{ include "stackn.studio.media.storageclass" . }}
   resources:
     requests:
