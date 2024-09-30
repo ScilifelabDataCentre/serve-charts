@@ -330,7 +330,7 @@ data:
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
     # Related to user registration and authetication workflow
-    LOGIN_REDIRECT_URL = '/projects'
+    LOGIN_REDIRECT_URL = '/projects/'
     LOGIN_URL = 'login'
     LOGOUT_URL = 'logout'
     INACTIVE_USERS = {{ if .Values.studio.inactive_users }}True{{ else }}False{{ end }}
