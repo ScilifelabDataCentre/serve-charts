@@ -34,8 +34,10 @@ spec:
           type: RuntimeDefault
         fsGroup: {{ .Values.appconfig.userid | default 1000 }}
 
-      {{- if .Values.apps.volumeK8s }}
+      {{- if or .Values.apps.volumeK8s .Values.appconfig.startupCommand }}
       initContainers:
+      {{- end}}
+      {{- if .Values.apps.volumeK8s }}
       - name: copy-to-pvc
         image: {{ .Values.appconfig.image }}
         imagePullPolicy: IfNotPresent
@@ -55,6 +57,19 @@ spec:
         - name: {{ $key }}
           mountPath: /tmp
       {{- end }}
+      {{- if .Values.appconfig.startupCommand}}
+      - name: create-startup-script
+        image: busybox
+        command:
+          - /bin/sh
+          - -c
+          - |
+            echo "{{ .Values.appconfig.startupCommand }}" > /scripts/custom-start-script.sh;
+            chmod +x /scripts/custom-start-script.sh;
+        volumeMounts:
+          - name: startup-script
+            mountPath: /scripts
+      {{- end}}
       {{- end }}
       containers:
       - name: {{ .Values.appname }}
@@ -63,7 +78,12 @@ spec:
         command:
           - /bin/sh
           - -c
+          {{- if .Values.appconfig.startupCommand }}
+          - /scripts/custom-start-script.sh;
+          {{- else }}
           - ./start-script.sh;
+          {{- end }}
+
         ports:
           - containerPort: {{ .Values.appconfig.port }}
         securityContext:
@@ -93,4 +113,8 @@ spec:
         persistentVolumeClaim:
           claimName: {{ $value.release }}
       {{- end }}
+      {{- if .Values.appconfig.startupCommand}}
+        - name: startup-script
+          emptyDir: { }
+      {{- end}}
       {{ end }}
