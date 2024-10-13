@@ -56,6 +56,7 @@ spec:
         {{- range $key, $value := .Values.apps.volumeK8s }}
         - name: {{ $key }}
           mountPath: /tmp
+        {{- end }}
       {{- end }}
       {{- if .Values.appconfig.startupCommand}}
       - name: create-startup-script
@@ -70,7 +71,6 @@ spec:
           - name: startup-script
             mountPath: /scripts
       {{- end}}
-      {{- end }}
       containers:
       - name: {{ .Values.appname }}
         image: {{ .Values.appconfig.image }}
@@ -97,24 +97,32 @@ spec:
               - all
         resources:
           {{- toYaml .Values.flavor | nindent 10 }}
-        {{- if .Values.apps.volumeK8s }}
+        {{- if or .Values.appconfig.startupCommand .Values.apps.volumeK8s }}
         volumeMounts:
+        {{- end }}
+        {{- if .Values.apps.volumeK8s }}
         {{- range $key, $value := .Values.apps.volumeK8s }}
         - name: {{ $key }}
           mountPath: {{ $.Values.appconfig.path }}
         {{- end }}
         {{- end }}
+        {{- if .Values.appconfig.startupCommand}}
+        - name: startup-script
+          mountPath: /scripts
+        {{- end}}
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst
-      {{ if .Values.apps.volumeK8s }}
+      {{ if or .Values.apps.volumeK8s .Values.appconfig.startupCommand }}
       volumes:
+      {{- end }}
+      {{ if .Values.apps.volumeK8s }}
       {{- range $key, $value := .Values.apps.volumeK8s }}
       - name: {{ $key }}
         persistentVolumeClaim:
           claimName: {{ $value.release }}
       {{- end }}
-      {{- if .Values.appconfig.startupCommand}}
-        - name: startup-script
-          emptyDir: { }
-      {{- end}}
       {{ end }}
+      {{- if .Values.appconfig.startupCommand}}
+      - name: startup-script
+        emptyDir: { }
+      {{- end}}
