@@ -3,6 +3,18 @@ entries:
   custom-app:
   - apiVersion: v1
     appVersion: "0.1"
+    created: "2024-10-16T12:02:13.885956125Z"
+    description: A Helm chart for a standard serve app
+    digest: 48136064648890a2dcaf8c16a2e821dbdb449534c2e02980f119d2ca4ebe5d45
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: custom-app
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/custom-app-1.1.0/custom-app-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v1
+    appVersion: "0.1"
     created: "2024-09-18T12:05:01.618574159Z"
     description: A Helm chart for a standard serve app
     digest: 9e4cd247fa36892e2eba40a575054e9b1bc93604c09cf2618f67cf6471c330a4
@@ -453,4 +465,4 @@ entries:
     urls:
     - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/vscode-1.0.0/vscode-1.0.0.tgz
     version: 1.0.0
-generated: "2024-09-18T12:05:03.195977868Z"
+generated: "2024-10-16T12:02:14.769933294Z"
