@@ -34,8 +34,10 @@ spec:
           type: RuntimeDefault
         fsGroup: {{ .Values.appconfig.userid | default 1000 }}
 
-      {{- if .Values.apps.volumeK8s }}
+      {{- if or .Values.apps.volumeK8s .Values.appconfig.startupCommand }}
       initContainers:
+      {{- end}}
+      {{- if .Values.apps.volumeK8s }}
       - name: copy-to-pvc
         image: {{ .Values.appconfig.image }}
         imagePullPolicy: IfNotPresent
@@ -54,8 +56,21 @@ spec:
         {{- range $key, $value := .Values.apps.volumeK8s }}
         - name: {{ $key }}
           mountPath: /tmp
+        {{- end }}
       {{- end }}
-      {{- end }}
+      {{- if .Values.appconfig.startupCommand}}
+      - name: create-startup-script
+        image: busybox
+        command:
+          - /bin/sh
+          - -c
+          - |
+            echo "{{ .Values.appconfig.startupCommand }}" > /scripts/custom-start-script.sh;
+            chmod +x /scripts/custom-start-script.sh;
+        volumeMounts:
+          - name: startup-script
+            mountPath: /scripts
+      {{- end}}
       containers:
       - name: {{ .Values.appname }}
         image: {{ .Values.appconfig.image }}
@@ -63,7 +78,12 @@ spec:
         command:
           - /bin/sh
           - -c
+          {{- if .Values.appconfig.startupCommand }}
+          - /scripts/custom-start-script.sh;
+          {{- else }}
           - ./start-script.sh;
+          {{- end }}
+
         ports:
           - containerPort: {{ .Values.appconfig.port }}
         securityContext:
@@ -77,20 +97,32 @@ spec:
               - all
         resources:
           {{- toYaml .Values.flavor | nindent 10 }}
-        {{- if .Values.apps.volumeK8s }}
+        {{- if or .Values.appconfig.startupCommand .Values.apps.volumeK8s }}
         volumeMounts:
+        {{- end }}
+        {{- if .Values.apps.volumeK8s }}
         {{- range $key, $value := .Values.apps.volumeK8s }}
         - name: {{ $key }}
           mountPath: {{ $.Values.appconfig.path }}
         {{- end }}
         {{- end }}
+        {{- if .Values.appconfig.startupCommand}}
+        - name: startup-script
+          mountPath: /scripts
+        {{- end}}
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst
-      {{ if .Values.apps.volumeK8s }}
+      {{ if or .Values.apps.volumeK8s .Values.appconfig.startupCommand }}
       volumes:
+      {{- end }}
+      {{ if .Values.apps.volumeK8s }}
       {{- range $key, $value := .Values.apps.volumeK8s }}
       - name: {{ $key }}
         persistentVolumeClaim:
           claimName: {{ $value.release }}
       {{- end }}
       {{ end }}
+      {{- if .Values.appconfig.startupCommand}}
+      - name: startup-script
+        emptyDir: { }
+      {{- end}}
