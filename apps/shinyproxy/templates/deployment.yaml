@@ -25,6 +25,7 @@ spec:
         access: {{ .Values.permission }}
         app: shinyproxy-deployment
         project: {{ .Values.project.slug }}
+        site-dir: {{ .Values.appconfig.site_dir | trimAll "/" | replace "/" "-"  }}
         networking/allow-internet-egress: "true"
         networking/allow-egress-to-studio-web: "true"
         allow-api-access: "true"
