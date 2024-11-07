@@ -17,13 +17,11 @@ appconfig:
   port: 8501
   image: ghcr.io/scilifelabdatacentre/example-streamlit:240312-1531
   path: /home
+  startupCommand: {}
 
 service:
   name: customapp-svc
   port: 80
-
-imagePullSecrets:
-  - name: regcred
 
 ingress:
   secretName: prod-ingress

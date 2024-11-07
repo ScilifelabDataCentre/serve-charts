@@ -19,9 +19,6 @@ service:
   name: rstudio-svc
   port: 80
 
-imagePullSecrets:
-  - name: regcred
-
 ingress:
   v1beta1: false
   secretName: prod-ingress

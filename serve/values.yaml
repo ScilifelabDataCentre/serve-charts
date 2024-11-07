@@ -2,19 +2,28 @@
 # Declare variables to be passed into STACKn templates.
 
 # REQUIREMENT: 
-# - set a storage class with ability to serve ReadWriteMany
+# - set a storage class with ability to serve ReadWriteOnce
 #   Name: storageClassName, and/or set anchor &śtorage_class
 #   Description: Set a storage class for the resources that are reused for multi-mount-points in cluster. To reduce wasteful copying we allow to use the same dataset volume to be mounted multiple times.
-#   Default: microk8s-hostpath, use nfs-client for docker-for-desktop
+#   Default: microk8s-hostpath, use local-path for k3s/Rancher Desktop
 
 #Set global values to overide default
+environment: "remote"
+# Template for remote development
+# Storage class used by the KTH cluster
+storageClass: &storage_class ontap-nas
+#storageClass: &storage_class local-path
+#storage access mode
+access_mode: &access_mode ReadWriteMany
+#access_mode: &access_mode ReadWriteOnce
+
 global:
   studio:
     superUser: "" ##these are currently not handled by stackn: default: admin
     superuserPassword: ""
     superuserEmail: ""  ##these are currently not handled by stackn: default: admin@test.com
     existingSecret: ""
-    storageClass: ""
+    storageClass: *storage_class
   postgresql:
       auth:
         username: studio
@@ -22,10 +31,9 @@ global:
         postgresPassword: ""
         database: studio
         existingSecret: ""
-      storageClass:
+      storageClass: *storage_class
 
-
-
+namespace: default
 existingSecret: ""
 serviceAccount:
   create: true
@@ -78,7 +86,7 @@ studio:
     replicas: 1
     strategy:
       type: Recreate
-    image: ghcr.io/scilifelabdatacentre/serve/serve-ingress:develop-20240326
+    image: ghcr.io/scilifelabdatacentre/serve/serve-ingress:develop-20240417
     pullPolicy: IfNotPresent
     resources:
       limits:
@@ -87,8 +95,8 @@ studio:
       requests:
         cpu: "100m"
         memory: "256Mi"
-  image: 
-    repository: ghcr.io/scilifelabdatacentre/serve/serve-studio:develop-20240326
+  image:
+    repository: ghcr.io/scilifelabdatacentre/serve/serve-studio:develop-20240417
     pullPolicy: IfNotPresent
   resources:
     limits:
@@ -98,12 +106,12 @@ studio:
       cpu: "400m"
       memory: "2Gi"
   storage:
-    storageClass: ""
+    storageClass: *storage_class
   media:
     storage:
-      storageClass: ""
+      storageClass: *storage_class
       size: "5Gi"
-      accessModes: ReadWriteMany
+      accessModes: *access_mode
       claimName: studio-media
       mountStudio: false
     mount_path: /app/media/
@@ -159,13 +167,11 @@ studio:
 #kubernetes config
 kubeconfig: ""
 
-#storage access mode
-accessmode: ReadWriteMany
-
+accessmode: *access_mode
 #the cluster domain name (default usually cluster.local)
 cluster_domain: cluster.local
 
-# Enable ingress if you want your to access the studio solution from a kubernetes host/localhost.
+# Enable ingress if you want to access the studio solution from a kubernetes host/localhost.
 domain: studio.127.0.0.1.nip.io
 session_cookie_domain: .127.0.0.1.nip.io
 ingress:
@@ -203,8 +209,8 @@ postgresql:
       enabled: true
       size: "10Gi"
       accessModes:
-        - ReadWriteMany
-      storageClass:
+        - *access_mode
+      storageClass: *storage_class
     podLabels: {"app":"stackn-studio"}
 
 redis:
@@ -223,20 +229,9 @@ rabbitmq:
   persistence:
     enabled: true
 
-
-
-# Will be added in future realease, for now keep "enabled:false"
+# Will be added in future release, for now keep "enabled:false"
 postgresql-ha:
   enabled: false
-
-### DEPLOY SECRETS WITH private helm chart 'secrets' from platform/secrets
-## Name: imagePullSecret
-## Description: Secret to pull images from our private repository.
-imagePullSecrets:
-  - name: regcred
-
-## to create a regcred
-## kubectl create secret docker-registry regcred --docker-server=<your-registry-server> --docker-username=<your-name> --docker-password=<your-pword>
 
 celeryWorkers:
   replicas: 2
