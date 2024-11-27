@@ -3,7 +3,7 @@ apiVersion: v1
 appVersion: "0.1"
 description: A Helm chart for VS code in the browser
 name: vscode
-version: 1.0.1
+version: 1.0.2
 maintainers:
   - name: Team Whale
     email: serve@scilifelab.se
