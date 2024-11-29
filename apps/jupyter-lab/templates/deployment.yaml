@@ -82,6 +82,12 @@ spec:
           mountPath: /home/jovyan/work/{{ $key }}
         {{- end }}
       terminationGracePeriodSeconds: 30
+      {{ if index .Values.flavor.limits "nvidia.com/gpu" }}
+      tolerations:
+      - key: nvidia.com/gpu
+        effect: NoSchedule
+        operator: Exists
+      {{ end }}
       dnsPolicy: ClusterFirst
       volumes:
       - name: jupyterconf
