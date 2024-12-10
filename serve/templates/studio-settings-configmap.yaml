@@ -543,3 +543,6 @@ data:
             logger_factory=structlog.stdlib.LoggerFactory(),
             cache_logger_on_first_use=True,
         )
+
+    # k8s cluster version for validation of manifests
+    CLUSTER_VERSION = "1.28"
