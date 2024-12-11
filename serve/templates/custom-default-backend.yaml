@@ -10,13 +10,14 @@ spec:
     matchLabels:
       app.kubernetes.io/name: nginx-errors
   policyTypes:
-    - Ingress
-  ingress:
-    - from:
-        - podSelector:
-            matchLabels:
-              app.kubernetes.io/name: nginx-errors
-
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+      ports:
+      - protocol: TCP
+        port: 443
 ---
 apiVersion: v1
 kind: Service
