@@ -35,44 +35,43 @@ spec:
         app.kubernetes.io/name: nginx-errors
         app.kubernetes.io/part-of: ingress-nginx
     spec:
+      initContainers:
+      - name: fetch-error-pages
+        image: curlimages/curl:latest
+        command:
+        - /bin/sh
+        - -c
+        - |
+          mkdir -p /www
+          curl -o /www/404.html https://raw.githubusercontent.com/ScilifelabDataCentre/serve-charts/refs/heads/develop/k8s-error-pages/error-page-404.html
+          curl -o /www/503.html https://raw.githubusercontent.com/ScilifelabDataCentre/serve-charts/refs/heads/develop/k8s-error-pages/error-page-503.html
+          curl -o /www/502.html https://raw.githubusercontent.com/ScilifelabDataCentre/serve-charts/refs/heads/develop/k8s-error-pages/error-page-502.html
+          curl -o /www/500.html https://raw.githubusercontent.com/ScilifelabDataCentre/serve-charts/refs/heads/develop/k8s-error-pages/error-page-500.html
+
+        volumeMounts:
+        - name: error-pages
+          mountPath: /www
       containers:
       - name: nginx-error-server
         image: registry.k8s.io/ingress-nginx/custom-error-pages:v1.0.2@sha256:b2259cf6bfda813548a64bded551b1854cb600c4f095738b49b4c5cdf8ab9d21
         ports:
         - containerPort: 8080
-        # Mounting custom error page from ConfigMap 1
         volumeMounts:
-        - name: custom-error-pages-404
-          mountPath: /www/404.html
-          subPath: 404.html
-        # Mounting custom error page from ConfigMap 2
-        - name: custom-error-pages-503
-          mountPath: /www/503.html
-          subPath: 503.html
+        - name: error-pages
+          mountPath: /www
 
-      # Mounting volumes from two ConfigMaps
       volumes:
-      - name: custom-error-pages-404
-        configMap:
-          name: custom-error-pages-404
-          items:
-          - key: "404"
-            path: "404.html"
-      - name: custom-error-pages-503
-        configMap:
-          name: custom-error-pages-503
-          items:
-          - key: "503"
-            path: "503.html"
+      - name: error-pages
+        emptyDir: {}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    nginx.ingress.kubernetes.io/custom-http-errors: 503,404
+    nginx.ingress.kubernetes.io/custom-http-errors: 503,502,500,404
     nginx.ingress.kubernetes.io/default-backend: nginx-errors
-  name: wildcard-test-srv-dev
-  namespace: serve-dev
+  name: wildcard-serve-errors-ingress
+  namespace: {{ .Values.namespace }}
 spec:
   defaultBackend:
     service:
@@ -92,6 +91,6 @@ spec:
         pathType: ImplementationSpecific
   tls:
   - hosts:
-    - '*.serve-dev.scilifelab.se'
+    - '*.{{ .Values.domain }}'
     secretName: prod-ingress
 
