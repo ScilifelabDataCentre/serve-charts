@@ -1,5 +1,23 @@
 # Configuration for the default backend: service and handling of a 404 error on a subdomain level (wild card domain).
 ---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-from-default-backend
+  namespace: {{ .Values.namespace | default "default" }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: nginx-errors
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: nginx-errors
+
+---
 apiVersion: v1
 kind: Service
 metadata:
