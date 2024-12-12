@@ -1,0 +1,115 @@
+# Configuration for the default backend: service and handling of a 404 error on a subdomain level (wild card domain).
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-from-default-backend
+  namespace: {{ .Values.namespace | default "default" }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: nginx-errors
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+      ports:
+      - protocol: TCP
+        port: 443
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-errors
+  labels:
+    app.kubernetes.io/name: nginx-errors
+    app.kubernetes.io/part-of: ingress-nginx
+spec:
+  selector:
+    app.kubernetes.io/name: nginx-errors
+    app.kubernetes.io/part-of: ingress-nginx
+  ports:
+  - port: 80
+    targetPort: 8080
+    name: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-errors
+  labels:
+    app.kubernetes.io/name: nginx-errors
+    app.kubernetes.io/part-of: ingress-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nginx-errors
+      app.kubernetes.io/part-of: ingress-nginx
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: nginx-errors
+        app.kubernetes.io/part-of: ingress-nginx
+    spec:
+      initContainers:
+      - name: fetch-error-pages
+        image: curlimages/curl:latest
+        command:
+        - /bin/sh
+        - -c
+        - |
+          mkdir -p /www
+          curl -o /www/404.html https://raw.githubusercontent.com/ScilifelabDataCentre/serve-charts/refs/heads/develop/k8s-error-pages/error-page-404.html
+          curl -o /www/503.html https://raw.githubusercontent.com/ScilifelabDataCentre/serve-charts/refs/heads/develop/k8s-error-pages/error-page-503.html
+          curl -o /www/502.html https://raw.githubusercontent.com/ScilifelabDataCentre/serve-charts/refs/heads/develop/k8s-error-pages/error-page-502.html
+          curl -o /www/500.html https://raw.githubusercontent.com/ScilifelabDataCentre/serve-charts/refs/heads/develop/k8s-error-pages/error-page-500.html
+
+        volumeMounts:
+        - name: error-pages
+          mountPath: /www
+      containers:
+      - name: nginx-error-server
+        image: registry.k8s.io/ingress-nginx/custom-error-pages:v1.0.2@sha256:b2259cf6bfda813548a64bded551b1854cb600c4f095738b49b4c5cdf8ab9d21
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: error-pages
+          mountPath: /www
+
+      volumes:
+      - name: error-pages
+        emptyDir: {}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/custom-http-errors: 503,502,500,404
+    nginx.ingress.kubernetes.io/default-backend: nginx-errors
+  name: wildcard-serve-errors-ingress
+  namespace: {{ .Values.namespace }}
+spec:
+  defaultBackend:
+    service:
+      name: nginx-errors
+      port:
+        number: 80
+  rules:
+  - host: '*.{{ .Values.domain }}'
+    http:
+      paths:
+      - backend:
+          service:
+            name: nginx-errors
+            port:
+              number: 80
+        path: /404.html
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - '*.{{ .Values.domain }}'
+    secretName: prod-ingress
+

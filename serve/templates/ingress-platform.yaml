@@ -7,6 +7,8 @@ metadata:
   {{- with .Values.ingress.annotations }}
      {{- toYaml . | nindent 4 }}
   {{- end }}
+    nginx.ingress.kubernetes.io/custom-http-errors: "503,502"
+    nginx.ingress.kubernetes.io/default-backend: nginx-errors
   labels:
     io.kompose.service: {{ .Release.Name }}-ingress
 spec:

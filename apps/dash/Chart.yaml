@@ -2,7 +2,7 @@ apiVersion: v1
 appVersion: "0.1"
 description: A Helm chart Dash apps
 name: dash-app
-version: 1.0.2
+version: 1.0.3
 maintainers:
   - name: Team Whale
     email: serve@scilifelab.se
