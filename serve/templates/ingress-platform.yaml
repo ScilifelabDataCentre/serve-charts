@@ -12,7 +12,7 @@ metadata:
   labels:
     io.kompose.service: {{ .Release.Name }}-ingress
 spec:
-  # ingressClassName: public
+  ingressClassName: nginx
   {{- if .Values.ingress.tls }}
   tls:
   {{- range .Values.ingress.tls }}

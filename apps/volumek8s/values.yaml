@@ -1,8 +1,8 @@
 # locally
 # accessModes: ReadWriteOnce
 # remote
-accessModes: ReadWriteMany
-storageClass: default
+#accessModes: ReadWriteMany
+storageClass: local-path
 
 appname: volumek8s
 project:
@@ -11,8 +11,8 @@ project:
 
 volume:
   size: 10Mi
-  storageClass: false
+  storageClass: local-path
 # locally
-# accessModes: ReadWriteOnce
+  accessModes: ReadWriteOnce
 # remote
-  accessModes: ReadWriteMany
+#  accessModes: ReadWriteMany

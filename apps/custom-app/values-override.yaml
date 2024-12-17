@@ -1,0 +1,34 @@
+---
+apps:
+  volumeK8s: {}
+name: Gradio app
+flavor:
+  limits:
+    cpu: 2000m
+    memory: 4Gi
+    ephemeral-storage: 5000Mi
+  requests:
+    cpu: 500m
+    memory: 1Gi
+    ephemeral-storage: 100Mi
+global:
+  domain: studio.127.0.0.1.nip.io
+  protocol: http
+  auth_domain: serve-studio.default.svc.cluster.local
+appname: re0470e70
+project:
+  name: nikita-project-1
+  slug: nikita-project-1-lzv
+release: re0470e70
+service:
+  name: re0470e70-gradio
+appconfig:
+  path: ''
+  port: 8080
+  image: kuparez/gradio:anyos1
+  userid: 1000
+  startupCommand: "python main.py"
+namespace: default
+subdomain: re0470e70
+permission: project
+storageClass: local-path

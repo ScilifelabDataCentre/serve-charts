@@ -92,6 +92,7 @@ metadata:
   name: wildcard-serve-errors-ingress
   namespace: {{ .Values.namespace }}
 spec:
+  ingressClassName: nginx
   defaultBackend:
     service:
       name: nginx-errors

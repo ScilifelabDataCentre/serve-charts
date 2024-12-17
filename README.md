@@ -35,6 +35,22 @@ Recommended settings for Rancher Desktop:
   - If you are running on an M3 Mac select `VZ`
 - `Preferences > Virtual Machine > Hardware` select `4 CPUs` and `16 GB` of memory.
 
+Additionally, you can set up nginx-ingress controller.
+
+Firstly, you need to disable the default ingress controller that comes with Rancher Desktop. 
+`Preferences > tick off Enable Traefik`.
+
+Then run the following command:
+```bash
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.2/deploy/static/provider/cloud/deploy.yaml
+```
+
+Due to using this, you will need to set for all `Ingress`: applications and templates/ingress-platform.yaml the following:
+```yaml
+spec:
+  ingressClassName: nginx
+```
+
 ##### Serve image
 
 By default, the image is pulled from the public registry. This image is the one we are using in production.
