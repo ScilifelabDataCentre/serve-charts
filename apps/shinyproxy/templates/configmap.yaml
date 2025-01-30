@@ -65,27 +65,23 @@ data:
                 items:
                 - key: shiny-server.conf
                   path: shiny-server.conf
+            {{- if .Values.apps.volumeK8s }}
+            {{- range $key, $value := .Values.apps.volumeK8s }}
+            - name: {{ $key }}
+              persistentVolumeClaim:
+                  claimName: {{ $value.release }}
+            {{- end }}
+            {{- end}}
           - op: add
             path: /spec/containers/0/volumeMounts
             value:
             - mountPath: /etc/shiny-server/shiny-server.conf
               subPath: shiny-server.conf
               name: {{ .Release.Name }}-shiny-configmap
-          {{ if .Values.apps.volumeK8s }}
-          - op: add
-            path: /spec/volumes/-
-            value:
-              {{- range $key, $value := .Values.apps.volumeK8s }}
-              - name: {{ $key }}
-                persistentVolumeClaim:
-                  claimName: {{ $value.release }}
-              {{ end }}
-          - op: add
-            path: /spec/containers/0/volumeMounts/-
-            value:
-              {{- range $key, $value := .Values.apps.volumeK8s }}
-              - mountPath: {{ $.Values.appconfig.path }}
-                name: {{ $key }}
-              {{ end }}
-          {{ end }}
+            {{- if .Values.apps.volumeK8s }}
+            {{- range $key, $value := .Values.apps.volumeK8s }}
+            - mountPath: {{ $.Values.appconfig.path }}
+              name: {{ $key }}
+            {{- end }}
+            {{- end}}
       title: Serve Shiny Proxy
