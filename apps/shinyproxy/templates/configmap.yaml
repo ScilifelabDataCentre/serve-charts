@@ -38,7 +38,7 @@ data:
         container-memory-request: {{ .Values.flavor.requests.memory }}
         port: {{ .Values.appconfig.port }}
         id:  {{ .Release.Name }}
-        display-name: {{ .Values.app_name | quote }}
+        display-name: {{ .Values.name | quote }}
         description: {{ .Values.app_description | quote }}
         minimum-seats-available: {{ .Values.appconfig.minimumSeatsAvailable }}
         seats-per-container: {{ .Values.appconfig.seatsPerContainer }}

@@ -1,4 +1,5 @@
 appname: shinyapp
+name: shinyapp
 project:
   name: project
   slug: project-slug
