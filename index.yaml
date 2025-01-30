@@ -334,6 +334,19 @@ entries:
   shinyproxy:
   - apiVersion: v2
     appVersion: "0.1"
+    created: "2025-01-30T15:36:09.498285201Z"
+    description: A Helm chart to install Shinyproxy
+    digest: 2b078a34a46d298b3cd9ec2a23b50c43b98184e920397730213c4260773e1606
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: shinyproxy
+    type: application
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/shinyproxy-1.4.4/shinyproxy-1.4.4.tgz
+    version: 1.4.4
+  - apiVersion: v2
+    appVersion: "0.1"
     created: "2024-12-10T12:22:38.213052255Z"
     description: A Helm chart to install Shinyproxy
     digest: 7d8e8f52beeed7aa7be291bd8109c043e6c6d61fb7821b1748e7f059826d1788
@@ -587,4 +600,4 @@ entries:
     urls:
     - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/vscode-1.0.0/vscode-1.0.0.tgz
     version: 1.0.0
-generated: "2024-12-10T12:22:38.429207522Z"
+generated: "2025-01-30T15:36:09.498439279Z"
