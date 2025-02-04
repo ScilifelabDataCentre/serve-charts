@@ -318,7 +318,7 @@ data:
     # Internationalization
     # https://docs.djangoproject.com/en/2.2/topics/i18n/
     LANGUAGE_CODE = 'en-us'
-    TIME_ZONE = 'UTC'
+    TIME_ZONE = 'Europe/Stockholm'
     USE_I18N = True
 
     # Media Files for Studio apps
@@ -330,7 +330,7 @@ data:
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
     # Related to user registration and authetication workflow
-    LOGIN_REDIRECT_URL = '/projects'
+    LOGIN_REDIRECT_URL = '/projects/'
     LOGIN_URL = 'login'
     LOGOUT_URL = 'logout'
     INACTIVE_USERS = {{ if .Values.studio.inactive_users }}True{{ else }}False{{ end }}
@@ -543,3 +543,6 @@ data:
             logger_factory=structlog.stdlib.LoggerFactory(),
             cache_logger_on_first_use=True,
         )
+
+    # k8s cluster version for validation of manifests
+    CLUSTER_VERSION = "1.28"

@@ -2,7 +2,7 @@ apiVersion: v1
 appVersion: "0.1"
 description: A Helm chart Shiny apps
 name: shinyapp
-version: 1.0.3
+version: 1.0.4
 maintainers:
   - name: Team Whale
     email: serve@scilifelab.se
