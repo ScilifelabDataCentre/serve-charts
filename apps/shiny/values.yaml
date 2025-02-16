@@ -3,6 +3,16 @@ project:
   name: project
   slug: project-slug
 
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: nvidia.com/gpu.present
+          operator: In
+          values:
+          - "true"
+
 global:
   protocol: TCP
   domain: studio.127.0.0.1.nip.io
