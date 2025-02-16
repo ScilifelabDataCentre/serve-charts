@@ -8,10 +8,10 @@ affinity:
     requiredDuringSchedulingIgnoredDuringExecution:
       nodeSelectorTerms:
       - matchExpressions:
-        - key: acceleration
+        - key: nvidia.com/gpu.present
           operator: In
           values:
-          - gpu
+          - "true"
 
 global:
   domain: localhost
