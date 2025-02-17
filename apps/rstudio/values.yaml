@@ -46,4 +46,12 @@ securityContext:
     drop:
       - all
 
-flavor: {}
+flavor:
+  limits:
+    cpu: 1
+    ephemeral-storage: 800Mi
+    memory: 1Gi
+  requests:
+    cpu: 500m
+    ephemeral-storage: 500Mi
+    memory: 500Mi
