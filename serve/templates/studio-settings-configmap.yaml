@@ -363,7 +363,7 @@ data:
     # App dependencies
 
     # Docker hub API
-    DOCKER_HUB_IMAGE_SEARCH = 'https://hub.docker.com/v2/search/repositories/''
+    DOCKER_HUB_IMAGE_SEARCH = 'https://hub.docker.com/v2/search/repositories/'
     DOCKER_HUB_TAG_SEARCH = 'https://hub.docker.com/v2/repositories/'
 
     # Apps
