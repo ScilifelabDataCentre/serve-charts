@@ -3,6 +3,16 @@ project:
   name: project
   slug: project-slug
 
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: nvidia.com/gpu.present
+          operator: In
+          values:
+          - "true"
+
 permission: public
 
 global:
@@ -36,4 +46,12 @@ securityContext:
     drop:
       - all
 
-flavor: {}
+flavor:
+  limits:
+    cpu: 1
+    ephemeral-storage: 800Mi
+    memory: 1Gi
+  requests:
+    cpu: 500m
+    ephemeral-storage: 500Mi
+    memory: 500Mi

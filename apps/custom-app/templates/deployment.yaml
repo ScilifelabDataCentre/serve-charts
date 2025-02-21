@@ -28,6 +28,10 @@ spec:
         type: app
         pod: {{ .Values.appname }}
     spec:
+      {{ if index .Values.flavor.limits "nvidia.com/gpu" }}
+      affinity:
+        {{ .Values.affinity | toYaml | nindent 8 | trim }}
+      {{ end }}
       automountServiceAccountToken: false
       securityContext:
         seccompProfile:
@@ -111,6 +115,12 @@ spec:
           mountPath: /scripts
         {{- end}}
       terminationGracePeriodSeconds: 30
+      {{ if index .Values.flavor.limits "nvidia.com/gpu" }}
+      tolerations:
+      - key: nvidia.com/gpu
+        effect: NoSchedule
+        operator: Exists
+      {{ end }}
       dnsPolicy: ClusterFirst
       {{ if or .Values.apps.volumeK8s .Values.appconfig.startupCommand }}
       volumes:
