@@ -3,6 +3,18 @@ entries:
   custom-app:
   - apiVersion: v1
     appVersion: "0.1"
+    created: "2025-02-21T12:03:08.111702679Z"
+    description: A Helm chart for a standard serve app
+    digest: 010e427790423337f5cccef077838f5c829b5a5d419be1681193264956945383
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: custom-app
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/custom-app-1.1.2/custom-app-1.1.2.tgz
+    version: 1.1.2
+  - apiVersion: v1
+    appVersion: "0.1"
     created: "2024-12-10T12:22:37.502952417Z"
     description: A Helm chart for a standard serve app
     digest: 98748dbacd90e664a860db3f09a7bcf0029136ecf2e74802e0beb721557df782
@@ -62,6 +74,18 @@ entries:
     - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/custom-app-1.0.0/custom-app-1.0.0.tgz
     version: 1.0.0
   dash-app:
+  - apiVersion: v1
+    appVersion: "0.1"
+    created: "2025-02-21T12:03:08.249896507Z"
+    description: A Helm chart Dash apps
+    digest: 07d26b16aec24ba646f540680b21b44a052cd7b39c158c34137a033885fa1955
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: dash-app
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/dash-app-1.0.4/dash-app-1.0.4.tgz
+    version: 1.0.4
   - apiVersion: v1
     appVersion: "0.1"
     created: "2024-12-10T12:22:37.619605491Z"
@@ -236,6 +260,18 @@ entries:
   rstudio:
   - apiVersion: v1
     appVersion: "0.1"
+    created: "2025-02-21T12:03:08.465425345Z"
+    description: A Helm chart for RStudio in the browser
+    digest: efe595c3503f541748227ee13b900e3bf66422e30395b16d7c47bdb67696dd7f
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: rstudio
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/rstudio-1.0.4/rstudio-1.0.4.tgz
+    version: 1.0.4
+  - apiVersion: v1
+    appVersion: "0.1"
     created: "2024-12-10T12:22:38.006711385Z"
     description: A Helm chart for RStudio in the browser
     digest: 70e41da64865a036fa526b366446b3fb44dbe1bf01890d1f1b6eecee0e9ec46c
@@ -283,6 +319,18 @@ entries:
     - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/rstudio-1.0.0/rstudio-1.0.0.tgz
     version: 1.0.0
   shinyapp:
+  - apiVersion: v1
+    appVersion: "0.1"
+    created: "2025-02-21T12:03:08.586211777Z"
+    description: A Helm chart Shiny apps
+    digest: 6bd5df34ec5cc42be61e700dc83c55694b888ff1e2c60e39de8b2ea4ee6af71f
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: shinyapp
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/shinyapp-1.0.5/shinyapp-1.0.5.tgz
+    version: 1.0.5
   - apiVersion: v1
     appVersion: "0.1"
     created: "2024-12-10T12:22:38.10590084Z"
@@ -612,4 +660,4 @@ entries:
     urls:
     - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/vscode-1.0.0/vscode-1.0.0.tgz
     version: 1.0.0
-generated: "2025-02-04T16:10:51.213674457Z"
+generated: "2025-02-21T12:03:08.741247866Z"
