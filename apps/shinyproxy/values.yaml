@@ -27,6 +27,7 @@ service:
 
 ingress:
   secretName: prod-ingress
+  clientMaxBodySize: 100M
 
 s3sync:
   image: scaleoutsystems/s3-sync:latest

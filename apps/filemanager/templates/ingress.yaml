@@ -9,6 +9,7 @@ metadata:
     {{- end }}
     nginx.ingress.kubernetes.io/custom-http-errors: "503"
     nginx.ingress.kubernetes.io/default-backend: nginx-errors
+    nginx.ingress.kubernetes.io/proxy-body-size: "{{ .Values.ingress.clientMaxBodySize }}"
   name: {{ .Release.Name }}-filemanager-ingress
   namespace: {{ .Release.Namespace }}
 spec:
