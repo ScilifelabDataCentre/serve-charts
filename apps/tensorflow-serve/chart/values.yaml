@@ -41,6 +41,7 @@ model_card:
   path: model-card
 
 ingress:
+  clientMaxBodySize: 500M
 
 podSecurityContext:
   seccompProfile:
