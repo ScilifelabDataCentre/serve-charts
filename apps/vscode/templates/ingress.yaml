@@ -12,6 +12,7 @@ metadata:
     #nginx.ingress.kubernetes.io/auth-response-headers: X-Forwarded-Host
     nginx.ingress.kubernetes.io/custom-http-errors: "503"
     nginx.ingress.kubernetes.io/default-backend: nginx-errors
+    nginx.ingress.kubernetes.io/proxy-body-size: "{{ .Values.ingress.clientMaxBodySize }}"
 spec:
   rules:
     - host: {{ .Release.Name }}.{{ .Values.global.domain }}

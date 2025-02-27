@@ -28,6 +28,10 @@ spec:
         type: app
         pod: {{ .Values.appname }}
     spec:
+      {{ if index .Values.flavor.limits "nvidia.com/gpu" }}
+      affinity:
+        {{ .Values.affinity | toYaml | nindent 8 | trim }}
+      {{ end }}
       automountServiceAccountToken: false
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -47,6 +51,12 @@ spec:
           mountPath: /home/jovyan/{{ $key }}
         {{- end }}
       terminationGracePeriodSeconds: 30
+      {{ if index .Values.flavor.limits "nvidia.com/gpu" }}
+      tolerations:
+      - key: nvidia.com/gpu
+        effect: NoSchedule
+        operator: Exists
+      {{ end }}
       dnsPolicy: ClusterFirst
       volumes:
       {{- range $key, $value := .Values.apps.volumeK8s }}

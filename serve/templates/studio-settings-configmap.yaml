@@ -362,6 +362,10 @@ data:
     
     # App dependencies
 
+    # Docker hub API
+    DOCKER_HUB_IMAGE_SEARCH = 'https://hub.docker.com/v2/search/repositories/'
+    DOCKER_HUB_TAG_SEARCH = 'https://hub.docker.com/v2/repositories/'
+
     # Apps
     APPS_MODEL = "apps.Apps"
     APPINSTANCE_MODEL = "apps.BaseAppInstance"
@@ -381,8 +385,8 @@ data:
 
     # App statuses
     APPS_STATUS_SUCCESS = ['Running', 'Succeeded', 'Success']
-    APPS_STATUS_WARNING = ['Pending', 'Installed',
-                        'Waiting', 'Installing', 'Created', 'Creating']
+    APPS_STATUS_WARNING = ['Pending', 'Installed', 'Waiting',
+                           'Installing', 'Created', 'Creating', 'Changing']
 
     DOMAIN = {{ .Values.domain | quote }}
     AUTH_DOMAIN = '{{ .Release.Name }}-studio.{{ .Values.namespace | default "default" }}.svc.{{ .Values.cluster_domain | default "cluster.local"}}'
