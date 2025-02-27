@@ -137,6 +137,18 @@ entries:
   filemanager:
   - apiVersion: v1
     appVersion: "0.1"
+    created: "2025-02-27T12:21:39.037744146Z"
+    description: A Helm chart for the serve File Manager
+    digest: 9ddd3327a36dde0c828f6fba5d9dd6f2812a1c49e8b2492cdf442704f78af60d
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: filemanager
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/filemanager-1.0.4/filemanager-1.0.4.tgz
+    version: 1.0.4
+  - apiVersion: v1
+    appVersion: "0.1"
     created: "2024-12-10T12:22:37.728932796Z"
     description: A Helm chart for the serve File Manager
     digest: 94117268ec300561435444f858d4ba3dbeea2cab1f1ac860f14d2b26925d8a0a
@@ -184,6 +196,18 @@ entries:
     - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/filemanager-1.0.0/filemanager-1.0.0.tgz
     version: 1.0.0
   lab:
+  - apiVersion: v1
+    appVersion: "0.1"
+    created: "2025-02-27T12:21:39.128856828Z"
+    description: A Helm chart for Jupyter Lab
+    digest: 14e40a2d6e9c960eb8ba52ca7810e9fee4d277b3e622c3daa25bb960de1789c9
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: lab
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/lab-1.0.5/lab-1.0.5.tgz
+    version: 1.0.5
   - apiVersion: v1
     appVersion: "0.1"
     created: "2025-02-04T16:10:50.2338622Z"
@@ -564,6 +588,18 @@ entries:
   tissuumaps:
   - apiVersion: v1
     appVersion: "0.1"
+    created: "2025-02-27T12:21:39.668295828Z"
+    description: A Helm chart tissuumaps apps
+    digest: 5f2fa0d8771d9871e74ec9b411dc266e574315a89a310abe31c60ba53f986cac
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: tissuumaps
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/tissuumaps-1.0.4/tissuumaps-1.0.4.tgz
+    version: 1.0.4
+  - apiVersion: v1
+    appVersion: "0.1"
     created: "2024-12-10T12:22:38.322281515Z"
     description: A Helm chart tissuumaps apps
     digest: 07857adb547fd660c57167e099f97c9979bb64f8c1a154b939066ba634cca2cb
@@ -626,6 +662,18 @@ entries:
   vscode:
   - apiVersion: v1
     appVersion: "0.1"
+    created: "2025-02-27T12:21:39.810978277Z"
+    description: A Helm chart for VS code in the browser
+    digest: 31d52106de21c31c2044fc5794ce5975542dd7be7217b92d3a3f06e09f5f6cf4
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: vscode
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/vscode-1.0.3/vscode-1.0.3.tgz
+    version: 1.0.3
+  - apiVersion: v1
+    appVersion: "0.1"
     created: "2024-12-10T12:22:38.429029429Z"
     description: A Helm chart for VS code in the browser
     digest: 9306681123205058e26b2edaea2dbf6db17f6135a0dbcb6f5de51520b89a0ce2
@@ -660,4 +708,4 @@ entries:
     urls:
     - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/vscode-1.0.0/vscode-1.0.0.tgz
     version: 1.0.0
-generated: "2025-02-21T12:03:08.741247866Z"
+generated: "2025-02-27T12:21:39.811134637Z"
