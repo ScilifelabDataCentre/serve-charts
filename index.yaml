@@ -198,6 +198,18 @@ entries:
   lab:
   - apiVersion: v1
     appVersion: "0.1"
+    created: "2025-03-03T13:59:15.65369478Z"
+    description: A Helm chart for Jupyter Lab
+    digest: 8ff98afa49ef02f53faaa11c849595a595c5bfad7897294cf8b9343b893ed772
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: lab
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/lab-1.0.6/lab-1.0.6.tgz
+    version: 1.0.6
+  - apiVersion: v1
+    appVersion: "0.1"
     created: "2025-02-27T12:21:39.128856828Z"
     description: A Helm chart for Jupyter Lab
     digest: 14e40a2d6e9c960eb8ba52ca7810e9fee4d277b3e622c3daa25bb960de1789c9
@@ -708,4 +720,4 @@ entries:
     urls:
     - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/vscode-1.0.0/vscode-1.0.0.tgz
     version: 1.0.0
-generated: "2025-02-27T12:21:39.811134637Z"
+generated: "2025-03-03T13:59:15.653825185Z"
