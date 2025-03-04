@@ -8,10 +8,10 @@ affinity:
     requiredDuringSchedulingIgnoredDuringExecution:
       nodeSelectorTerms:
       - matchExpressions:
-        - key: acceleration
+        - key: nvidia.com/gpu.present
           operator: In
           values:
-          - gpu
+          - "true"
 
 global:
   domain: localhost
@@ -35,6 +35,7 @@ service:
 ingress:
   v1beta1: false
   secretName: prod-ingress
+  clientMaxBodySize: 5500m
 
 mlflow:
   url: ""
