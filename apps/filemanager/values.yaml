@@ -18,7 +18,7 @@ apps:
   volumeK8s: {}
 
 appconfig:
-  image: ghcr.io/scilifelabdatacentre/serve-filemanager:240221-0930
+  image: ghcr.io/scilifelabdatacentre/serve-filemanager:250310-1430
 
 service:
   name: filemanager-svc
