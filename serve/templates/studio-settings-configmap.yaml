@@ -363,13 +363,12 @@ data:
     # App dependencies
 
     # Docker hub API
-    DOCKER_HUB_IMAGE_SEARCH = 'https://hub.docker.com/v2/search/repositories/'
-    DOCKER_HUB_TAG_SEARCH = 'https://hub.docker.com/v2/repositories/'
+    DOCKER_HUB_REPO_SEARCH = 'https://hub.docker.com/v2/search/repositories'
+    DOCKER_HUB_TAG_SEARCH = 'https://hub.docker.com/v2/repositories'
 
     # GHCR API
+    GITHUB_API = 'https://api.github.com'
     GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
-    GHCR_IMAGE_SEARCH = 'https://api.github.com/orgs/ScilifelabDataCentre/packages?package_type=container&per_page=100'
-    GHCR_TAG_SEARCH = 'https://api.github.com/orgs/ScilifelabDataCentre/packages/container'
 
     # Apps
     APPS_MODEL = "apps.Apps"
