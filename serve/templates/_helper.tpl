@@ -102,7 +102,6 @@ Return postgres secret
 {{- end -}}
 {{- end -}}
 
-
 {{/*
 Return redis secret
 */}}
