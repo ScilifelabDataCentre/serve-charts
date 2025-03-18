@@ -163,7 +163,7 @@ studio:
     minSize: 2
     maxSize: 4
     timeout: 10
-  githubToken:
+  githubApiToken:
 
 #kubernetes config
 kubeconfig: ""
