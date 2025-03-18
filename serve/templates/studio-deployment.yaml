@@ -113,7 +113,7 @@ spec:
         - name: GITHUB_API_TOKEN
           valueFrom:
             secretKeyRef:
-              name: {{ include "stackn.studio.githubApiToken" . }}
+              name: {{ include "stackn.secretName" . }}
               key: github-api-token
         - name: RABBITMQ_DEFAULT_PASS
           valueFrom:

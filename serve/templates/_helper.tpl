@@ -102,13 +102,6 @@ Return postgres secret
 {{- end -}}
 {{- end -}}
 
-{{/*
-Return github api token
-*/}}
-{{- define "stackn.studio.githubApiToken" -}}
-{{- .Values.studio.githubApiToken -}}
-{{- end -}}
-
 
 {{/*
 Return redis secret
