@@ -23,7 +23,7 @@ apps:
 
 appconfig:
   port: 8787
-  image: ghcr.io/scilifelabdatacentre/serve-rstudio:231030-1146
+  image: ghcr.io/scilifelabdatacentre/serve-rstudio:250304-1611
 
 service:
   name: rstudio-svc
