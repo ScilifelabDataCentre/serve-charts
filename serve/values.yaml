@@ -211,6 +211,23 @@ postgresql:
       accessModes:
         - *access_mode
       storageClass: *storage_class
+    extraEnvVars:
+      - name: POSTGRES_SSL_CERT
+        value: "/var/lib/postgresql/tls/tls.crt"
+      - name: POSTGRES_SSL_KEY
+        value: "/var/lib/postgresql/tls/tls.key"
+      - name: POSTGRES_SSL_CA
+        value: "/var/lib/postgresql/tls/ca.crt"
+      - name: POSTGRES_SSL_MODE
+        value: "require"
+    extraVolumes:
+      - name: postgres-tls
+        secret:
+          secretName: postgres-tls-secret
+    extraVolumeMounts:
+      - name: postgres-tls
+        mountPath: /var/lib/postgresql/tls
+        readOnly: true
     podLabels: {"app":"stackn-studio"}
 
 redis:
