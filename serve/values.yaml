@@ -206,29 +206,35 @@ postgresql:
     extraEnvVars:
       - name: POSTGRESQL_MAX_CONNECTIONS
         value: "300"
-      - name: POSTGRES_SSL_CERT
-        value: "/var/lib/postgresql/tls/tls.crt"
-      - name: POSTGRES_SSL_KEY
-        value: "/var/lib/postgresql/tls/tls.key"
-      - name: POSTGRES_SSL_CA
-        value: "/var/lib/postgresql/tls/ca.crt"
-      - name: POSTGRES_SSL_MODE
-        value: "require"
     persistence:
       enabled: true
       size: "10Gi"
       accessModes:
         - *access_mode
       storageClass: *storage_class
+    podLabels: {"app":"stackn-studio"}
     extraVolumes:
       - name: postgres-tls
         secret:
-          secretName: postgres-tls-secret
+          secretName: {{ template "common.names.fullname" . }}-postgres-tls-secret
     extraVolumeMounts:
       - name: postgres-tls
-        mountPath: /var/lib/postgresql/tls
+        mountPath: /opt/bitnami/postgresql
         readOnly: true
-    podLabels: {"app":"stackn-studio"}
+    extraEnvVars:
+      - name: POSTGRESQL_ENABLE_TLS
+        value: "yes"
+      - name: POSTGRESQL_TLS_CERT_FILE
+        value: /opt/bitnami/postgresql/postgres-tls.crt
+      - name: POSTGRESQL_TLS_KEY_FILE
+        value: /opt/bitnami/postgresql/postgres-tls.key
+      - name: POSTGRESQL_TLS_CA_FILE
+        value: /opt/bitnami/postgresql/postgres-ca.crt
+  tls:
+    enabled: true
+    cert: ''
+    key: ''
+    ca: ''
 
 redis:
   enabled: true
