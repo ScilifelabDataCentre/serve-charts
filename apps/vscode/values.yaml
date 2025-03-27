@@ -13,7 +13,7 @@ apps:
   volumek8s:
 
 appconfig:
-  image: ghcr.io/scilifelabdatacentre/serve-vscode:250312-1210
+  image: ghcr.io/scilifelabdatacentre/serve-vscode:latest
 
 affinity:
   nodeAffinity:
@@ -42,7 +42,6 @@ podSecurityContext:
 
 securityContext:
   runAsNonRoot: true
-  runAsUser: 1000
   runAsGroup: 1000
   allowPrivilegeEscalation: false
   privileged: false
