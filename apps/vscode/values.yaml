@@ -13,7 +13,7 @@ apps:
   volumek8s:
 
 appconfig:
-  image: ghcr.io/scilifelabdatacentre/serve-vscode:latest
+  image: ghcr.io/scilifelabdatacentre/serve-vscode:250327-1600
 
 affinity:
   nodeAffinity:
