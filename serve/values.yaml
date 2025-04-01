@@ -118,6 +118,7 @@ studio:
   superUser: admin
   superuserPassword: ""
   superuserEmail: admin@serve.scilifelab.se
+  adminPath: "/admin"
   eventUser: ""
   eventuserPassword: ""
   eventuserEmail: event_user@serve.scilifelab.se
@@ -274,7 +275,7 @@ reloader:
     watchGlobally: false
 
 eventListener:
-  image: ghcr.io/scilifelabdatacentre/serve-event-listener/event-listener:v1.0.0
+  image: ghcr.io/scilifelabdatacentre/serve-event-listener/event-listener:v1.1.0
   resources:
     requests:
       cpu: "100m"

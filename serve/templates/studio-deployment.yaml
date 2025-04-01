@@ -89,6 +89,8 @@ spec:
             secretKeyRef:
               name: {{ include "stackn.secretName" . }}
               key: studio-superuser-password
+        - name: DJANGO_ADMIN_URL_PATH
+          value: {{ .Values.studio.adminPath }}
         - name: EVENT_USER_EMAIL
           value: {{ include "stackn.studio.eventuser.email" . }}
         - name: EVENT_USER_PASSWORD
@@ -110,11 +112,16 @@ spec:
             secretKeyRef:
               name: {{ include "stackn.redis.secretName" . }}
               key: {{ include "stackn.redis.secretPasswordKey" . }}
+        {{ if .Values.studio.githubApiToken }}
         - name: GITHUB_API_TOKEN
           valueFrom:
             secretKeyRef:
               name: {{ include "stackn.secretName" . }}
               key: github-api-token
+        {{ else }}
+        - name: GITHUB_API_TOKEN
+          value: ""
+        {{ end }}
         - name: RABBITMQ_DEFAULT_PASS
           valueFrom:
             secretKeyRef:
