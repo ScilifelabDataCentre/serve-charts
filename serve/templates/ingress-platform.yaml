@@ -56,8 +56,8 @@ spec:
                 number: 8081
           pathType: ImplementationSpecific
   {{- end }}
+{{if ne .Values.environment "local" }}
 ---
-{{if neq .Values.environment "local" }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
