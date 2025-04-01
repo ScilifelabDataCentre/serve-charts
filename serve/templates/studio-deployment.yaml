@@ -110,11 +110,16 @@ spec:
             secretKeyRef:
               name: {{ include "stackn.redis.secretName" . }}
               key: {{ include "stackn.redis.secretPasswordKey" . }}
+        {{ if .Values.studio.githubApiToken }}
         - name: GITHUB_API_TOKEN
           valueFrom:
             secretKeyRef:
               name: {{ include "stackn.secretName" . }}
               key: github-api-token
+        {{ else }}
+        - name: GITHUB_API_TOKEN
+          value: ""
+        {{ end }}
         - name: RABBITMQ_DEFAULT_PASS
           valueFrom:
             secretKeyRef:
