@@ -56,6 +56,7 @@ spec:
                 number: 8081
           pathType: ImplementationSpecific
   {{- end }}
+{{if ne .Values.environment "local" }}
 ---
 {{if neq .Values.environment "local" }}
 apiVersion: networking.k8s.io/v1
@@ -78,7 +79,7 @@ spec:
                 name: {{ .Release.Name }}-studio
                 port:
                   number: 8080
-            path: {{ .Values.studio.djangoAdminUrlPath }}
+            path: /{{ .Values.studio.djangoAdminUrlPath }}
             pathType: Exact
 
     - host: {{ .Values.domain | quote }}
@@ -89,7 +90,7 @@ spec:
                 name: {{ .Release.Name }}-studio
                 port:
                   number: 8080
-            path: {{ .Values.studio.djangoAdminUrlPath }}/
+            path: /{{ .Values.studio.djangoAdminUrlPath }}/
             pathType: Prefix
 {{- end }}
 {{- end }}
