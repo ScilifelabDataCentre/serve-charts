@@ -89,6 +89,8 @@ spec:
             secretKeyRef:
               name: {{ include "stackn.secretName" . }}
               key: studio-superuser-password
+        - name: DJANGO_ADMIN_URL_PATH
+          value: {{ .Values.studio.adminPath }}
         - name: EVENT_USER_EMAIL
           value: {{ include "stackn.studio.eventuser.email" . }}
         - name: EVENT_USER_PASSWORD
