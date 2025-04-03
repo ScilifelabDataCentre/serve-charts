@@ -118,6 +118,7 @@ studio:
   superUser: admin
   superuserPassword: ""
   superuserEmail: admin@serve.scilifelab.se
+  djangoAdminUrlPath: "admin"
   eventUser: ""
   eventuserPassword: ""
   eventuserEmail: event_user@serve.scilifelab.se
