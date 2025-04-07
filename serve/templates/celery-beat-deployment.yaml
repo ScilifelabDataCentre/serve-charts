@@ -95,6 +95,8 @@ spec:
             secretKeyRef:
               name: {{ include "stackn.secretName" . }}
               key: django-secret-key
+        - name: DJANGO_ADMIN_URL_PATH
+          value: {{ .Values.studio.djangoAdminUrlPath }}
         {{ if .Values.studio.emailService.enabled }}
         - name: EMAIL_HOST_USER
           valueFrom:
