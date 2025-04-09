@@ -56,6 +56,42 @@ spec:
                 number: 8081
           pathType: ImplementationSpecific
   {{- end }}
+{{if ne .Values.environment "local" }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: admin-ingress
+  annotations:
+    # POI: here we are allowing access to /admin/* only to 130.238.0.0/16
+    nginx.ingress.kubernetes.io/whitelist-source-range: 130.238.0.0/16
+  labels:
+    io.kompose.service: {{ .Release.Name }}-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: {{ .Values.domain | quote }}
+      http:
+        paths:
+          - backend:
+              service:
+                name: {{ .Release.Name }}-studio
+                port:
+                  number: 8080
+            path: /{{ .Values.studio.djangoAdminUrlPath }}
+            pathType: Exact
+
+    - host: {{ .Values.domain | quote }}
+      http:
+        paths:
+          - backend:
+              service:
+                name: {{ .Release.Name }}-studio
+                port:
+                  number: 8080
+            path: /{{ .Values.studio.djangoAdminUrlPath }}/
+            pathType: Prefix
+{{- end }}
 {{- end }}
 
 

@@ -108,6 +108,8 @@ spec:
               name: {{ include "stackn.secretName" . }}
               key: email-host-password
         {{- end }}
+        - name: DJANGO_ADMIN_URL_PATH
+          value: {{ .Values.studio.djangoAdminUrlPath }}
         image: {{ .Values.studio.image.repository }}
         imagePullPolicy: {{ .Values.studio.image.pullPolicy }}
         name: {{ .Release.Name }}-celery-worker

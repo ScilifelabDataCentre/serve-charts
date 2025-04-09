@@ -37,12 +37,13 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
       - name: vscode
-        image: {{ .Values.appconfig.image }} #TODO add own image here when we have it -  2023-09-28
+        image: {{ .Values.appconfig.image }} #TODO add own image here when we have it -  2023-09-28, # done 2025-03-27
         imagePullPolicy: IfNotPresent
-        command:
-          - /bin/bash
-          - -c
-          - code-server --auth=none --bind-addr 0.0.0.0:8080
+        command: ["/bin/bash"]  # Override default entrypoint
+        args:
+          - "-l"               # Force login shell (sources /etc/profile, for enforcing umask 007 in custom_umask.sh)
+          - "-c"               # Execute the command below,
+          - "umask 007 && exec /usr/bin/code-server --auth=none --bind-addr=0.0.0.0:8080 /home/serve/"
         ports:
           - containerPort: {{ .Values.service.targetport }}
         securityContext:
