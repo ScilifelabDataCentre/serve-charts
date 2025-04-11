@@ -2,7 +2,7 @@ apiVersion: v1
 appVersion: "0.1"
 description: A Helm chart for RStudio in the browser
 name: rstudio
-version: 1.0.5
+version: 1.0.6
 maintainers:
   - name: Team Whale
     email: serve@scilifelab.se

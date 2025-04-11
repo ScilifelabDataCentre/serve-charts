@@ -186,6 +186,11 @@ ingress:
     - secretName: prod-ingress
       hosts:
         - studio.127.0.0.1.nip.io
+  # Enable or disable access to the django admin interface from the university network
+  djangoAdminAccessRestriction:
+    enabled: true
+    # IP address range to allow access to the django admin interface
+    whiteListSourceRange: 130.238.0.0/16
 
 ### A Postgres database for STACKn ###
 # Here we use https://charts.bitnami.com/bitnami postgresql chart 

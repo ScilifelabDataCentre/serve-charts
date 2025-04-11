@@ -56,7 +56,7 @@ spec:
                 number: 8081
           pathType: ImplementationSpecific
   {{- end }}
-{{if ne .Values.environment "local" }}
+{{if .Values.ingress.djangoAdminAccessRestriction.enabled }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -64,7 +64,9 @@ metadata:
   name: admin-ingress
   annotations:
     # POI: here we are allowing access to /admin/* only to 130.238.0.0/16
-    nginx.ingress.kubernetes.io/whitelist-source-range: 130.238.0.0/16
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{.Values.ingress.djangoAdminAccessRestriction.whiteListSourceRange}}
+    nginx.ingress.kubernetes.io/custom-http-errors: "403"
+    nginx.ingress.kubernetes.io/default-backend: nginx-errors
   labels:
     io.kompose.service: {{ .Release.Name }}-ingress
 spec:

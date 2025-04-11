@@ -2,7 +2,7 @@ apiVersion: v2
 name: shinyproxy
 description: A Helm chart to install Shinyproxy
 type: application
-version: 1.4.4
+version: 1.4.5
 appVersion: "0.1"
 maintainers:
   - name: Team Whale
