@@ -62,7 +62,7 @@ spec:
         - -c
         - |
           mkdir -p /www
-          curl -o /www/403.html https://raw.githubusercontent.com/ScilifelabDataCentre/serve-charts/refs/heads/develop/k8s-error-pages/error-page-404.html
+          curl -o /www/403.html https://raw.githubusercontent.com/ScilifelabDataCentre/serve-charts/refs/heads/develop/k8s-error-pages/error-page-403.html
           curl -o /www/404.html https://raw.githubusercontent.com/ScilifelabDataCentre/serve-charts/refs/heads/develop/k8s-error-pages/error-page-404.html
           curl -o /www/503.html https://raw.githubusercontent.com/ScilifelabDataCentre/serve-charts/refs/heads/develop/k8s-error-pages/error-page-503.html
           curl -o /www/502.html https://raw.githubusercontent.com/ScilifelabDataCentre/serve-charts/refs/heads/develop/k8s-error-pages/error-page-502.html
