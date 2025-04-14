@@ -9,12 +9,12 @@ jobs:
   update-json:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Check out serve-charts repository
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.GH_PAT }}
+          token: ${{ secrets.TW_PAT }}
 
-      - name: Set environment variables
+      - name: Set up environment variables
         run: |
           HELM_CHART=rstudio
           echo "HELM_CHART=$HELM_CHART" >> "$GITHUB_ENV"
@@ -22,38 +22,46 @@ jobs:
           echo "NEW_CHART_VERSION=$NEW_CHART_VERSION" >> $GITHUB_ENV
           echo "JSON_FILE_PATH=fixtures/apps_fixtures.json" >> $GITHUB_ENV
 
-      - name: Setup SSH key
+      - name: Set up the SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.TW_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-      - name: Clone the Serve repo
+      - name: Clone the Serve repository
         run: |
           git config --global user.name "$GITHUB_ACTOR"
           git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git clone git@github.com:ScilifelabDataCentre/serve.git
 
-      - name: Update JSON file in Serve
+      - name: Import GPG key and configure commit signing
+        run: |
+          echo "${{ secrets.TW_GPG_PRIVATE_KEY }}" | gpg --batch --import
+          git config --global user.signingkey "$(gpg --list-keys --with-colons | grep pub | cut -d':' -f10)"
+          git config --global commit.gpgsign true
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.TW_GPG_PRIVATE_KEY }}
+
+      - name: Update JSON file in the Serve repository
         run: |
           cd serve
           jq -M --arg new_chart_version "$NEW_CHART_VERSION" 'map(if .fields.chart | contains("${{ env.HELM_CHART }}:") then .fields.chart |= sub(":[^:]+$"; ":" + $new_chart_version) else . end)' $JSON_FILE_PATH > tmp.json
           mv tmp.json $JSON_FILE_PATH
           git add $JSON_FILE_PATH
-          git diff --quiet || git commit -m "Update chart version in ${{ env.HELM_CHART }} to ${{ env.NEW_CHART_VERSION }}"
-      
-      - name: Push Changes
+          git diff --quiet || git commit -S -m "Update chart version in ${{ env.HELM_CHART }} to ${{ env.NEW_CHART_VERSION }}"
+
+      - name: Push changes to the Serve repository
         run: |
           cd serve
           git push origin HEAD
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.TW_PAT }}
 
-      - name: Create Pull Request
+      - name: Create a pull request in the Serve repository
         uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.GH_PAT }}
+          token: ${{ secrets.TW_PAT }}
           commit-message: "Update apps_fixtures.json"
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
