@@ -30,7 +30,7 @@ jobs:
   
     steps:
       - name: Check out serve-charts repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.TW_PAT }}
 
@@ -87,7 +87,7 @@ jobs:
           committer: ${{ github.actor }} <teamwhale@scilifelab.se>
           author: ${{ github.actor }} <teamwhale@scilifelab.se>
           branch: update/${{ env.HELM_CHART }}-${{ env.NEW_CHART_VERSION }}
-          title: 'Update chart version in ${{ env.HELM_CHART }} to ${{ env.NEW_CHART_VERSION }}'
+          title: '[Automated PR] Update chart version in ${{ env.HELM_CHART }} to ${{ env.NEW_CHART_VERSION }}'
           body: |
             This PR updates the `chart` field in `app_fixtures.json` to use the new version: `${{ env.NEW_CHART_VERSION }}`.
             Please review and merge if everything looks good.
