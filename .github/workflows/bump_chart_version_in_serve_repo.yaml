@@ -8,63 +8,55 @@ on:
       - "apps/**/Chart.yaml"
 
 jobs:
-  detect-changed-app:
+  update-json:
     runs-on: ubuntu-latest
-    outputs:
-      changed_app: ${{ steps.find-app.outputs.changed_app }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 2
+          token: ${{ secrets.TW_PAT }}
           
-      - name: Find changed Chart.yaml
+      - name: Find changed Chart.yaml and set variables
         id: find-app
         run: |
+          # Find the changed Chart.yaml file
           CHANGED_FILES=$(git diff --name-only HEAD^ HEAD | grep "apps/.*Chart.yaml" || echo "")
+          
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "No Chart.yaml files changed. Exiting."
+            exit 0
+          fi
+          
+          # Extract app name from path
           APP_NAME=$(echo "$CHANGED_FILES" | head -n 1 | sed -E 's|apps/([^/]+)/Chart.yaml|\1|')
-          echo "changed_app=$APP_NAME" >> $GITHUB_OUTPUT
           echo "Found changed app: $APP_NAME"
-
-  update-json:
-    needs: detect-changed-app
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        app:
-          - name: custom-app
-            helm_name: custom-app
-          - name: dash
-            helm_name: dash-app
-          - name: filemanager
-            helm_name: filemanager
-          - name: jupyter-lab
-            helm_name: lab
-          - name: rstudio
-            helm_name: rstudio
-          - name: shiny
-            helm_name: shinyapp
-          - name: shinyproxy
-            helm_name: shinyproxy
-          - name: tissuumaps
-            helm_name: tissuumaps
-  
-    if: ${{ matrix.app.name == needs.detect-changed-app.outputs.changed_app }}
-
-    steps:
-      - name: Check out serve-charts repository
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.TW_PAT }}
-
-      - name: Set up environment variables
-        run: |
-          HELM_CHART=${{ matrix.app.helm_name }}
-          CHART_PATH=apps/${{ matrix.app.name }}/Chart.yaml
-          echo "HELM_CHART=$HELM_CHART" >> "$GITHUB_ENV"
+          
+          # Map the app name to helm name
+          case "$APP_NAME" in
+            "custom-app") HELM_NAME="custom-app" ;;
+            "dash") HELM_NAME="dash-app" ;;
+            "filemanager") HELM_NAME="filemanager" ;;
+            "jupyter-lab") HELM_NAME="lab" ;;
+            "rstudio") HELM_NAME="rstudio" ;;
+            "shiny") HELM_NAME="shinyapp" ;;
+            "shinyproxy") HELM_NAME="shinyproxy" ;;
+            "tissuumaps") HELM_NAME="tissuumaps" ;;
+            *) 
+              echo "Unknown app: $APP_NAME. Exiting."
+              exit 1
+              ;;
+          esac
+          
+          # Get the chart version
+          CHART_PATH="apps/$APP_NAME/Chart.yaml"
           NEW_CHART_VERSION=$(yq e '.version' $CHART_PATH)
-          echo "NEW_CHART_VERSION=$NEW_CHART_VERSION" >> $GITHUB_ENV
-          echo "JSON_FILE_PATH=fixtures/apps_fixtures.json" >> $GITHUB_ENV
+          
+          # Export variables for later steps
+          echo "HELM_CHART=$HELM_NAME" >> "$GITHUB_ENV"
+          echo "APP_NAME=$APP_NAME" >> "$GITHUB_ENV"
+          echo "NEW_CHART_VERSION=$NEW_CHART_VERSION" >> "$GITHUB_ENV"
+          echo "JSON_FILE_PATH=fixtures/apps_fixtures.json" >> "$GITHUB_ENV"
 
       - name: Set up the SSH key
         run: |
