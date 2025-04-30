@@ -8,7 +8,26 @@ on:
       - "apps/**/Chart.yaml"
 
 jobs:
+  detect-changed-app:
+    runs-on: ubuntu-latest
+    outputs:
+      changed_app: ${{ steps.find-app.outputs.changed_app }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          
+      - name: Find changed Chart.yaml
+        id: find-app
+        run: |
+          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD | grep "apps/.*Chart.yaml" || echo "")
+          APP_NAME=$(echo "$CHANGED_FILES" | head -n 1 | sed -E 's|apps/([^/]+)/Chart.yaml|\1|')
+          echo "changed_app=$APP_NAME" >> $GITHUB_OUTPUT
+          echo "Found changed app: $APP_NAME"
+
   update-json:
+    needs: detect-changed-app
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -30,6 +49,8 @@ jobs:
           - name: tissuumaps
             helm_name: tissuumaps
   
+    if: ${{ matrix.app.name == needs.detect-changed-app.outputs.changed_app }}
+
     steps:
       - name: Check out serve-charts repository
         uses: actions/checkout@v4
