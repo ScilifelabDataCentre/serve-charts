@@ -102,7 +102,6 @@ jobs:
 
       - name: Create a pull request in the Serve repository
         run: |
-          gh auth login --with-token <<< "${{ secrets.TW_PAT }}"
           gh pr create \
             --repo ScilifelabDataCentre/serve \
             --head update/${{ env.HELM_CHART }}-${{ env.NEW_CHART_VERSION }} \
