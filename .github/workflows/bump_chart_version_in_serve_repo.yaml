@@ -1,7 +1,9 @@
 name: New Helm chart version
 
 on:
-  pull_request:
+  push:
+    branches:
+      - ss-1388-bug-fix
     paths:
       - "apps/**/Chart.yaml"
 
