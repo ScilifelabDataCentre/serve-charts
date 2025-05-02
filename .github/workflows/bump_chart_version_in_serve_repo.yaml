@@ -87,12 +87,27 @@ jobs:
       - name: Update JSON file in the Serve repository
         run: |
           cd serve
+          git checkout develop
           git checkout -b update/${{ env.HELM_CHART }}-${{ env.NEW_CHART_VERSION }}
+
+          # Debug 1
+          grep -A 1 "${{ env.HELM_CHART }}" $JSON_FILE_PATH || echo "Pattern not found"
+
           jq -M --arg new_chart_version "$NEW_CHART_VERSION" 'map(if .fields.chart | contains("${{ env.HELM_CHART }}:") then .fields.chart |= sub(":[^:]+$"; ":" + $new_chart_version) else . end)' $JSON_FILE_PATH > tmp.json
+
+          # Debug 2
+          echo "Changes to be applied:"
+          diff -u $JSON_FILE_PATH tmp.json || echo "No differences in diff" 
+
           mv tmp.json $JSON_FILE_PATH
           git add $JSON_FILE_PATH
-          git diff --quiet || git commit -S -m "Update chart version in ${{ env.HELM_CHART }} to ${{ env.NEW_CHART_VERSION }}"
-          git push -u origin update/${{ env.HELM_CHART }}-${{ env.NEW_CHART_VERSION }}
+          if git diff --staged --quiet; then
+            echo "No changes to commit. The chart version might already be up-to-date."
+            exit 1
+          else
+            git commit -S -m "Update chart version in ${{ env.HELM_CHART }} to ${{ env.NEW_CHART_VERSION }}"
+            git push -u origin update/${{ env.HELM_CHART }}-${{ env.NEW_CHART_VERSION }}
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.TW_PAT }}
 
