@@ -281,6 +281,7 @@ reloader:
 
 eventListener:
   image: ghcr.io/scilifelabdatacentre/serve-event-listener/event-listener:v1.1.0
+  debug: true
   resources:
     requests:
       cpu: "100m"

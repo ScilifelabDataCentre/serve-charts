@@ -52,7 +52,7 @@ spec:
         - name: BASE_URL
           value: http://{{ .Release.Name }}-{{ .Values.studio.servicename }}:8080
         - name: DEBUG
-        {{- if .Values.studio.debug }}
+        {{- if .Values.eventListener.debug }}
           value: "true"
         {{- else }}
           value: "false"
