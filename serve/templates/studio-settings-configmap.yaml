@@ -18,6 +18,7 @@ data:
     import logging
     import os
     import sys
+    import json
     from pathlib import Path
 
     import colorlog
@@ -115,6 +116,7 @@ data:
         "api",
         "axes",  # django-axes for brute force login protection
         "django_password_validators",  # django-password-validators for password validation
+        "gmailapi_backend",
     ] + DJANGO_WIKI_APPS
 
     {{ if .Values.studio.custom_apps.enabled }}
@@ -405,29 +407,32 @@ data:
     {{ if .Values.studio.debug }}
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
     {{ else }}
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_BACKEND = "gmailapi_backend.service.GmailApiBackend"
     {{ end }}
     {{ if .Values.studio.emailService.enabled }}
-    EMAIL_HOST = {{ .Values.studio.emailService.host | quote}}
-    EMAIL_PORT = {{ .Values.studio.emailService.port }}
-    EMAIL_HOST_USER = os.environ["EMAIL_HOST_USER"]
-    EMAIL_HOST_PASSWORD = os.environ["EMAIL_HOST_PASSWORD"]
-    # EMAIL_DOMAIN_NAME = {{ .Values.studio.emailService.domainName | quote}}
-    # EMAIL_API_KEY = os.environ["EMAIL_API_KEY"]
-    # EMAIL_MAILGUN_API = {{ .Values.studio.emailService.apiEndpoint | quote}}
-    # EMAIL_NOTIFY_ON_ACCOUNT_REGISTER_LIST = [{{- range .Values.studio.emailService.notifyOnAccountRegisterList }}{{. | quote }},{{- end }}]
-    # DEFAULT_FROM_EMAIL = {{ .Values.studio.emailService.smtpEmailFrom | quote}}
+    EMAIL_FROM = 'noreply-serve@scilifelab.se'
+    GMAIL_USER = 'noreply-serve@scilifelab.se'
+    GMAIL_SCOPES = ['https://www.googleapis.com/auth/gmail.send']
+    GOOGLE_SERVICE_ACCOUNT = json.dumps(
+        {
+            "type": os.getenv('GOOGLE_SERVICE_ACCOUNT_TYPE'),
+            "project_id": os.getenv('GOOGLE_SERVICE_ACCOUNT_PROJECT_ID'),
+            "private_key_id": os.getenv('GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY_ID'),
+            "private_key": os.getenv('GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY').replace("\\n", "\n"),
+            "client_email": os.getenv('GOOGLE_SERVICE_ACCOUNT_CLIENT_EMAIL'),
+            "client_id": os.getenv('GOOGLE_SERVICE_ACCOUNT_CLIENT_ID'),
+            "auth_uri": os.getenv('GOOGLE_SERVICE_ACCOUNT_AUTH_URI'),
+            "token_uri": os.getenv('GOOGLE_SERVICE_ACCOUNT_TOKEN_URI'),
+            "auth_provider_x509_cert_url": os.getenv('GOOGLE_SERVICE_ACCOUNT_AUTH_PROVIDER_X509_CERT_URL'),
+            "client_x509_cert_url": os.getenv('GOOGLE_SERVICE_ACCOUNT_CLIENT_X509_CERT_URL'),
+            "universe_domain": os.getenv('GOOGLE_SERVICE_ACCOUNT_UNIVERSE_DOMAIN'),
+        }
+            )
     {{ else }}
     EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
     EMAIL_FILE_PATH =  os.path.join(BASE_DIR, 'sent_emails')
     {{ end }}
-    {{ if .Values.studio.emailService.ssl }}
-    EMAIL_USE_TLS = False
-    EMAIL_USE_SSL = True
-    {{ else }}
-    EMAIL_USE_TLS = True
-    {{ end }}
-    EMAIL_TEMPLATE_PROTOCOL = "https"
+
 
     VERSION = {{ .Values.studio.version | quote  }}
 

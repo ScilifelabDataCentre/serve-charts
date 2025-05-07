@@ -98,16 +98,61 @@ spec:
         - name: DJANGO_ADMIN_URL_PATH
           value: {{ .Values.studio.djangoAdminUrlPath }}
         {{ if .Values.studio.emailService.enabled }}
-        - name: EMAIL_HOST_USER
+        - name: GOOGLE_SERVICE_ACCOUNT_TYPE
           valueFrom:
             secretKeyRef:
               name: {{ include "stackn.secretName" . }}
-              key: email-host-user
-        - name: EMAIL_HOST_PASSWORD
+              key: email-google-service-account-type
+        - name: GOOGLE_SERVICE_ACCOUNT_PROJECT_ID
           valueFrom:
             secretKeyRef:
               name: {{ include "stackn.secretName" . }}
-              key: email-host-password
+              key: email-google-service-account-project-id
+        - name: GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.secretName" . }}
+              key: email-google-service-account-private-key-id
+        - name: GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.secretName" . }}
+              key: email-google-service-account-private-key
+        - name: GOOGLE_SERVICE_ACCOUNT_CLIENT_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.secretName" . }}
+              key: email-google-service-account-client-email
+        - name: GOOGLE_SERVICE_ACCOUNT_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.secretName" . }}
+              key: email-google-service-account-client-id
+        - name: GOOGLE_SERVICE_ACCOUNT_AUTH_URI
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.secretName" . }}
+              key: email-google-service-account-auth-uri
+        - name: GOOGLE_SERVICE_ACCOUNT_TOKEN_URI
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.secretName" . }}
+              key: email-google-service-account-token-uri
+        - name: GOOGLE_SERVICE_ACCOUNT_AUTH_PROVIDER_X509_CERT_URL
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.secretName" . }}
+              key: email-google-service-account-auth-provider-x509-cert-url
+        - name: GOOGLE_SERVICE_ACCOUNT_CLIENT_X509_CERT_URL
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.secretName" . }}
+              key: email-google-service-account-client-x509-cert-url
+        - name: GOOGLE_SERVICE_ACCOUNT_UNIVERSE_DOMAIN
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.secretName" . }}
+              key: email-google-service-account-universe-domain
         {{- end }}
         image: {{ .Values.studio.image.repository }}
         imagePullPolicy: {{ .Values.studio.image.pullPolicy }}
