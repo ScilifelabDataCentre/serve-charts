@@ -145,14 +145,6 @@ studio:
   djangoSecret: ''
   emailService:
     enabled: false
-    host: ''
-    port: 587
-    hostUser: ''
-    hostPassword: ''
-    smtpEmailFrom: ''
-    domainName: ''
-    apiEndpoint: ''
-    apiKey: ''
     notifyOnAccountRegisterList:
       - ''
     googleServiceAccount:
