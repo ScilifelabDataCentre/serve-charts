@@ -143,6 +143,10 @@ studio:
     initialDelaySeconds: 20
     periodSeconds: 20
   djangoSecret: ''
+  axes:
+    failure_limit: 20
+    cooloff_time: 2
+    ipware_proxy_count: 1
   emailService:
     enabled: false
     notifyOnAccountRegisterList:

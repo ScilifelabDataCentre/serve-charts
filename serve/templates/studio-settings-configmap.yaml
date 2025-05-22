@@ -270,9 +270,9 @@ data:
 
     # Settings for the Django Axes brute force login protection
     # Number of allowed login failures before action is taken
-    AXES_FAILURE_LIMIT = {{ .Values.studio.axes_failure_limit | default 10 }}
+    AXES_FAILURE_LIMIT = {{ .Values.studio.axes.failure_limit | default 10 }}
     # Duration in hours after which old failed login attempts will be cleared
-    AXES_COOLOFF_TIME = {{ .Values.studio.axes_cooloff_time | default 1 }}
+    AXES_COOLOFF_TIME = {{ .Values.studio.axes.cooloff_time | default 1 }}
     # Reset the number of failed attempts to 0 after a successful login
     AXES_RESET_ON_SUCCESS = True
     # Block failed attempts based on IP and username combination
@@ -283,6 +283,10 @@ data:
     AXES_DISABLE_ACCESS_LOG = True
     # The custom view template to display on locked out event
     AXES_LOCKOUT_TEMPLATE = "registration/locked_out.html"
+    # Configure AXES to use the real user client IP considering reverse proxy deployments
+    AXES_IPWARE_PROXY_COUNT = {{ .Values.studio.axes.ipware_proxy_count | default 1 }}  # Number of reverse proxies in front of Django (None or 1)
+    AXES_IPWARE_META_PRECEDENCE_ORDER = ["HTTP_X_FORWARDED_FOR", "HTTP_X_REAL_IP", "REMOTE_ADDR"]
+
 
     # Password validation
     # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
