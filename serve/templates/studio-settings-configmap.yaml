@@ -284,7 +284,7 @@ data:
     # The custom view template to display on locked out event
     AXES_LOCKOUT_TEMPLATE = "registration/locked_out.html"
     # Configure AXES to use the real user client IP considering reverse proxy deployments
-    AXES_IPWARE_PROXY_COUNT = {{ .Values.studio.axes.ipware_proxy_count | default 1 }}  # Number of reverse proxies in front of Django (None or 1)
+    AXES_IPWARE_PROXY_COUNT = {{ .Values.studio.axes.ipware_proxy_count | default 0 }}  # Number of reverse proxies in front of Django
     AXES_IPWARE_META_PRECEDENCE_ORDER = ["HTTP_X_FORWARDED_FOR", "HTTP_X_REAL_IP", "REMOTE_ADDR"]
 
 

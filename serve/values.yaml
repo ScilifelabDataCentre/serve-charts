@@ -144,9 +144,9 @@ studio:
     periodSeconds: 20
   djangoSecret: ''
   axes:
-    failure_limit: 20
-    cooloff_time: 2
-    ipware_proxy_count: 1
+    failure_limit: 5
+    cooloff_time: 0.1
+    ipware_proxy_count: 0
   emailService:
     enabled: false
     notifyOnAccountRegisterList:
