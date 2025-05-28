@@ -109,6 +109,7 @@ data:
         'guardian',
         "crispy_forms",
         "crispy_bootstrap5",
+        "waffle",
         "portal",
         "projects",
         "models",
@@ -140,7 +141,8 @@ data:
             "django.middleware.clickjacking.XFrameOptionsMiddleware",
             "corsheaders.middleware.CorsMiddleware",
             "axes.middleware.AxesMiddleware",
-            "studio.middleware.ExceptionLoggingMiddleware"
+            "studio.middleware.ExceptionLoggingMiddleware",
+            "waffle.middleware.WaffleMiddleware"
         ] 
         + DJANGO_WIKI_MIDDLEWARE
         + (STRUCTLOG_MIDDLEWARE if not DEBUG else [])
@@ -478,6 +480,7 @@ data:
     "netpolicy": 0,
     "filemanager": 1,
     "mlflow": 1,
+    "depictio": 1,
     }
     {{ if .Values.loki.enabled }}
     LOKI_SVC = {{ .Values.loki.host | quote}}
