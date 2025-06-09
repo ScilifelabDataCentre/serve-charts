@@ -3,6 +3,18 @@ entries:
   custom-app:
   - apiVersion: v1
     appVersion: "0.1"
+    created: "2025-06-09T09:39:40.686015325Z"
+    description: A Helm chart for a standard serve app
+    digest: 66a5497eef63435ab738d39b9d259eff862382db10ed14b895120433107701da
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: custom-app
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/custom-app-1.1.3/custom-app-1.1.3.tgz
+    version: 1.1.3
+  - apiVersion: v1
+    appVersion: "0.1"
     created: "2025-02-21T12:03:08.111702679Z"
     description: A Helm chart for a standard serve app
     digest: 010e427790423337f5cccef077838f5c829b5a5d419be1681193264956945383
@@ -76,6 +88,18 @@ entries:
   dash-app:
   - apiVersion: v1
     appVersion: "0.1"
+    created: "2025-06-09T09:39:40.828701589Z"
+    description: A Helm chart Dash apps
+    digest: 03041723aa790e30610644f8b6cdefcaf5352cae8842d4fda3d2f4089f82c3dc
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: dash-app
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/dash-app-1.0.5/dash-app-1.0.5.tgz
+    version: 1.0.5
+  - apiVersion: v1
+    appVersion: "0.1"
     created: "2025-02-21T12:03:08.249896507Z"
     description: A Helm chart Dash apps
     digest: 07d26b16aec24ba646f540680b21b44a052cd7b39c158c34137a033885fa1955
@@ -135,6 +159,18 @@ entries:
     - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/dash-app-1.0.0/dash-app-1.0.0.tgz
     version: 1.0.0
   filemanager:
+  - apiVersion: v1
+    appVersion: "0.1"
+    created: "2025-06-09T09:39:40.957654834Z"
+    description: A Helm chart for the serve File Manager
+    digest: 0155f646c8acff27f21bb659438a3afaf29a46fbefcc8df66d4837feea333dbf
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: filemanager
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/filemanager-1.0.6/filemanager-1.0.6.tgz
+    version: 1.0.6
   - apiVersion: v1
     appVersion: "0.1"
     created: "2025-03-17T12:35:17.525296463Z"
@@ -208,6 +244,18 @@ entries:
     - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/filemanager-1.0.0/filemanager-1.0.0.tgz
     version: 1.0.0
   lab:
+  - apiVersion: v1
+    appVersion: "0.1"
+    created: "2025-06-09T09:39:41.047465865Z"
+    description: A Helm chart for Jupyter Lab
+    digest: bb87e274871b0556b0e03c6437e0ee7bb75176279a539f3efba67547156c38a5
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: lab
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/lab-1.0.7/lab-1.0.7.tgz
+    version: 1.0.7
   - apiVersion: v1
     appVersion: "0.1"
     created: "2025-03-03T13:59:15.65369478Z"
@@ -308,6 +356,18 @@ entries:
   rstudio:
   - apiVersion: v1
     appVersion: "0.1"
+    created: "2025-06-09T09:39:41.175933379Z"
+    description: A Helm chart for RStudio in the browser
+    digest: 81814899c0e810369383829874208b606820c5a6be76791fae67c9f24442ef6e
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: rstudio
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/rstudio-1.0.6/rstudio-1.0.6.tgz
+    version: 1.0.6
+  - apiVersion: v1
+    appVersion: "0.1"
     created: "2025-03-17T12:35:17.669707567Z"
     description: A Helm chart for RStudio in the browser
     digest: 245a7f2d3b5499eec0fa1e4996a18edcc13ac89472a6fb77fa5d61e6f592700a
@@ -381,6 +441,18 @@ entries:
   shinyapp:
   - apiVersion: v1
     appVersion: "0.1"
+    created: "2025-06-09T09:39:41.328374495Z"
+    description: A Helm chart Shiny apps
+    digest: 551d59f9a16712629142c45f909b8008cae9de0ac4c09036d76f4329a4a60468
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: shinyapp
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/shinyapp-1.0.6/shinyapp-1.0.6.tgz
+    version: 1.0.6
+  - apiVersion: v1
+    appVersion: "0.1"
     created: "2025-02-21T12:03:08.586211777Z"
     description: A Helm chart Shiny apps
     digest: 6bd5df34ec5cc42be61e700dc83c55694b888ff1e2c60e39de8b2ea4ee6af71f
@@ -452,6 +524,19 @@ entries:
     - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/shinyapp-1.0.0/shinyapp-1.0.0.tgz
     version: 1.0.0
   shinyproxy:
+  - apiVersion: v2
+    appVersion: "0.1"
+    created: "2025-06-09T09:39:41.465842638Z"
+    description: A Helm chart to install Shinyproxy
+    digest: 43625fa2e44028ffd58623eb7e2c27320242f475781dc1bcd58ed918a284d9c2
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: shinyproxy
+    type: application
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/shinyproxy-1.4.5/shinyproxy-1.4.5.tgz
+    version: 1.4.5
   - apiVersion: v2
     appVersion: "0.1"
     created: "2025-01-30T15:36:09.498285201Z"
@@ -624,6 +709,18 @@ entries:
   tissuumaps:
   - apiVersion: v1
     appVersion: "0.1"
+    created: "2025-06-09T09:39:41.650000276Z"
+    description: A Helm chart tissuumaps apps
+    digest: 07c26eed4bfe444465268eff9896b77c59229cfe4adcb296738559fda0acf932
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: tissuumaps
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/tissuumaps-1.0.5/tissuumaps-1.0.5.tgz
+    version: 1.0.5
+  - apiVersion: v1
+    appVersion: "0.1"
     created: "2025-02-27T12:21:39.668295828Z"
     description: A Helm chart tissuumaps apps
     digest: 5f2fa0d8771d9871e74ec9b411dc266e574315a89a310abe31c60ba53f986cac
@@ -698,6 +795,18 @@ entries:
   vscode:
   - apiVersion: v1
     appVersion: "0.1"
+    created: "2025-06-09T09:39:41.801676513Z"
+    description: A Helm chart for VS code in the browser
+    digest: e6bd7f82b599004133caa86130a74cdfba1ca6dc33bd8e27e63707d59653a2a3
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: vscode
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/vscode-1.0.5/vscode-1.0.5.tgz
+    version: 1.0.5
+  - apiVersion: v1
+    appVersion: "0.1"
     created: "2025-03-17T12:35:17.787410712Z"
     description: A Helm chart for VS code in the browser
     digest: 52ca5f7c8933706fa3cb56220e529b71df73aed34707d7f4ce3325e768eb7419
@@ -756,4 +865,4 @@ entries:
     urls:
     - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/vscode-1.0.0/vscode-1.0.0.tgz
     version: 1.0.0
-generated: "2025-03-17T12:35:17.787625301Z"
+generated: "2025-06-09T09:39:41.802009259Z"
