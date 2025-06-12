@@ -143,6 +143,10 @@ studio:
     initialDelaySeconds: 20
     periodSeconds: 20
   djangoSecret: ''
+  axes:
+    failure_limit: 5
+    cooloff_time: 0.1
+    ipware_proxy_count: 0
   emailService:
     enabled: false
     notifyOnAccountRegisterList:
@@ -285,6 +289,7 @@ reloader:
 
 eventListener:
   image: ghcr.io/scilifelabdatacentre/serve-event-listener/event-listener:v1.1.0
+  debug: true
   resources:
     requests:
       cpu: "100m"

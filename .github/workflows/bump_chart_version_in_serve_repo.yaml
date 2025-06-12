@@ -1,0 +1,122 @@
+name: New Helm chart version
+
+on:
+  pull_request:
+    paths:
+      - "apps/**/Chart.yaml"
+
+jobs:
+  update-json:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          token: ${{ secrets.TW_PAT }}
+          
+      - name: Find changed Chart.yaml and set variables
+        id: find-app
+        run: |
+          # Find the changed Chart.yaml file
+          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD | grep "apps/.*Chart.yaml" || echo "")
+          
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "No Chart.yaml files changed. Exiting."
+            exit 0
+          fi
+          
+          # Extract app name from path
+          APP_NAME=$(echo "$CHANGED_FILES" | head -n 1 | sed -E 's|apps/([^/]+)/Chart.yaml|\1|')
+          echo "Found changed app: $APP_NAME"
+          
+          # Map the app name to helm name
+          case "$APP_NAME" in
+            "custom-app") HELM_NAME="custom-app" ;;
+            "dash") HELM_NAME="dash-app" ;;
+            "filemanager") HELM_NAME="filemanager" ;;
+            "jupyter-lab") HELM_NAME="lab" ;;
+            "rstudio") HELM_NAME="rstudio" ;;
+            "shiny") HELM_NAME="shinyapp" ;;
+            "shinyproxy") HELM_NAME="shinyproxy" ;;
+            "tissuumaps") HELM_NAME="tissuumaps" ;;
+            *) 
+              echo "Unknown app: $APP_NAME. Exiting."
+              exit 1
+              ;;
+          esac
+          
+          # Get the chart version
+          CHART_PATH="apps/$APP_NAME/Chart.yaml"
+          NEW_CHART_VERSION=$(yq e '.version' $CHART_PATH)
+          
+          # Export variables for later steps
+          echo "HELM_CHART=$HELM_NAME" >> "$GITHUB_ENV"
+          echo "APP_NAME=$APP_NAME" >> "$GITHUB_ENV"
+          echo "NEW_CHART_VERSION=$NEW_CHART_VERSION" >> "$GITHUB_ENV"
+          echo "JSON_FILE_PATH=fixtures/apps_fixtures.json" >> "$GITHUB_ENV"
+
+      - name: Set up the SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.TW_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      - name: Clone the Serve repository
+        run: |
+          git config --global user.name "$GITHUB_ACTOR"
+          git config --global user.email "teamwhale@scilifelab.se"
+          # Check if the directory already exists
+          if [ -d "serve" ]; then
+            echo "Directory 'serve' already exists, removing it first..."
+            rm -rf serve
+          fi
+          git clone git@github.com:ScilifelabDataCentre/serve.git
+
+      - name: Import GPG key and configure commit signing
+        run: |
+          echo "${{ secrets.TW_GPG_PRIVATE_KEY }}" | gpg --batch --import
+          git config --global user.signingkey "${{ secrets.GPG_KEY_ID }}"
+          git config --global commit.gpgsign true
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.TW_GPG_PRIVATE_KEY }}
+
+      - name: Update JSON file in the Serve repository
+        run: |
+          cd serve
+          git checkout develop
+          git checkout -b update/${{ env.HELM_CHART }}-${{ env.NEW_CHART_VERSION }}
+
+          # Check if pattern exists in the JSON file
+          grep -A 1 "${{ env.HELM_CHART }}" $JSON_FILE_PATH || echo "Pattern not found"
+
+          jq -M --arg new_chart_version "$NEW_CHART_VERSION" 'map(if .fields.chart | contains("${{ env.HELM_CHART }}:") then .fields.chart |= sub(":[^:]+$"; ":" + $new_chart_version) else . end)' $JSON_FILE_PATH > tmp.json
+
+          # Check if the jq command was successful
+          echo "Changes to be applied:"
+          diff -u $JSON_FILE_PATH tmp.json || echo "No differences in diff" 
+
+          mv tmp.json $JSON_FILE_PATH
+          git add $JSON_FILE_PATH
+          if git diff --staged --quiet; then
+            echo "No changes to commit. The chart version might already be up-to-date."
+            exit 1
+          else
+            git commit -S -m "Update chart version in ${{ env.HELM_CHART }} to ${{ env.NEW_CHART_VERSION }}"
+            git push -u origin update/${{ env.HELM_CHART }}-${{ env.NEW_CHART_VERSION }}
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.TW_PAT }}
+
+      - name: Create a pull request in the Serve repository
+        run: |
+          gh pr create \
+            --repo ScilifelabDataCentre/serve \
+            --head update/${{ env.HELM_CHART }}-${{ env.NEW_CHART_VERSION }} \
+            --base develop \
+            --title "[Automated PR] Update chart version in ${{ env.HELM_CHART }} to ${{ env.NEW_CHART_VERSION }}" \
+            --body "This PR updates the \`chart\` field in \`app_fixtures.json\` to use the new version: \`${{ env.NEW_CHART_VERSION }}\`.
+          Please review and merge if everything looks good."
+        env:
+          GITHUB_TOKEN: ${{ secrets.TW_PAT }}
