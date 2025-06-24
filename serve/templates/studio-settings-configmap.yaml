@@ -34,7 +34,7 @@ data:
     ]
 
     # Build paths inside the project like this: BASE_DIR / 'subdir'.
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    BASE_DIR = Path(__file__).resolve().parent.parent
 
     # Quick-start development settings - unsuitable for production
     # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -215,7 +215,7 @@ data:
     TEMPLATES = [
         {
             'BACKEND': 'django.template.backends.django.DjangoTemplates',
-            'DIRS': [os.path.join(BASE_DIR, 'templates')],
+            'DIRS': [BASE_DIR / 'templates'],
             'APP_DIRS': True,
             'OPTIONS': {
                 'context_processors': [
@@ -232,6 +232,10 @@ data:
             },
         },
     ]
+    EMAIL_TEMPLATES = []
+    for path in (TEMPLATES[0]["DIRS"][0] / "admin" / "email").iterdir():
+        if path.is_file() and path.suffix in [".html", ".txt"]:
+            EMAIL_TEMPLATES.append(f"admin/email/{path.name}")
 
     WSGI_APPLICATION = 'studio.wsgi.application'
     ASGI_APPLICATION = 'studio.asgi.application'
@@ -410,13 +414,14 @@ data:
     CSRF_TRUSTED_ORIGINS = ['https://*{{ .Values.session_cookie_domain }}','https://*.127.0.0.1'] + [{{ .Values.studio.csrf_trusted_origins | quote}}]
 
     # Email
+    DEFAULT_FROM_EMAIL = "serve@scilifelab.se"
+    EMAIL_FROM = 'noreply-serve@scilifelab.se'
     {{ if .Values.studio.debug }}
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
     {{ else }}
     EMAIL_BACKEND = "gmailapi_backend.service.GmailApiBackend"
     {{ end }}
     {{ if .Values.studio.emailService.enabled }}
-    EMAIL_FROM = 'noreply-serve@scilifelab.se'
     GMAIL_USER = 'noreply-serve@scilifelab.se'
     GMAIL_SCOPES = ['https://www.googleapis.com/auth/gmail.send']
     GOOGLE_SERVICE_ACCOUNT = json.dumps(
