@@ -46,8 +46,10 @@ data:
     # SECURITY WARNING: don't run with debug turned on in production
     {{ if .Values.studio.debug }}
     DEBUG = True
+    DEVELOP_LOGS_ENABLED = True
     {{ else }}
     DEBUG = False
+    DEVELOP_LOGS_ENABLED = False
     {{ end }}
 
     if DEBUG:
@@ -87,7 +89,7 @@ data:
     STRUCTLOG_MIDDLEWARE = [
         "django_structlog.middlewares.RequestMiddleware"
         ]
-    DJANGO_STRUCTLOG_CELERY_ENABLED = not DEBUG
+    DJANGO_STRUCTLOG_CELERY_ENABLED = not DEVELOP_LOGS_ENABLED
 
     # Application definition
 
@@ -145,7 +147,7 @@ data:
             "waffle.middleware.WaffleMiddleware"
         ] 
         + DJANGO_WIKI_MIDDLEWARE
-        + (STRUCTLOG_MIDDLEWARE if not DEBUG else [])
+        + (STRUCTLOG_MIDDLEWARE if not DEVELOP_LOGS_ENABLED else [])
     )
 
     
@@ -540,11 +542,11 @@ data:
         },
         "loggers": {
             "": {
-                "handlers": ["console" if DEBUG else "json"],
-                "level": "DEBUG" if DEBUG else "INFO",
+                "handlers": ["console" if DEVELOP_LOGS_ENABLED else "json"],
+                "level": "DEBUG" if DEVELOP_LOGS_ENABLED else "INFO",
             },
             "django.server": {
-                "handlers": ["console" if DEBUG else "json"],
+                "handlers": ["console" if DEVELOP_LOGS_ENABLED else "json"],
                 "level": "WARNING",
                 "propagate": False,
             },
@@ -553,7 +555,7 @@ data:
     
     LOGGING = add_loggers(LOGGING, INSTALLED_APPS)
     
-    if not DEBUG:
+    if not DEVELOP_LOGS_ENABLED:
         structlog.configure(
             processors=[
                 structlog.contextvars.merge_contextvars,
