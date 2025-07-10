@@ -118,8 +118,26 @@ spec:
             secretKeyRef:
               name: {{ include "stackn.secretName" . }}
               key: github-api-token
+        - name: GITHUB_API_USERNAME
+          value: {{ .Values.studio.githubApiUsername | quote }}
         {{ else }}
         - name: GITHUB_API_TOKEN
+          value: ""
+        - name: GITHUB_API_USERNAME
+          value: ""
+        {{ end }}
+        {{ if not .Values.studio.dockerhubUsername }}
+        - name: DOCKER_HUB_USERNAME
+          value: {{ .Values.studio.dockerhubUsername | quote }}
+        - name: DOCKER_HUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "stackn.secretName" . }}
+              key: docker-hub-token
+        {{ else }}
+        - name: DOCKER_HUB_USERNAME
+          value: ""
+        - name: DOCKER_HUB_TOKEN
           value: ""
         {{ end }}
         - name: RABBITMQ_DEFAULT_PASS

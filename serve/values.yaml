@@ -173,6 +173,9 @@ studio:
     maxSize: 4
     timeout: 10
   githubApiToken:
+  githubApiUsername:
+  dockerhubToken:
+  dockerhubUsername:
 
 #kubernetes config
 kubeconfig: ""
