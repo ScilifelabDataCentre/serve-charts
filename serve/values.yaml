@@ -204,6 +204,7 @@ ingress:
 # Here we use https://charts.bitnami.com/bitnami postgresql chart 
 
 # Postgres deploy with a single-pod database:
+# https://github.com/bitnami/charts/tree/main/bitnami/postgresql#postgresql-common-parameters
 postgresql:
   enabled: true
   fullnameOverride: studio-postgres
@@ -227,7 +228,10 @@ postgresql:
         - *access_mode
       storageClass: *storage_class
     podLabels: {"app":"stackn-studio"}
+  image:
+    repository: "bitnamilegacy/postgresql"
 
+# https://github.com/bitnami/charts/tree/main/bitnami/redis
 redis:
   enabled: true
   commonAnnotations: {"reloader.stakater.com/auto": "true"}
@@ -236,13 +240,18 @@ redis:
   replica:
     replicaCount: 1
     podLabels: {"app":"stackn-studio"}
+  image:
+    repository: "bitnamilegacy/redis"
 
+# https://github.com/bitnami/charts/tree/b41a51d1bd04841fc108b78d3b8357a5292771c8/bitnami/rabbitmq
 rabbitmq:
   enabled: true
   commonAnnotations: {"reloader.stakater.com/auto": "true"}
   podLabels: {"app":"stackn-studio","allow-api-access": "true"}
   persistence:
     enabled: true
+  image:
+    repository: "bitnamilegacy/rabbitmq"
 
 # Will be added in future release, for now keep "enabled:false"
 postgresql-ha:
