@@ -288,7 +288,7 @@ reloader:
     watchGlobally: false
 
 eventListener:
-  image: ghcr.io/scilifelabdatacentre/serve-event-listener/event-listener:v1.1.0
+  image: ghcr.io/scilifelabdatacentre/serve-event-listener/event-listener:v1.1.1
   debug: true
   resources:
     requests:
