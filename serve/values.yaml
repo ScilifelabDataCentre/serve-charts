@@ -207,6 +207,7 @@ ingress:
 # Here we use https://charts.bitnami.com/bitnami postgresql chart 
 
 # Postgres deploy with a single-pod database:
+# https://github.com/bitnami/charts/tree/main/bitnami/postgresql#postgresql-common-parameters
 postgresql:
   enabled: true
   fullnameOverride: studio-postgres
@@ -230,7 +231,11 @@ postgresql:
         - *access_mode
       storageClass: *storage_class
     podLabels: {"app":"stackn-studio"}
+  image:
+    repository: "bitnamilegacy/postgresql"
+    tag: "15.2.0-debian-11-r16"
 
+# https://github.com/bitnami/charts/tree/main/bitnami/redis
 redis:
   enabled: true
   commonAnnotations: {"reloader.stakater.com/auto": "true"}
@@ -239,13 +244,20 @@ redis:
   replica:
     replicaCount: 1
     podLabels: {"app":"stackn-studio"}
+  image:
+    repository: "bitnamilegacy/redis"
+    tag: "7.0.8-debian-11-r11"
 
+# https://github.com/bitnami/charts/tree/b41a51d1bd04841fc108b78d3b8357a5292771c8/bitnami/rabbitmq
 rabbitmq:
   enabled: true
   commonAnnotations: {"reloader.stakater.com/auto": "true"}
   podLabels: {"app":"stackn-studio","allow-api-access": "true"}
   persistence:
     enabled: true
+  image:
+    repository: "bitnamilegacy/rabbitmq"
+    tag: "3.11.18-debian-11-r0"
 
 # Will be added in future release, for now keep "enabled:false"
 postgresql-ha:
@@ -291,7 +303,7 @@ reloader:
     watchGlobally: false
 
 eventListener:
-  image: ghcr.io/scilifelabdatacentre/serve-event-listener/event-listener:v1.1.0
+  image: ghcr.io/scilifelabdatacentre/serve-event-listener/event-listener:v1.1.1
   debug: true
   resources:
     requests:

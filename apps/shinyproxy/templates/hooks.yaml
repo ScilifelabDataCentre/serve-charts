@@ -20,7 +20,7 @@ spec:
       serviceAccountName: {{ .Release.Namespace }}-shinyproxy
       containers:
       - name: delete-user-pods
-        image: bitnami/kubectl:{{ .Capabilities.KubeVersion.Major }}.{{ .Capabilities.KubeVersion.Minor }}
+        image: bitnamilegacy/kubectl:{{ .Capabilities.KubeVersion.Major }}.{{ .Capabilities.KubeVersion.Minor }}
         args:
           - "delete"
           - "pods"
