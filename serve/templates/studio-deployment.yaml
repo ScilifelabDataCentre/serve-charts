@@ -126,7 +126,7 @@ spec:
         - name: GITHUB_API_USERNAME
           value: ""
         {{ end }}
-        {{ if not .Values.studio.dockerhubUsername }}
+        {{ if .Values.studio.dockerhubUsername }}
         - name: DOCKER_HUB_USERNAME
           value: {{ .Values.studio.dockerhubUsername | quote }}
         - name: DOCKER_HUB_TOKEN
