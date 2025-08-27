@@ -34,7 +34,7 @@ data:
     ]
 
     # Build paths inside the project like this: BASE_DIR / 'subdir'.
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    BASE_DIR = Path(__file__).resolve().parent.parent
 
     # Quick-start development settings - unsuitable for production
     # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -46,8 +46,10 @@ data:
     # SECURITY WARNING: don't run with debug turned on in production
     {{ if .Values.studio.debug }}
     DEBUG = True
+    DEVELOP_LOGS_ENABLED = True
     {{ else }}
     DEBUG = False
+    DEVELOP_LOGS_ENABLED = False
     {{ end }}
 
     if DEBUG:
@@ -87,7 +89,7 @@ data:
     STRUCTLOG_MIDDLEWARE = [
         "django_structlog.middlewares.RequestMiddleware"
         ]
-    DJANGO_STRUCTLOG_CELERY_ENABLED = not DEBUG
+    DJANGO_STRUCTLOG_CELERY_ENABLED = not DEVELOP_LOGS_ENABLED
 
     # Application definition
 
@@ -145,7 +147,7 @@ data:
             "waffle.middleware.WaffleMiddleware"
         ] 
         + DJANGO_WIKI_MIDDLEWARE
-        + (STRUCTLOG_MIDDLEWARE if not DEBUG else [])
+        + (STRUCTLOG_MIDDLEWARE if not DEVELOP_LOGS_ENABLED else [])
     )
 
     
@@ -215,7 +217,7 @@ data:
     TEMPLATES = [
         {
             'BACKEND': 'django.template.backends.django.DjangoTemplates',
-            'DIRS': [os.path.join(BASE_DIR, 'templates')],
+            'DIRS': [BASE_DIR / 'templates'],
             'APP_DIRS': True,
             'OPTIONS': {
                 'context_processors': [
@@ -232,6 +234,10 @@ data:
             },
         },
     ]
+    EMAIL_TEMPLATES = []
+    for path in sorted((Path(BASE_DIR, "templates", "admin", "email")).iterdir(), key=lambda p: p.name):
+        if path.is_file() and path.suffix in [".html", ".txt"]:
+            EMAIL_TEMPLATES.append(f"admin/email/{path.name}")
 
     WSGI_APPLICATION = 'studio.wsgi.application'
     ASGI_APPLICATION = 'studio.asgi.application'
@@ -374,10 +380,13 @@ data:
     # Docker hub API
     DOCKER_HUB_REPO_SEARCH = 'https://hub.docker.com/v2/search/repositories'
     DOCKER_HUB_TAG_SEARCH = 'https://hub.docker.com/v2/repositories'
+    DOCKER_HUB_TOKEN = os.getenv("DOCKER_HUB_TOKEN")
+    DOCKER_HUB_USERNAME = os.getenv("DOCKER_HUB_USERNAME")
 
     # GHCR API
     GITHUB_API = 'https://api.github.com'
     GITHUB_API_TOKEN = os.getenv('GITHUB_API_TOKEN')
+    GITHUB_API_USERNAME = os.getenv('GITHUB_API_USERNAME')
 
     # Apps
     APPS_MODEL = "apps.Apps"
@@ -410,13 +419,14 @@ data:
     CSRF_TRUSTED_ORIGINS = ['https://*{{ .Values.session_cookie_domain }}','https://*.127.0.0.1'] + [{{ .Values.studio.csrf_trusted_origins | quote}}]
 
     # Email
+    DEFAULT_FROM_EMAIL = "serve@scilifelab.se"
+    EMAIL_FROM = 'noreply-serve@scilifelab.se'
     {{ if .Values.studio.debug }}
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
     {{ else }}
     EMAIL_BACKEND = "gmailapi_backend.service.GmailApiBackend"
     {{ end }}
     {{ if .Values.studio.emailService.enabled }}
-    EMAIL_FROM = 'noreply-serve@scilifelab.se'
     GMAIL_USER = 'noreply-serve@scilifelab.se'
     GMAIL_SCOPES = ['https://www.googleapis.com/auth/gmail.send']
     GOOGLE_SERVICE_ACCOUNT = json.dumps(
@@ -535,11 +545,11 @@ data:
         },
         "loggers": {
             "": {
-                "handlers": ["console" if DEBUG else "json"],
-                "level": "DEBUG" if DEBUG else "INFO",
+                "handlers": ["console" if DEVELOP_LOGS_ENABLED else "json"],
+                "level": "DEBUG" if DEVELOP_LOGS_ENABLED else "INFO",
             },
             "django.server": {
-                "handlers": ["console" if DEBUG else "json"],
+                "handlers": ["console" if DEVELOP_LOGS_ENABLED else "json"],
                 "level": "WARNING",
                 "propagate": False,
             },
@@ -548,7 +558,7 @@ data:
     
     LOGGING = add_loggers(LOGGING, INSTALLED_APPS)
     
-    if not DEBUG:
+    if not DEVELOP_LOGS_ENABLED:
         structlog.configure(
             processors=[
                 structlog.contextvars.merge_contextvars,
@@ -567,4 +577,4 @@ data:
         )
 
     # k8s cluster version for validation of manifests
-    CLUSTER_VERSION = "1.31"
+    CLUSTER_VERSION = "1.32"
