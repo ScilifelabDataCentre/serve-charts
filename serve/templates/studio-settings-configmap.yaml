@@ -495,6 +495,7 @@ data:
     {{ if .Values.loki.enabled }}
     LOKI_SVC = {{ .Values.loki.host | quote}}
     {{ end }}
+    LOKI_READER_ENDPOINT = "http://loki-read-headless.loki-stack.svc.cluster.local:3100"
     PROJECTS_PER_USER_LIMIT = 10
     STUDIO_ACCESSMODE = os.environ.get("STUDIO_ACCESSMODE", "")
     {{ if .Values.studio.enable_project_extra_settings }}
@@ -592,3 +593,13 @@ data:
             "silk.middleware.SilkyMiddleware",
             "debug_toolbar.middleware.DebugToolbarMiddleware",
         ] + MIDDLEWARE
+
+    # Django cache
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/1",
+            "KEY_PREFIX": "serve",
+            "TIMEOUT": 7200,
+        }
+    }
