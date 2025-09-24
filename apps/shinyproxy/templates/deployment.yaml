@@ -39,7 +39,10 @@ spec:
       - name: serve
         image: {{ .Values.appconfig.proxyimage }}
         ports:
-          - containerPort: {{ .Values.appconfig.proxyport }}
+          - name: access
+            containerPort: {{ .Values.appconfig.proxyport }}
+          - name: management
+            containerPort: 9091
         volumeMounts:
           - name: application-conf-{{ .Release.Name }}
             mountPath: /opt/shinyproxy/config
