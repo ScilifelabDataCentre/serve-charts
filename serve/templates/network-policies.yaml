@@ -410,7 +410,7 @@ spec:
   policyTypes:
   - Egress
   egress:
-    to:
+    - to:
       - podSelector:
           matchExpressions:
             - key: app
@@ -419,10 +419,10 @@ spec:
                 - shinyproxy-deployment
           matchLabels:
             app: shinyproxy-deployment
-    ports:
-    - protocol: TCP
-      port: 8080
-    - protocol: TCP
-      port: 9091
+      ports:
+      - protocol: TCP
+        port: 8080
+      - protocol: TCP
+        port: 9091
 {{- end }}
 {{- end }}
