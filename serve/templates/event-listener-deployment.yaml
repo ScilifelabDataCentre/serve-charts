@@ -57,6 +57,10 @@ spec:
         {{- else }}
           value: "false"
         {{- end }}
+        - name: TLS_SSL_VERIFICATION
+          value: {{ .Values.eventListener.tlsSSLVerification | default "1" | quote }}
+        - name: APP_PROBE_STATUSES
+          value: {{ .Values.eventListener.appProbeStatuses | default "Running,Deleted" | quote }}
         - name: USERNAME
           value: {{ include "stackn.studio.eventuser.email" . }}
         - name: PASSWORD
