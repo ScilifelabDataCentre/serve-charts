@@ -7,8 +7,13 @@ metadata:
     run: {{ .Release.Name }}-shinyapp
 spec:
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: {{ .Values.appconfig.proxyport }}
+    - name: access
+      protocol: TCP
+      port: 80
+      targetPort: {{ .Values.appconfig.proxyport }}
+    - name: management
+      port: 9091
+      targetPort: management    # resolves to containerPort 9091
+      protocol: TCP
   selector:
     release: {{ $.Release.Name }}

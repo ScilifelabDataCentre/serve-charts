@@ -355,10 +355,11 @@ data:
     REDIS_PORT = 6379
     REDIS_DB = 0
     REDIS_HOST = os.environ.get('REDIS_PORT_6379_TCP_ADDR', '{{ .Release.Name }}-redis-master') #TODO: fetch service dns from bitnami/redis instead
-   
+    REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD', '{{ .Values.redis.auth.password }}')
+
     # Celery settings
     CELERY_BROKER_URL = 'amqp://{{ include "stackn.rabbit.username" . }}:{}@{{ include "common.names.fullname" .Subcharts.rabbitmq }}:{{ .Values.rabbitmq.containerPorts.amqp }}//'.format(os.environ.get("RABBITMQ_DEFAULT_PASS"))
-    CELERY_RESULT_BACKEND = 'redis://:%s@%s:%d/%d' % (os.environ.get("REDIS_PASSWORD"),REDIS_HOST, REDIS_PORT, REDIS_DB)
+    CELERY_RESULT_BACKEND = f"redis://{f':{REDIS_PASSWORD}@' if REDIS_PASSWORD else ''}{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
     CELERY_TASK_SERIALIZER = 'json'
     CELERY_RESULT_SERIALIZER = 'json'
     CELERY_ACCEPT_CONTENT = ['json']
@@ -495,6 +496,7 @@ data:
     {{ if .Values.loki.enabled }}
     LOKI_SVC = {{ .Values.loki.host | quote}}
     {{ end }}
+    LOKI_READER_ENDPOINT = "http://loki-read-headless.loki-stack.svc.cluster.local:3100"
     PROJECTS_PER_USER_LIMIT = 10
     STUDIO_ACCESSMODE = os.environ.get("STUDIO_ACCESSMODE", "")
     {{ if .Values.studio.enable_project_extra_settings }}
@@ -578,3 +580,27 @@ data:
 
     # k8s cluster version for validation of manifests
     CLUSTER_VERSION = "1.32"
+
+    # Serve profiling image
+    PROFILING_ENABLED = os.getenv("PROFILING_ENABLED", "false").lower() == "true"
+
+    if PROFILING_ENABLED:
+        INSTALLED_APPS = INSTALLED_APPS + [
+            "silk",
+            "debug_toolbar",
+        ]
+
+        MIDDLEWARE = [
+            "silk.middleware.SilkyMiddleware",
+            "debug_toolbar.middleware.DebugToolbarMiddleware",
+        ] + MIDDLEWARE
+
+    # Django cache
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": f"redis://{f':{REDIS_PASSWORD}@' if REDIS_PASSWORD else ''}{REDIS_HOST}:{REDIS_PORT}/1",
+            "KEY_PREFIX": "serve",
+            "TIMEOUT": 7200,
+        }
+    }

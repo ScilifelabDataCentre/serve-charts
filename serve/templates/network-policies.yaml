@@ -373,5 +373,56 @@ spec:
       web: studio-web
   policyTypes:
     - Egress
+---
+# this policy enables retrieving MLflow server storage information on credential page (SS-1380)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-from-studio-to-minio
+  namespace: {{ .Values.namespace | default "default" }}
+spec:
+  podSelector:
+    matchLabels:
+      app: stackn-studio
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/component: minio
+    ports:
+    - protocol: TCP
+      port: 80
+    - protocol: TCP
+      port: 9000
+---
+# This policy allows studio pods such as the event listener to check status of shiny proxy apps (SS-1531)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-studio-to-shinyproxy
+  namespace: {{ .Values.namespace | default "default" }}
+spec:
+  podSelector:
+    matchLabels:
+      app: stackn-studio
+  policyTypes:
+  - Egress
+  egress:
+    - to:
+      - podSelector:
+          matchExpressions:
+            - key: app
+              operator: In
+              values:
+                - shinyproxy-deployment
+          matchLabels:
+            app: shinyproxy-deployment
+      ports:
+      - protocol: TCP
+        port: 8080
+      - protocol: TCP
+        port: 9091
 {{- end }}
 {{- end }}
