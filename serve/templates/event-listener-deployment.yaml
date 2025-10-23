@@ -66,8 +66,13 @@ spec:
         - name: PASSWORD
           valueFrom:
             secretKeyRef:
+              {{- if eq .Values.environment "remote" }}
+              name: serve-dev-bitwarden-secret
+              key: event-user-password
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: event-user-password
+              {{- end }}
         resources:
           limits:
             cpu: {{ .Values.eventListener.resources.limits.cpu }}

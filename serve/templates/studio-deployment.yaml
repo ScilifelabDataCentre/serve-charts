@@ -87,8 +87,13 @@ spec:
         - name: DJANGO_SUPERUSER_PASSWORD
           valueFrom:
             secretKeyRef:
+              {{- if eq .Values.environment "remote" }}
+              name: serve-dev-bitwarden-secret
+              key: studio-superuser-password
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: studio-superuser-password
+              {{- end }}
         - name: DJANGO_ADMIN_URL_PATH
           value: {{ .Values.studio.djangoAdminUrlPath }}
         - name: EVENT_USER_EMAIL
@@ -96,15 +101,25 @@ spec:
         - name: EVENT_USER_PASSWORD
           valueFrom:
             secretKeyRef:
+              {{- if eq .Values.environment "remote" }}
+              name: serve-dev-bitwarden-secret
+              key: event-user-password
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: event-user-password
+              {{- end }}
         - name: GET_HOSTS_FROM
           value: dns
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
+              {{- if eq .Values.environment "remote" }}
+              name: serve-dev-bitwarden-secret
+              key: postgresql-password
+              {{- else }}
               name: {{ include "stackn.postgres.secretName" . }}
               key: password
+              {{- end }}
         - name: POSTGRES_USER
           value: {{ .Values.postgresql.global.postgresql.auth.user }}
         - name: REDIS_PASSWORD
@@ -116,8 +131,13 @@ spec:
         - name: GITHUB_API_TOKEN
           valueFrom:
             secretKeyRef:
+              {{- if eq .Values.environment "remote" }}
+              name: serve-dev-bitwarden-secret
+              key: github-api-token
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: github-api-token
+              {{- end }}
         - name: GITHUB_API_USERNAME
           value: {{ .Values.studio.githubApiUsername | quote }}
         {{ else }}
@@ -132,8 +152,13 @@ spec:
         - name: DOCKER_HUB_TOKEN
           valueFrom:
             secretKeyRef:
+              {{- if eq .Values.environment "remote" }}
+              name: serve-dev-bitwarden-secret
+              key: docker-hub-token
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: docker-hub-token
+              {{- end }}
         {{ else }}
         - name: DOCKER_HUB_USERNAME
           value: ""
@@ -143,8 +168,13 @@ spec:
         - name: RABBITMQ_DEFAULT_PASS
           valueFrom:
             secretKeyRef:
+              {{- if eq .Values.environment "remote" }}
+              name: serve-dev-bitwarden-secret
+              key: rabbitmq-password
+              {{- else }}
               name: {{ include "stackn.rabbit.secretName" . }}
               key: rabbitmq-password
+              {{- end }}
         {{- if .Values.chartcontroller.addSecret }}
         - name: KUBECONFIG
           value: {{ .Values.studio.kubeconfig_file | quote }}
@@ -152,64 +182,124 @@ spec:
         - name: DJANGO_SECRET
           valueFrom:
             secretKeyRef:
+              {{- if eq .Values.environment "remote" }}
+              name: serve-dev-bitwarden-secret
+              key: django-secret-key
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: django-secret-key
+              {{- end }}
         {{ if .Values.studio.emailService.enabled }}
         - name: GOOGLE_SERVICE_ACCOUNT_TYPE
           valueFrom:
             secretKeyRef:
+              {{- if eq .Values.environment "remote" }}
+              name: serve-dev-bitwarden-secret
+              key: email-google-service-account-type
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: email-google-service-account-type
+              {{- end }}
         - name: GOOGLE_SERVICE_ACCOUNT_PROJECT_ID
           valueFrom:
             secretKeyRef:
+              {{- if eq .Values.environment "remote" }}
+              name: serve-dev-bitwarden-secret
+              key: email-google-service-account-project-id
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: email-google-service-account-project-id
+              {{- end }}
         - name: GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY_ID
           valueFrom:
             secretKeyRef:
+              {{- if eq .Values.environment "remote" }}
+              name: serve-dev-bitwarden-secret
+              key: email-google-service-account-private-key-id
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: email-google-service-account-private-key-id
+              {{- end }}
         - name: GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY
           valueFrom:
             secretKeyRef:
+              {{- if eq .Values.environment "remote" }}
+              name: serve-dev-bitwarden-secret
+              key: email-google-service-account-private-key
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: email-google-service-account-private-key
+              {{- end }}
         - name: GOOGLE_SERVICE_ACCOUNT_CLIENT_EMAIL
           valueFrom:
             secretKeyRef:
+              {{- if eq .Values.environment "remote" }}
+              name: serve-dev-bitwarden-secret
+              key: email-google-service-account-client-email
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: email-google-service-account-client-email
+              {{- end }}
         - name: GOOGLE_SERVICE_ACCOUNT_CLIENT_ID
           valueFrom:
             secretKeyRef:
+              {{- if eq .Values.environment "remote" }}
+              name: serve-dev-bitwarden-secret
+              key: email-google-service-account-client-id
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: email-google-service-account-client-id
+              {{- end }}
         - name: GOOGLE_SERVICE_ACCOUNT_AUTH_URI
           valueFrom:
             secretKeyRef:
+              {{- if eq .Values.environment "remote" }}
+              name: serve-dev-bitwarden-secret
+              key: email-google-service-account-auth-uri
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: email-google-service-account-auth-uri
+              {{- end }}
         - name: GOOGLE_SERVICE_ACCOUNT_TOKEN_URI
           valueFrom:
             secretKeyRef:
+              {{- if eq .Values.environment "remote" }}
+              name: serve-dev-bitwarden-secret
+              key: email-google-service-account-token-uri
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: email-google-service-account-token-uri
+              {{- end }}
         - name: GOOGLE_SERVICE_ACCOUNT_AUTH_PROVIDER_X509_CERT_URL
           valueFrom:
             secretKeyRef:
+              {{- if eq .Values.environment "remote" }}
+              name: serve-dev-bitwarden-secret
+              key: email-google-service-account-auth-provider-x509-cert-url
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: email-google-service-account-auth-provider-x509-cert-url
+              {{- end }}
         - name: GOOGLE_SERVICE_ACCOUNT_CLIENT_X509_CERT_URL
           valueFrom:
             secretKeyRef:
+              {{- if eq .Values.environment "remote" }}
+              name: serve-dev-bitwarden-secret
+              key: email-google-service-account-client-x509-cert-url
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: email-google-service-account-client-x509-cert-url
+              {{- end }}
         - name: GOOGLE_SERVICE_ACCOUNT_UNIVERSE_DOMAIN
           valueFrom:
             secretKeyRef:
+              {{- if eq .Values.environment "remote" }}
+              name: serve-dev-bitwarden-secret
+              key: email-google-service-account-universe-domain
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: email-google-service-account-universe-domain
+              {{- end }}
         {{ end }}
         image: {{ .Values.studio.image.repository }}
         imagePullPolicy: {{ .Values.studio.image.pullPolicy }}
