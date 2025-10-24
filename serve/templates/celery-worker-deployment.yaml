@@ -92,8 +92,13 @@ spec:
         - name: REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
+              {{- if eq .Values.environment "remote" }}
+              name: serve-dev-bitwarden-secret
+              key: redis-password
+              {{- else }}
               name: {{ include "stackn.redis.secretName" . }}
               key: {{ include "stackn.redis.secretPasswordKey" . }}
+              {{- end }}
         - name: RABBITMQ_DEFAULT_PASS
           valueFrom:
             secretKeyRef:
