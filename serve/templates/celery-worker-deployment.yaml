@@ -81,7 +81,14 @@ spec:
               key: password
               {{- end }}
         - name: POSTGRES_USER
-          value: {{ .Values.postgresql.global.postgresql.auth.user }}
+          {{- if eq .Values.environment "remote" }}
+            valueFrom:
+              secretKeyRef:
+                name: serve-dev-bitwarden-secret
+                key: postgresql-username
+          {{- else }}
+              value: {{ .Values.postgresql.global.postgresql.auth.user }}
+          {{- end }}
         - name: REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
