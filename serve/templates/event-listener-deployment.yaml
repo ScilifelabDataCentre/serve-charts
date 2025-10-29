@@ -66,7 +66,7 @@ spec:
         - name: PASSWORD
           valueFrom:
             secretKeyRef:
-              {{- if eq .Values.environment "remote" }}
+              {{- if eq .Values.environment "bitwarden" }}
               name: serve-dev-bitwarden-secret
               key: event-user-password
               {{- else }}

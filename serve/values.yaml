@@ -8,7 +8,7 @@
 #   Default: microk8s-hostpath, use local-path for k3s/Rancher Desktop
 
 #Set global values to overide default
-environment: "remote"
+environment: "bitwarden"
 # Template for remote development
 # Storage class used by the KTH cluster
 storageClass: &storage_class ontap-nas
