@@ -1,6 +1,9 @@
 name: Render Helm chart
 
 on:
+  push:
+    paths:
+      - 'serve/**'
   pull_request:
     paths:
       - 'serve/**'
