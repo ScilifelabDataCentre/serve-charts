@@ -76,7 +76,7 @@ spec:
         - name: POSTGRES_USER
           value: {{ .Values.postgresql.global.postgresql.auth.user }}
         - name: POSTGRES_PASSWORD
-          valueFrom:
+        valueFrom:
             secretKeyRef:
               name: {{ include "stackn.postgres.secretName" . }}
               key: password
