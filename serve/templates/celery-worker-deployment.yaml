@@ -73,7 +73,7 @@ spec:
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
-              {{- if eq .Values.environment "bitwarden" }}
+              {{- if .Values.global.bitwarden.enabled }}
               name: serve-dev-bitwarden-secret
               key: postgresql-password
               {{- else }}
@@ -81,7 +81,7 @@ spec:
               key: password
               {{- end }}
         - name: POSTGRES_USER
-          {{- if eq .Values.environment "bitwarden" }}
+          {{- if .Values.global.bitwarden.enabled }}
           valueFrom:
             secretKeyRef:
               name: serve-dev-bitwarden-secret
@@ -92,7 +92,7 @@ spec:
         - name: REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
-              {{- if eq .Values.environment "bitwarden" }}
+              {{- if .Values.global.bitwarden.enabled }}
               name: serve-dev-bitwarden-secret
               key: redis-password
               {{- else }}
@@ -102,7 +102,7 @@ spec:
         - name: RABBITMQ_DEFAULT_PASS
           valueFrom:
             secretKeyRef:
-              {{- if eq .Values.environment "bitwarden" }}
+              {{- if .Values.global.bitwarden.enabled }}
               name: serve-dev-bitwarden-secret
               key: rabbitmq-password
               {{- else }}
@@ -116,7 +116,7 @@ spec:
         - name: DJANGO_SECRET
           valueFrom:
             secretKeyRef:
-              {{- if eq .Values.environment "bitwarden" }}
+              {{- if .Values.global.bitwarden.enabled }}
               name: serve-dev-bitwarden-secret
               key: django-secret-key
               {{- else }}
@@ -127,7 +127,7 @@ spec:
         - name: GOOGLE_SERVICE_ACCOUNT_TYPE
           valueFrom:
             secretKeyRef:
-              {{- if eq .Values.environment "bitwarden" }}
+              {{- if .Values.global.bitwarden.enabled }}
               name: serve-dev-bitwarden-secret
               key: email-google-service-account-type
               {{- else }}
@@ -137,7 +137,7 @@ spec:
         - name: GOOGLE_SERVICE_ACCOUNT_PROJECT_ID
           valueFrom:
             secretKeyRef:
-              {{- if eq .Values.environment "bitwarden" }}
+              {{- if .Values.global.bitwarden.enabled }}
               name: serve-dev-bitwarden-secret
               key: email-google-service-account-project-id
               {{- else }}
@@ -147,7 +147,7 @@ spec:
         - name: GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY_ID
           valueFrom:
             secretKeyRef:
-              {{- if eq .Values.environment "bitwarden" }}
+              {{- if .Values.global.bitwarden.enabled }}
               name: serve-dev-bitwarden-secret
               key: email-google-service-account-private-key-id
               {{- else }}
@@ -157,7 +157,7 @@ spec:
         - name: GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY
           valueFrom:
             secretKeyRef:
-              {{- if eq .Values.environment "bitwarden" }}
+              {{- if .Values.global.bitwarden.enabled }}
               name: serve-dev-bitwarden-secret
               key: email-google-service-account-private-key
               {{- else }}
@@ -167,7 +167,7 @@ spec:
         - name: GOOGLE_SERVICE_ACCOUNT_CLIENT_EMAIL
           valueFrom:
             secretKeyRef:
-              {{- if eq .Values.environment "bitwarden" }}
+              {{- if .Values.global.bitwarden.enabled }}
               name: serve-dev-bitwarden-secret
               key: email-google-service-account-client-email
               {{- else }}
@@ -177,7 +177,7 @@ spec:
         - name: GOOGLE_SERVICE_ACCOUNT_CLIENT_ID
           valueFrom:
             secretKeyRef:
-              {{- if eq .Values.environment "bitwarden" }}
+              {{- if .Values.global.bitwarden.enabled }}
               name: serve-dev-bitwarden-secret
               key: email-google-service-account-client-id
               {{- else }}
@@ -187,7 +187,7 @@ spec:
         - name: GOOGLE_SERVICE_ACCOUNT_AUTH_URI
           valueFrom:
             secretKeyRef:
-              {{- if eq .Values.environment "bitwarden" }}
+              {{- if .Values.global.bitwarden.enabled }}
               name: serve-dev-bitwarden-secret
               key: email-google-service-account-auth-uri
               {{- else }}
@@ -197,7 +197,7 @@ spec:
         - name: GOOGLE_SERVICE_ACCOUNT_TOKEN_URI
           valueFrom:
             secretKeyRef:
-              {{- if eq .Values.environment "bitwarden" }}
+              {{- if .Values.global.bitwarden.enabled }}
               name: serve-dev-bitwarden-secret
               key: email-google-service-account-token-uri
               {{- else }}
@@ -207,7 +207,7 @@ spec:
         - name: GOOGLE_SERVICE_ACCOUNT_AUTH_PROVIDER_X509_CERT_URL
           valueFrom:
             secretKeyRef:
-              {{- if eq .Values.environment "bitwarden" }}
+              {{- if .Values.global.bitwarden.enabled }}
               name: serve-dev-bitwarden-secret
               key: email-google-service-account-auth-provider-x509-cert-url
               {{- else }}
@@ -217,7 +217,7 @@ spec:
         - name: GOOGLE_SERVICE_ACCOUNT_CLIENT_X509_CERT_URL
           valueFrom:
             secretKeyRef:
-              {{- if eq .Values.environment "bitwarden" }}
+              {{- if .Values.global.bitwarden.enabled }}
               name: serve-dev-bitwarden-secret
               key: email-google-service-account-client-x509-cert-url
               {{- else }}
@@ -227,7 +227,7 @@ spec:
         - name: GOOGLE_SERVICE_ACCOUNT_UNIVERSE_DOMAIN
           valueFrom:
             secretKeyRef:
-              {{- if eq .Values.environment "bitwarden" }}
+              {{- if .Values.global.bitwarden.enabled }}
               name: serve-dev-bitwarden-secret
               key: email-google-service-account-universe-domain
               {{- else }}

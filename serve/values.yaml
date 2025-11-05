@@ -8,7 +8,7 @@
 #   Default: microk8s-hostpath, use local-path for k3s/Rancher Desktop
 
 #Set global values to overide default
-environment: "bitwarden"
+environment: "remote"
 # Template for remote development
 # Storage class used by the KTH cluster
 storageClass: &storage_class ontap-nas
@@ -18,6 +18,8 @@ access_mode: &access_mode ReadWriteMany
 #access_mode: &access_mode ReadWriteOnce
 
 global:
+  bitwarden:
+    enabled: true
   studio:
     superUser: "" ##these are currently not handled by stackn: default: admin
     superuserPassword: ""
