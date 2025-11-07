@@ -1,0 +1,34 @@
+name: Render Helm chart
+
+on:
+  push:
+    paths:
+      - 'serve/**'
+  pull_request:
+    paths:
+      - 'serve/**'
+  workflow_dispatch:
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4.3.0
+        with:
+          version: v3.17.1
+
+      - name: Render Helm templates
+        run: |
+          cd serve
+          helm dependency build .
+          helm template . --name-template serve-chart \
+            --namespace default \
+            --kube-version 1.32 \
+            --values values.yaml \
+            --include-crds \
+            --debug > output.yaml
+        shell: bash
