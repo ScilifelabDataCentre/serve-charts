@@ -177,6 +177,16 @@ spec:
         - name: DOCKER_HUB_TOKEN
           value: ""
         {{ end }}
+        - name: ALTCHA_HMAC_KEY
+          valueFrom:
+            secretKeyRef:
+              {{- if .Values.global.bitwarden.enabled }}
+              name: serve-dev-bitwarden-secret
+              key: altcha-hmac-key
+              {{- else }}
+              name: {{ include "stackn.secretName" . }}
+              key: altcha-hmac-key
+              {{- end }}
         - name: RABBITMQ_DEFAULT_PASS
           valueFrom:
             secretKeyRef:
