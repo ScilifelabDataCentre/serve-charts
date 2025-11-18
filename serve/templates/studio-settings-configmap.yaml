@@ -120,6 +120,7 @@ data:
         "axes",  # django-axes for brute force login protection
         "django_password_validators",  # django-password-validators for password validation
         "gmailapi_backend",
+        "django_altcha",
     ] + DJANGO_WIKI_APPS
 
     {{ if .Values.studio.custom_apps.enabled }}
@@ -449,6 +450,11 @@ data:
     EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
     EMAIL_FILE_PATH =  os.path.join(BASE_DIR, 'sent_emails')
     {{ end }}
+
+    ALTCHA_HMAC_KEY = os.environ.get(
+        'ALTCHA_HMAC_KEY',
+        'eead811cbbbc5a8e4e9ac81657b398b42211910eca497628372ac9281f9620a74036b965056286754e33187678e52f55d010fbabf6ed9f001885b15bf728f05f'
+    )
 
 
     VERSION = {{ .Values.studio.version | quote  }}
