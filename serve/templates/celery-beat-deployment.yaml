@@ -77,7 +77,7 @@ spec:
           {{- if .Values.global.bitwarden.enabled }}
           valueFrom:
             secretKeyRef:
-              name: serve-dev-bitwarden-secret
+              name: serve-bitwarden-secret
               key: postgresql-username
           {{- else }}
           value: {{ .Values.postgresql.global.postgresql.auth.user }}
@@ -86,7 +86,7 @@ spec:
           valueFrom:
             secretKeyRef:
               {{- if .Values.global.bitwarden.enabled }}
-              name: serve-dev-bitwarden-secret
+              name: serve-bitwarden-secret
               key: postgresql-password
               {{- else }}
               name: {{ include "stackn.postgres.secretName" . }}
@@ -96,7 +96,7 @@ spec:
           valueFrom:
             secretKeyRef:
               {{- if .Values.global.bitwarden.enabled }}
-              name: serve-dev-bitwarden-secret
+              name: serve-bitwarden-secret
               key: redis-password
               {{- else }}
               name: {{ include "stackn.redis.secretName" . }}
@@ -106,7 +106,7 @@ spec:
           valueFrom:
             secretKeyRef:
               {{- if .Values.global.bitwarden.enabled }}
-              name: serve-dev-bitwarden-secret
+              name: serve-bitwarden-secret
               key: rabbitmq-password
               {{- else }}
               name: {{ include "stackn.rabbit.secretName" . }}
@@ -116,7 +116,7 @@ spec:
           valueFrom:
             secretKeyRef:
               {{- if .Values.global.bitwarden.enabled }}
-              name: serve-dev-bitwarden-secret
+              name: serve-bitwarden-secret
               key: django-secret-key
               {{- else }}
               name: {{ include "stackn.secretName" . }}
@@ -129,7 +129,7 @@ spec:
           valueFrom:
             secretKeyRef:
               {{- if .Values.global.bitwarden.enabled }}
-              name: serve-dev-bitwarden-secret
+              name: serve-bitwarden-secret
               key: email-google-service-account-type
               {{- else }}
               name: {{ include "stackn.secretName" . }}
@@ -139,7 +139,7 @@ spec:
           valueFrom:
             secretKeyRef:
               {{- if .Values.global.bitwarden.enabled }}
-              name: serve-dev-bitwarden-secret
+              name: serve-bitwarden-secret
               key: email-google-service-account-project-id
               {{- else }}
               name: {{ include "stackn.secretName" . }}
@@ -149,7 +149,7 @@ spec:
           valueFrom:
             secretKeyRef:
               {{- if .Values.global.bitwarden.enabled }}
-              name: serve-dev-bitwarden-secret
+              name: serve-bitwarden-secret
               key: email-google-service-account-private-key-id
               {{- else }}
               name: {{ include "stackn.secretName" . }}
@@ -159,7 +159,7 @@ spec:
           valueFrom:
             secretKeyRef:
               {{- if .Values.global.bitwarden.enabled }}
-              name: serve-dev-bitwarden-secret
+              name: serve-bitwarden-secret
               key: email-google-service-account-private-key
               {{- else }}
               name: {{ include "stackn.secretName" . }}
@@ -169,7 +169,7 @@ spec:
           valueFrom:
             secretKeyRef:
               {{- if .Values.global.bitwarden.enabled }}
-              name: serve-dev-bitwarden-secret
+              name: serve-bitwarden-secret
               key: email-google-service-account-client-email
               {{- else }}
               name: {{ include "stackn.secretName" . }}
@@ -179,7 +179,7 @@ spec:
           valueFrom:
             secretKeyRef:
               {{- if .Values.global.bitwarden.enabled }}
-              name: serve-dev-bitwarden-secret
+              name: serve-bitwarden-secret
               key: email-google-service-account-client-id
               {{- else }}
               name: {{ include "stackn.secretName" . }}
@@ -189,7 +189,7 @@ spec:
           valueFrom:
             secretKeyRef:
               {{- if .Values.global.bitwarden.enabled }}
-              name: serve-dev-bitwarden-secret
+              name: serve-bitwarden-secret
               key: email-google-service-account-auth-uri
               {{- else }}
               name: {{ include "stackn.secretName" . }}
@@ -199,7 +199,7 @@ spec:
           valueFrom:
             secretKeyRef:
               {{- if .Values.global.bitwarden.enabled }}
-              name: serve-dev-bitwarden-secret
+              name: serve-bitwarden-secret
               key: email-google-service-account-token-uri
               {{- else }}
               name: {{ include "stackn.secretName" . }}
@@ -209,7 +209,7 @@ spec:
           valueFrom:
             secretKeyRef:
               {{- if .Values.global.bitwarden.enabled }}
-              name: serve-dev-bitwarden-secret
+              name: serve-bitwarden-secret
               key: email-google-service-account-auth-provider-x509-cert-url
               {{- else }}
               name: {{ include "stackn.secretName" . }}
@@ -219,7 +219,7 @@ spec:
           valueFrom:
             secretKeyRef:
               {{- if .Values.global.bitwarden.enabled }}
-              name: serve-dev-bitwarden-secret
+              name: serve-bitwarden-secret
               key: email-google-service-account-client-x509-cert-url
               {{- else }}
               name: {{ include "stackn.secretName" . }}
@@ -229,7 +229,7 @@ spec:
           valueFrom:
             secretKeyRef:
               {{- if .Values.global.bitwarden.enabled }}
-              name: serve-dev-bitwarden-secret
+              name: serve-bitwarden-secret
               key: email-google-service-account-universe-domain
               {{- else }}
               name: {{ include "stackn.secretName" . }}
