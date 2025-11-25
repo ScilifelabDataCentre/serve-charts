@@ -48,15 +48,32 @@ spec:
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
+              {{- if .Values.global.bitwarden.enabled }}
+              name: serve-bitwarden-secret
+              key: postgresql-password
+              {{- else }}
               name: {{ include "stackn.postgres.secretName" . }}
               key: password
+              {{- end }}
         - name: POSTGRES_USER
+          {{- if .Values.global.bitwarden.enabled }}
+          valueFrom:
+            secretKeyRef:
+              name: serve-bitwarden-secret
+              key: postgresql-username
+          {{- else }}
           value: {{ .Values.postgresql.global.postgresql.auth.user }}
+          {{- end }}
         - name: RABBITMQ_DEFAULT_PASS
           valueFrom:
             secretKeyRef:
+              {{- if .Values.global.bitwarden.enabled }}
+              name: serve-bitwarden-secret
+              key: rabbit-password
+              {{- else }}
               name: {{ template "stackn.secretName" . }}
               key: rabbit-password
+              {{- end }}
         - name: RABBITMQ_HOST
           value: {{ .Release.Name }}-rabbit
         - name: RABBITMQ_USER
@@ -70,64 +87,124 @@ spec:
         - name: DJANGO_SECRET
           valueFrom:
             secretKeyRef:
+              {{- if .Values.global.bitwarden.enabled }}
+              name: serve-bitwarden-secret
+              key: django-secret-key
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: django-secret-key
+              {{- end }}
         {{ if .Values.studio.emailService.enabled }}
         - name: GOOGLE_SERVICE_ACCOUNT_TYPE
           valueFrom:
             secretKeyRef:
+              {{- if .Values.global.bitwarden.enabled }}
+              name: serve-bitwarden-secret
+              key: email-google-service-account-type
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: email-google-service-account-type
+              {{- end }}
         - name: GOOGLE_SERVICE_ACCOUNT_PROJECT_ID
           valueFrom:
             secretKeyRef:
+              {{- if .Values.global.bitwarden.enabled }}
+              name: serve-bitwarden-secret
+              key: email-google-service-account-project-id
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: email-google-service-account-project-id
+              {{- end }}
         - name: GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY_ID
           valueFrom:
             secretKeyRef:
+              {{- if .Values.global.bitwarden.enabled }}
+              name: serve-bitwarden-secret
+              key: email-google-service-account-private-key-id
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: email-google-service-account-private-key-id
+              {{- end }}
         - name: GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY
           valueFrom:
             secretKeyRef:
+              {{- if .Values.global.bitwarden.enabled }}
+              name: serve-bitwarden-secret
+              key: email-google-service-account-private-key
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: email-google-service-account-private-key
+              {{- end }}
         - name: GOOGLE_SERVICE_ACCOUNT_CLIENT_EMAIL
           valueFrom:
             secretKeyRef:
+              {{- if .Values.global.bitwarden.enabled }}
+              name: serve-bitwarden-secret
+              key: email-google-service-account-client-email
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: email-google-service-account-client-email
+              {{- end }}
         - name: GOOGLE_SERVICE_ACCOUNT_CLIENT_ID
           valueFrom:
             secretKeyRef:
+              {{- if .Values.global.bitwarden.enabled }}
+              name: serve-bitwarden-secret
+              key: email-google-service-account-client-id
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: email-google-service-account-client-id
+              {{- end }}
         - name: GOOGLE_SERVICE_ACCOUNT_AUTH_URI
           valueFrom:
             secretKeyRef:
+              {{- if .Values.global.bitwarden.enabled }}
+              name: serve-bitwarden-secret
+              key: email-google-service-account-auth-uri
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: email-google-service-account-auth-uri
+              {{- end }}
         - name: GOOGLE_SERVICE_ACCOUNT_TOKEN_URI
           valueFrom:
             secretKeyRef:
+              {{- if .Values.global.bitwarden.enabled }}
+              name: serve-bitwarden-secret
+              key: email-google-service-account-token-uri
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: email-google-service-account-token-uri
+              {{- end }}
         - name: GOOGLE_SERVICE_ACCOUNT_AUTH_PROVIDER_X509_CERT_URL
           valueFrom:
             secretKeyRef:
+              {{- if .Values.global.bitwarden.enabled }}
+              name: serve-bitwarden-secret
+              key: email-google-service-account-auth-provider-x509-cert-url
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: email-google-service-account-auth-provider-x509-cert-url
+              {{- end }}
         - name: GOOGLE_SERVICE_ACCOUNT_CLIENT_X509_CERT_URL
           valueFrom:
             secretKeyRef:
+              {{- if .Values.global.bitwarden.enabled }}
+              name: serve-bitwarden-secret
+              key: email-google-service-account-client-x509-cert-url
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: email-google-service-account-client-x509-cert-url
+              {{- end }}
         - name: GOOGLE_SERVICE_ACCOUNT_UNIVERSE_DOMAIN
           valueFrom:
             secretKeyRef:
+              {{- if .Values.global.bitwarden.enabled }}
+              name: serve-bitwarden-secret
+              key: email-google-service-account-universe-domain
+              {{- else }}
               name: {{ include "stackn.secretName" . }}
               key: email-google-service-account-universe-domain
+              {{- end }}
         {{- end }}
         - name: DJANGO_ADMIN_URL_PATH
           value: {{ .Values.studio.djangoAdminUrlPath }}

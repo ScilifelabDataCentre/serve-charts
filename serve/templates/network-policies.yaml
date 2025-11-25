@@ -370,7 +370,7 @@ spec:
               kubernetes.io/metadata.name: loki-stack
   podSelector:
     matchLabels:
-      web: studio-web
+      app: stackn-studio
   policyTypes:
     - Egress
 ---
