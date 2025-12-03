@@ -1,64 +1,35 @@
-# This is a YAML-formatted file.
-# Declare variables to be passed into STACKn templates.
-
 # REQUIREMENT: 
 # - set a storage class with ability to serve ReadWriteOnce
 #   Name: storageClassName, and/or set anchor &śtorage_class
 #   Description: Set a storage class for the resources that are reused for multi-mount-points in cluster. To reduce wasteful copying we allow to use the same dataset volume to be mounted multiple times.
 #   Default: microk8s-hostpath, use local-path for k3s/Rancher Desktop
 
-#Set global values to overide default
-environment: "remote"
-# Template for remote development
-# Storage class used by the KTH cluster
-storageClass: &storage_class ontap-nas
-#storageClass: &storage_class local-path
-#storage access mode
-access_mode: &access_mode ReadWriteMany
-#access_mode: &access_mode ReadWriteOnce
 
 global:
-  bitwarden:
-    enabled: true
-  studio:
-    superUser: "" ##these are currently not handled by stackn: default: admin
-    superuserPassword: ""
-    superuserEmail: ""  ##these are currently not handled by stackn: default: admin@test.com
-    existingSecret: ""
-    storageClass: *storage_class
-  postgresql:
-      auth:
-        username: studio
-        password: ""
-        postgresPassword: ""
-        database: studio
-        existingSecret: ""
-      storageClass: *storage_class
+  # Set global values to overide default
+  environment: "remote"
 
-namespace: default
-existingSecret: ""
-serviceAccount:
-  create: true
-  automountServiceAccountToken: true
-rbac:
-  create: true
+  # Storage class used by the KTH cluster
+  storageClass: &storage_class ontap-nas
+  #storageClass: &storage_class local-path
 
-commonLabels: {}
-commonAnnotations: {}
+  # Storage access mode
+  access_mode: &access_mode ReadWriteMany
+  #access_mode: &access_mode ReadWriteOnce
 
-networkPolicy:
-  enable: false
-  kubernetes:
-    cidr: # To get kubernetes api server endpoints run: $ kubectl get endpoints kubernetes
-    port: 6443 
-  internal_cidr: # in-cluster IpBlock cidr, used in allow-internet-[egress|ingress] policy, e.g:
-    - 10.0.0.0/8
-    - 192.168.0.0/16
-    - 172.0.0.0/20
-  ingress_controller_namespace: kube-system
+  namespace: default
+  commonLabels: {}
+  commonAnnotations: {}
+  kubeconfig: ""
+  cluster_domain: cluster.local
+
+  domain: studio.127.0.0.1.nip.io
+  session_cookie_domain: .127.0.0.1.nip.io
 
 
 studio:
+  existingSecret: ""
+  storageClass: *storage_class
   servicename: studio
   replicas: 1
   strategy:
@@ -152,8 +123,6 @@ studio:
     ipware_proxy_count: 0
   emailService:
     enabled: false
-    notifyOnAccountRegisterList:
-      - ''
     googleServiceAccount:
       type: ''
       project_id: ''
@@ -180,16 +149,117 @@ studio:
   dockerhubToken:
   dockerhubUsername:
 
-#kubernetes config
-kubeconfig: ""
 
-accessmode: *access_mode
-#the cluster domain name (default usually cluster.local)
-cluster_domain: cluster.local
+postgresql:
+  enabled: true
+  fullnameOverride: studio-postgres
+  commonAnnotations: {"reloader.stakater.com/auto": "true"}
+  auth:
+    username:
+    password:
+    database: stackn
+  primary:
+    service:
+      ports: 
+        postgresql: 5432
+    extraEnvVars:
+      - name: POSTGRESQL_MAX_CONNECTIONS
+        value: "300"
+    persistence:
+      enabled: true
+      size: "10Gi"
+      accessModes:
+        - *access_mode
+      storageClass: *storage_class
+    podLabels: {"app":"studio-app"}
+  image:
+    repository: "bitnamilegacy/postgresql"
+    tag: "15.6.0-debian-12-r15"
+
+
+redis:
+  enabled: true
+  commonAnnotations: {"reloader.stakater.com/auto": "true"}
+  master:
+    podLabels: {"app":"studio-app"}
+  replica:
+    replicaCount: 1
+    podLabels: {"app":"studio-app"}
+  image:
+    repository: "bitnamilegacy/redis"
+    tag: "7.2.4-debian-12-r9"
+
+
+rabbitmq:
+  enabled: true
+  auth:
+    username:
+    password: 
+    erlangCookie: 
+  commonAnnotations: {"reloader.stakater.com/auto": "true"}
+  podLabels: {"app":"studio-app","allow-api-access": "true"}
+  persistence:
+    enabled: true
+  image:
+    repository: "bitnamilegacy/rabbitmq"
+    tag: "3.13.1-debian-12-r0"
+
+
+celeryWorkers:
+  replicas: 2
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "1Gi"
+    limits:
+      cpu: "1000m"
+      memory: "8Gi"
+
+
+celeryFlower:
+  enabled: true
+
+
+eventListener:
+  image: ghcr.io/scilifelabdatacentre/serve-event-listener/event-listener:v1.3.1
+  debug: true
+  tlsSSLVerification: "1"            # "0" / "1" / "/path/to/ca.pem"
+  appProbeStatuses: "Running,Deleted"  # "" disables probing completely
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "1Gi"
+    limits:
+      cpu: "500m"
+      memory: "2Gi"
+
+
+bitwarden:
+  enabled: true
+
+
+networkPolicy:
+  enable: false
+  kubernetes:
+    cidr: # To get kubernetes api server endpoints run: $ kubectl get endpoints kubernetes
+    port: 6443 
+  internal_cidr: # in-cluster IpBlock cidr, used in allow-internet-[egress|ingress] policy, e.g:
+    - 10.0.0.0/8
+    - 192.168.0.0/16
+    - 172.0.0.0/20
+  ingress_controller_namespace: kube-system
+
+
+serviceAccount:
+  create: true
+  automountServiceAccountToken: true
+
+
+rbac:
+  create: true
+
 
 # Enable ingress if you want to access the studio solution from a kubernetes host/localhost.
-domain: studio.127.0.0.1.nip.io
-session_cookie_domain: .127.0.0.1.nip.io
 ingress:
   enabled: true
   annotations: {}
@@ -206,117 +276,20 @@ ingress:
     # IP address range to allow access to the django admin interface
     whiteListSourceRange: 130.238.0.0/16
 
-### A Postgres database for STACKn ###
-# Here we use https://charts.bitnami.com/bitnami postgresql chart 
-
-# Postgres deploy with a single-pod database:
-# https://github.com/bitnami/charts/tree/main/bitnami/postgresql#postgresql-common-parameters
-postgresql:
-  enabled: true
-  fullnameOverride: studio-postgres
-  commonAnnotations: {"reloader.stakater.com/auto": "true"}
-  auth:
-    username:
-    password:
-    postgresPassword:
-    database: studio
-  primary:
-    service:
-      ports: 
-        postgresql: 5432
-    extraEnvVars:
-      - name: POSTGRESQL_MAX_CONNECTIONS
-        value: "300"
-    persistence:
-      enabled: true
-      size: "10Gi"
-      accessModes:
-        - *access_mode
-      storageClass: *storage_class
-    podLabels: {"app":"stackn-studio"}
-  image:
-    repository: "bitnamilegacy/postgresql"
-    tag: "15.6.0-debian-12-r15"
-
-# https://github.com/bitnami/charts/tree/main/bitnami/redis
-redis:
-  enabled: true
-  commonAnnotations: {"reloader.stakater.com/auto": "true"}
-  master:
-    podLabels: {"app":"stackn-studio"}
-  replica:
-    replicaCount: 1
-    podLabels: {"app":"stackn-studio"}
-  image:
-    repository: "bitnamilegacy/redis"
-    tag: "7.2.4-debian-12-r9"
-
-# https://github.com/bitnami/charts/tree/b41a51d1bd04841fc108b78d3b8357a5292771c8/bitnami/rabbitmq
-rabbitmq:
-  enabled: true
-  commonAnnotations: {"reloader.stakater.com/auto": "true"}
-  podLabels: {"app":"stackn-studio","allow-api-access": "true"}
-  persistence:
-    enabled: true
-  image:
-    repository: "bitnamilegacy/rabbitmq"
-    tag: "3.13.1-debian-12-r0"
-
-# Will be added in future release, for now keep "enabled:false"
-postgresql-ha:
-  enabled: false
-
-celeryWorkers:
-  replicas: 2
-  resources:
-    requests:
-      cpu: "100m"
-      memory: "1Gi"
-    limits:
-      cpu: "1000m"
-      memory: "8Gi"
-
-celeryFlower:
-  enabled: true
-
-# default credentials for rabbitmq. override in production!
-rabbit:
-  image: rabbitmq:3-management
-  username: admin
-  password: ""
 
 chartcontroller:
   enabled: false
   #addSecret -- if true create chart-controller-secret from cluster_config, if false it must be added manually
   addSecret: false
 
+
 docker-registry:
   enabled: false
 
-prometheus:
-  enabled: false
-
-grafana:
-  enabled: false
 
 reloader:
   enabled: true
-  
-  reloader:
-    watchGlobally: false
 
-eventListener:
-  image: ghcr.io/scilifelabdatacentre/serve-event-listener/event-listener:v1.3.1
-  debug: true
-  tlsSSLVerification: "1"            # "0" / "1" / "/path/to/ca.pem"
-  appProbeStatuses: "Running,Deleted"  # "" disables probing completely
-  resources:
-    requests:
-      cpu: "100m"
-      memory: "1Gi"
-    limits:
-      cpu: "500m"
-      memory: "2Gi"
 
 loki:
     enabled: true

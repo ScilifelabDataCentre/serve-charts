@@ -359,7 +359,7 @@ data:
     REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD', '{{ .Values.redis.auth.password }}')
 
     # Celery settings
-    CELERY_BROKER_URL = 'amqp://{{ include "stackn.rabbit.username" . }}:{}@{{ include "common.names.fullname" .Subcharts.rabbitmq }}:{{ .Values.rabbitmq.containerPorts.amqp }}//'.format(os.environ.get("RABBITMQ_DEFAULT_PASS"))
+    CELERY_BROKER_URL = 'amqp://{{ include "studio.rabbitmq.username" . }}:{}@{{ include "common.names.fullname" .Subcharts.rabbitmq }}:{{ .Values.rabbitmq.containerPorts.amqp }}//'.format(os.environ.get("RABBITMQ_DEFAULT_PASS"))
     CELERY_RESULT_BACKEND = f"redis://{f':{REDIS_PASSWORD}@' if REDIS_PASSWORD else ''}{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
     CELERY_TASK_SERIALIZER = 'json'
     CELERY_RESULT_SERIALIZER = 'json'
@@ -375,7 +375,7 @@ data:
     KUBECONFIG = {{ .Values.studio.kubeconfig_file | quote }}
     NAMESPACE = {{ .Values.namespace | default "default" | quote }}
     KUBE_API_REQUEST_TIMEOUT = {{ .Values.studio.kube_api_request_timeout }}
-    STORAGECLASS = {{ include "stackn.studio.storageclass" . | quote }}
+    STORAGECLASS = {{ include "studio.storageclass" . | quote }}
     
     # App dependencies
 

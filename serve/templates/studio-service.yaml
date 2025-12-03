@@ -7,7 +7,7 @@ spec:
   - name: "8080"
     port: 8080
     targetPort: 8080
-  {{- if eq .Values.environment "local" }}
+  {{- if eq .Values.global.environment "local" }}
   - name: ssh
     port: 22
     targetPort: 22
