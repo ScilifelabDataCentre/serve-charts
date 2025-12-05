@@ -4,28 +4,22 @@
 #   Description: Set a storage class for the resources that are reused for multi-mount-points in cluster. To reduce wasteful copying we allow to use the same dataset volume to be mounted multiple times.
 #   Default: microk8s-hostpath, use local-path for k3s/Rancher Desktop
 
+# Set global values to overide default
+environment: "remote"
 
-global:
-  # Set global values to overide default
-  environment: "remote"
+# Storage class used by the KTH cluster
+storageClass: &storage_class ontap-nas
+#storageClass: &storage_class local-path
 
-  # Storage class used by the KTH cluster
-  storageClass: &storage_class ontap-nas
-  #storageClass: &storage_class local-path
+# Storage access mode
+access_mode: &access_mode ReadWriteMany
+#access_mode: &access_mode ReadWriteOnce
 
-  # Storage access mode
-  access_mode: &access_mode ReadWriteMany
-  #access_mode: &access_mode ReadWriteOnce
-
-  namespace: default
-  commonLabels: {}
-  commonAnnotations: {}
-  kubeconfig: ""
-  cluster_domain: cluster.local
-
-  domain: studio.127.0.0.1.nip.io
-  session_cookie_domain: .127.0.0.1.nip.io
-
+namespace: default
+commonLabels: {}
+commonAnnotations: {}
+kubeconfig: ""
+cluster_domain: cluster.local
 
 studio:
   existingSecret: ""
@@ -43,6 +37,8 @@ studio:
     enabled: true
     apps:
     - "common"
+  domain: studio.127.0.0.1.nip.io
+  session_cookie_domain: .127.0.0.1.nip.io
   custom_migrations:
     enabled: false
     apps:
@@ -149,18 +145,20 @@ studio:
   dockerhubToken:
   dockerhubUsername:
 
-
 postgresql:
   enabled: true
   fullnameOverride: studio-postgres
   commonAnnotations: {"reloader.stakater.com/auto": "true"}
   auth:
-    username:
+    username: studio
     password:
-    database: stackn
+    postgresPassword: ""
+    database: studio
+    existingSecret: ""
+  storageClass: *storage_class
   primary:
     service:
-      ports: 
+      ports:
         postgresql: 5432
     extraEnvVars:
       - name: POSTGRESQL_MAX_CONNECTIONS
@@ -176,7 +174,6 @@ postgresql:
     repository: "bitnamilegacy/postgresql"
     tag: "15.6.0-debian-12-r15"
 
-
 redis:
   enabled: true
   commonAnnotations: {"reloader.stakater.com/auto": "true"}
@@ -189,13 +186,12 @@ redis:
     repository: "bitnamilegacy/redis"
     tag: "7.2.4-debian-12-r9"
 
-
 rabbitmq:
   enabled: true
   auth:
-    username:
-    password: 
-    erlangCookie: 
+    username: admin
+    password:
+    erlangCookie:
   commonAnnotations: {"reloader.stakater.com/auto": "true"}
   podLabels: {"app":"studio-app","allow-api-access": "true"}
   persistence:
@@ -203,7 +199,6 @@ rabbitmq:
   image:
     repository: "bitnamilegacy/rabbitmq"
     tag: "3.13.1-debian-12-r0"
-
 
 celeryWorkers:
   replicas: 2
@@ -215,10 +210,8 @@ celeryWorkers:
       cpu: "1000m"
       memory: "8Gi"
 
-
 celeryFlower:
   enabled: true
-
 
 eventListener:
   image: ghcr.io/scilifelabdatacentre/serve-event-listener/event-listener:v1.3.1
@@ -233,10 +226,8 @@ eventListener:
       cpu: "500m"
       memory: "2Gi"
 
-
 bitwarden:
   enabled: true
-
 
 networkPolicy:
   enable: false
@@ -249,15 +240,12 @@ networkPolicy:
     - 172.0.0.0/20
   ingress_controller_namespace: kube-system
 
-
 serviceAccount:
   create: true
   automountServiceAccountToken: true
 
-
 rbac:
   create: true
-
 
 # Enable ingress if you want to access the studio solution from a kubernetes host/localhost.
 ingress:
@@ -276,20 +264,16 @@ ingress:
     # IP address range to allow access to the django admin interface
     whiteListSourceRange: 130.238.0.0/16
 
-
 chartcontroller:
   enabled: false
   #addSecret -- if true create chart-controller-secret from cluster_config, if false it must be added manually
   addSecret: false
 
-
 docker-registry:
   enabled: false
 
-
 reloader:
   enabled: true
-
 
 loki:
     enabled: true

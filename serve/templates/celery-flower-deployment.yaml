@@ -69,13 +69,13 @@ spec:
             secretKeyRef:
               {{- if .Values.bitwarden.enabled }}
               name: serve-bitwarden-secret
-              key: rabbit-password
+              key: rabbitmq-password
               {{- else }}
               name: {{ template "studio.secretName" . }}
-              key: rabbit-password
+              key: rabbitmq-password
               {{- end }}
         - name: RABBITMQ_HOST
-          value: {{ .Release.Name }}-rabbit
+          value: {{ .Release.Name }}-rabbitmq
         - name: RABBITMQ_USER
           value: {{ include "studio.rabbitmq.username" . }}
         - name: REDIS_HOST

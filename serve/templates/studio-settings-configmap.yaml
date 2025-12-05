@@ -55,7 +55,7 @@ data:
     if DEBUG:
         ALLOWED_HOSTS = ['*']
     else:
-        ALLOWED_HOSTS = ['{{ .Values.domain }}', '{{ .Release.Name }}-{{ .Values.studio.servicename }}', '{{ .Release.Name }}-studio.{{ .Values.namespace | default "default" }}.svc.{{ .Values.cluster_domain | default "cluster.local"}}']
+        ALLOWED_HOSTS = ['{{ .Values.studio.domain }}', '{{ .Release.Name }}-{{ .Values.studio.servicename }}', '{{ .Release.Name }}-studio.{{ .Values.namespace | default "default" }}.svc.{{ .Values.cluster_domain | default "cluster.local"}}']
 
     # For django-wiki
     SITE_ID = 1
@@ -258,8 +258,8 @@ data:
                 }
             },
             {{ end }}
-            'NAME': '{{ .Values.postgresql.global.postgresql.auth.database }}',
-            'USER': '{{ .Values.postgresql.global.postgresql.auth.username }}',
+            'NAME': '{{ .Values.postgresql.auth.database }}',
+            'USER': '{{ .Values.postgresql.auth.username }}',
             'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
             'HOST': '{{ .Values.postgresql.fullnameOverride }}',
             'PORT': '{{ .Values.postgresql.primary.service.ports.postgresql }}',
@@ -412,13 +412,13 @@ data:
     APPS_STATUS_WARNING = ['Pending', 'Installed', 'Waiting',
                            'Installing', 'Created', 'Creating', 'Changing']
 
-    DOMAIN = {{ .Values.domain | quote }}
+    DOMAIN = {{ .Values.studio.domain | quote }}
     AUTH_DOMAIN = '{{ .Release.Name }}-studio.{{ .Values.namespace | default "default" }}.svc.{{ .Values.cluster_domain | default "cluster.local"}}'
     AUTH_PROTOCOL = 'http'
     STUDIO_URL = 'http://{{ .Release.Name }}-studio:8080'
     # To enable sticky sessions for k8s ingress
-    SESSION_COOKIE_DOMAIN = {{ .Values.session_cookie_domain | quote }}
-    CSRF_TRUSTED_ORIGINS = ['https://*{{ .Values.session_cookie_domain }}','https://*.127.0.0.1'] + [{{ .Values.studio.csrf_trusted_origins | quote}}]
+    SESSION_COOKIE_DOMAIN = {{ .Values.studio.session_cookie_domain | quote }}
+    CSRF_TRUSTED_ORIGINS = ['https://*{{ .Values.studio.session_cookie_domain }}','https://*.127.0.0.1'] + [{{ .Values.studio.csrf_trusted_origins | quote}}]
 
     # Email
     DEFAULT_FROM_EMAIL = "serve@scilifelab.se"

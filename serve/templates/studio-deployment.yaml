@@ -54,7 +54,7 @@ spec:
       containers:
       - args:
         - sh
-        {{ if eq .Values.global.environment "local" }}
+        {{ if eq .Values.environment "local" }}
         - -c
         - "/usr/sbin/sshd -D"
         {{ else }}
@@ -62,7 +62,7 @@ spec:
         {{ end }}
         ports:
         - containerPort: 8080
-        {{- if eq .Values.global.environment "local" }}
+        {{- if eq .Values.environment "local" }}
         - containerPort: 22
         {{- end }}
         env:
@@ -117,7 +117,7 @@ spec:
               name: serve-bitwarden-secret
               key: postgresql-password
               {{- else }}
-              name: {{ include "studio.postgres.secretName" . }}
+              name: {{ include "studio.postgresql.secretName" . }}
               key: password
               {{- end }}
         - name: POSTGRES_USER
@@ -136,8 +136,8 @@ spec:
               name: serve-bitwarden-secret
               key: redis-password
               {{- else }}
-              name: {{ include "stackn.redis.secretName" . }}
-              key: {{ include "stackn.redis.secretPasswordKey" . }}
+              name: {{ include "studio.redis.secretName" . }}
+              key: {{ include "studio.redis.secretPasswordKey" . }}
               {{- end }}
         {{ if .Values.studio.githubApiToken }}
         - name: GITHUB_API_TOKEN
@@ -194,7 +194,7 @@ spec:
               name: serve-bitwarden-secret
               key: rabbitmq-password
               {{- else }}
-              name: {{ include "studio.rabbit.secretName" . }}
+              name: {{ include "studio.rabbitmq.secretName" . }}
               key: rabbitmq-password
               {{- end }}
         {{- if .Values.chartcontroller.addSecret }}
@@ -339,7 +339,7 @@ spec:
           - name: mediavol
             mountPath: {{ .Values.studio.media.mount_path }}
           {{ end }}
-          {{ if eq .Values.global.environment "local" }}
+          {{ if eq .Values.environment "local" }}
           - mountPath: /app
             name: sourcecode
           {{ end }}
@@ -393,7 +393,7 @@ spec:
         persistentVolumeClaim:
           claimName: {{ .Release.Name }}-{{ .Values.studio.media.storage.claimName }}
       {{ end }}
-      {{ if eq .Values.global.environment "local" }}
+      {{ if eq .Values.environment "local" }}
       - hostPath:
           path: {{ .Values.source_code_path }}
           type: Directory

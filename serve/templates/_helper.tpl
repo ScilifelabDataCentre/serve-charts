@@ -62,11 +62,10 @@ Return Studio superuser email
 {{- end -}}
 {{- end -}}
 
-
 {{/*
 Return Studio PostgreSQL password
 */}}
-{{- define "studio.postgresql.password" -}}
+{{- define "studio.postgres.password" -}}
 {{- if .Values.postgresql.auth.password -}}
     {{- .Values.postgresql.auth.password -}}
 {{- else -}}
@@ -100,6 +99,31 @@ Return Redis secret password key
 {{- end -}}
 
 {{/*
+Return RabbitMQ username
+*/}}
+{{- define "studio.rabbitmq.username" -}}
+{{- .Values.rabbitmq.auth.username -}}
+{{- end -}}
+
+{{/*
+Return RabbitMQ password
+*/}}
+{{- define "studio.rabbitmq.password" -}}
+{{- if .Values.rabbitmq.password -}}
+    {{- .Values.rabbitmq.password -}}
+{{- else -}}
+    {{- randAlphaNum 10 -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return RabbitMQ secret
+*/}}
+{{- define "studio.rabbitmq.secretName" -}}
+{{- include "rabbitmq.secretPasswordName" .Subcharts.rabbitmq -}}
+{{- end -}}
+
+{{/*
 Return Studio storageClass
 */}}
 {{- define "studio.storageclass" -}}
@@ -120,21 +144,6 @@ Return Studio media storageClass
     {{- .Values.postgresql.primary.persistence.storageClass -}}
 {{- end -}}
 {{- end -}}
-
-{{/*
-Return RabbitMQ username
-*/}}
-{{- define "studio.rabbitmq.username" -}}
-{{- .Values.rabbitmq.auth.username -}}
-{{- end -}}
-
-{{/*
-Return RabbitMQ secret
-*/}}
-{{- define "studio.rabbitmq.secretName" -}}
-{{- include "rabbitmq.secretPasswordName" .Subcharts.rabbitmq -}}
-{{- end -}}
-
 
 {{/*
     Return eventuser password
