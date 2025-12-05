@@ -172,9 +172,10 @@ studio:
       - ''
   connectionPool:
     enabled: true
-    minSize: 2
-    maxSize: 4
-    timeout: 10
+    minSize: 4
+    maxSize: 10
+    timeout: 30
+    maxIdle: 300
   githubApiToken:
   githubApiUsername:
   dockerhubToken:
