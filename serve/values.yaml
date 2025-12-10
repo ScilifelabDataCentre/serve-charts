@@ -196,6 +196,7 @@ redis:
 rabbitmq:
   enabled: true
   auth:
+    username: admin
     password:
     erlangCookie:
   commonAnnotations: {"reloader.stakater.com/auto": "true"}
