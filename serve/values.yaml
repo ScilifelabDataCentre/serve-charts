@@ -14,8 +14,9 @@ storageClass: &storage_class ontap-nas
 # Storage access mode
 access_mode: &access_mode ReadWriteMany
 #access_mode: &access_mode ReadWriteOnce
+accessmode: *access_mode
 
-namespace: default
+namespace: serve-dev
 commonLabels: {}
 commonAnnotations: {}
 kubeconfig: ""
@@ -28,17 +29,17 @@ studio:
   replicas: 1
   strategy:
     type: RollingUpdate
-  debug: false
+  debug: true
   init: true
   reset_db: false
   enable_project_extra_settings: false
-  inactive_users: False
+  inactive_users: true
   custom_apps:
     enabled: true
     apps:
     - "common"
-  domain: studio.127.0.0.1.nip.io
-  session_cookie_domain: .127.0.0.1.nip.io
+  domain: serve-dev.scilifelab.se
+  session_cookie_domain: .serve-dev.scilifelab.se
   custom_migrations:
     enabled: false
     apps:
@@ -47,7 +48,8 @@ studio:
   auth_user_model:
     override: false
     model: "user.User"
-  csrf_trusted_origins: 
+  csrf_trusted_origins: "https://serve-dev.scilifelab.se:8082" #if you want to port-forward the web server
+  session_cookie_age: 3600
   kubeconfig_file: /app/kubeconfig/config
   kubeconfig_dir: /app/kubeconfig/
   kube_api_request_timeout: 1
@@ -55,7 +57,7 @@ studio:
     replicas: 1
     strategy:
       type: Recreate
-    image: ghcr.io/scilifelabdatacentre/serve/serve-ingress:develop-20251105
+    image: ghcr.io/scilifelabdatacentre/serve/serve-ingress:develop-20251208
     pullPolicy: IfNotPresent
     resources:
       limits:
@@ -65,14 +67,14 @@ studio:
         cpu: "100m"
         memory: "256Mi"
   image:
-    repository: ghcr.io/scilifelabdatacentre/serve/serve-studio:develop-20251105
-    pullPolicy: IfNotPresent
+    repository: ghcr.io/scilifelabdatacentre/serve/serve-studio:develop-20251208
+    pullPolicy: Always
   resources:
     limits:
-      cpu: "1000m"
+      cpu: 16
       memory: "4Gi"
     requests:
-      cpu: "400m"
+      cpu: 8
       memory: "2Gi"
   storage:
     storageClass: *storage_class
@@ -82,14 +84,14 @@ studio:
       size: "5Gi"
       accessModes: *access_mode
       claimName: studio-media
-      mountStudio: false
+      mountStudio: true
     mount_path: /app/media/
   superUser: admin
-  superuserPassword: ""
+  superuserPassword:
   superuserEmail: admin@serve.scilifelab.se
-  djangoAdminUrlPath: "admin"
-  eventUser: ""
-  eventuserPassword: ""
+  djangoAdminUrlPath: whale
+  eventUser:
+  eventuserPassword:
   eventuserEmail: event_user@serve.scilifelab.se
   version: studio
   securityContext:
@@ -111,26 +113,31 @@ studio:
       port: 8080
     initialDelaySeconds: 20
     periodSeconds: 20
-  djangoSecret: ''
-  altchaHmacKey: ''
+  djangoSecret:
+  altchaHmacKey:
   axes:
     failure_limit: 5
     cooloff_time: 0.1
-    ipware_proxy_count: 0
+    ipware_proxy_count: 1
   emailService:
-    enabled: false
+    enabled: true
+    hostUser: noreply-serve@scilifelab.se
+    hostPassword:
+    host: smtp.gmail.com
+    port: 465
+    ssl: true
     googleServiceAccount:
-      type: ''
-      project_id: ''
-      private_key_id: ''
-      private_key: ''
-      client_email: ''
-      client_id: ''
-      auth_uri: ''
-      token_uri: ''
-      auth_provider_x509_cert_url: ''
-      client_x509_cert_url: ''
-      universe_domain: ''
+      type: ""
+      project_id: ""
+      private_key_id: ""
+      private_key: ""
+      client_email: ""
+      client_id: ""
+      auth_uri: ""
+      token_uri: ""
+      auth_provider_x509_cert_url: ""
+      client_x509_cert_url: ""
+      universe_domain: ""
   disabledAppInstanceFields:
     enabled: false
     fields:
@@ -138,8 +145,8 @@ studio:
   connectionPool:
     enabled: true
     minSize: 2
-    maxSize: 4
-    timeout: 10
+    maxSize: 16
+    timeout: 30
   githubApiToken:
   githubApiUsername:
   dockerhubToken:
@@ -147,14 +154,14 @@ studio:
 
 postgresql:
   enabled: true
-  fullnameOverride: studio-postgres
+  fullnameOverride: serve-studio-postgres
   commonAnnotations: {"reloader.stakater.com/auto": "true"}
   auth:
-    username: studio
+    username: stackn
     password:
-    postgresPassword: ""
-    database: studio
-    existingSecret: ""
+    postgresPassword:
+    database: stackn
+    existingSecret:
   storageClass: *storage_class
   primary:
     service:
@@ -189,7 +196,6 @@ redis:
 rabbitmq:
   enabled: true
   auth:
-    username: admin
     password:
     erlangCookie:
   commonAnnotations: {"reloader.stakater.com/auto": "true"}
@@ -199,6 +205,15 @@ rabbitmq:
   image:
     repository: "bitnamilegacy/rabbitmq"
     tag: "3.13.1-debian-12-r0"
+  resources:
+    limits:
+      cpu: 2
+      ephemeral-storage: 1Gi
+      memory: 1024Mi
+    requests:
+      cpu: 1
+      ephemeral-storage: 50Mi
+      memory: 512Mi
 
 celeryWorkers:
   replicas: 2
@@ -211,7 +226,7 @@ celeryWorkers:
       memory: "8Gi"
 
 celeryFlower:
-  enabled: true
+  enabled: false
 
 eventListener:
   image: ghcr.io/scilifelabdatacentre/serve-event-listener/event-listener:v1.3.1
@@ -230,9 +245,9 @@ bitwarden:
   enabled: true
 
 networkPolicy:
-  enable: false
+  enable: true
   kubernetes:
-    cidr: # To get kubernetes api server endpoints run: $ kubectl get endpoints kubernetes
+    cidr: 130.237.255.59/32 # To get kubernetes api server endpoints run: $ kubectl get endpoints kubernetes
     port: 6443 
   internal_cidr: # in-cluster IpBlock cidr, used in allow-internet-[egress|ingress] policy, e.g:
     - 10.0.0.0/8
@@ -252,12 +267,12 @@ ingress:
   enabled: true
   annotations: {}
   hosts:
-    - host: studio.127.0.0.1.nip.io
+    - host: serve-dev.scilifelab.se
   # setup TLS if you have a platform certificate or use 'tls-acme' if you have certbot deployed and want to generate a certificate.
   tls:
     - secretName: prod-ingress
       hosts:
-        - studio.127.0.0.1.nip.io
+        - serve-dev.scilifelab.se
   # Enable or disable access to the django admin interface from the university network
   djangoAdminAccessRestriction:
     enabled: true
@@ -274,6 +289,9 @@ docker-registry:
 
 reloader:
   enabled: true
+  namespace: serve-dev
+  reloader:
+    watchGlobally: false
 
 loki:
     enabled: true
