@@ -184,8 +184,8 @@ postgresql:
 redis:
   enabled: true
   auth:
-    existingPasswordSecret: serve-bitwarden-secret
-    existingPasswordSecretKey: redis-password
+    existingSecret: serve-bitwarden-secret
+    existingSecretPasswordKey: redis-password
   commonAnnotations: {"reloader.stakater.com/auto": "true"}
   master:
     podLabels: {"app":"studio-app"}
