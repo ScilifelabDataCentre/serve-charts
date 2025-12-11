@@ -109,8 +109,8 @@ Return RabbitMQ username
 Return RabbitMQ password
 */}}
 {{- define "studio.rabbitmq.password" -}}
-{{- if .Values.rabbitmq.password -}}
-    {{- .Values.rabbitmq.password -}}
+{{- if .Values.rabbitmq.auth.password -}}
+    {{- .Values.rabbitmq.auth.password -}}
 {{- else -}}
     {{- randAlphaNum 10 -}}
 {{- end -}}
