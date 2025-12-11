@@ -196,7 +196,8 @@ redis:
 rabbitmq:
   enabled: true
   auth:
-    password:
+    existingPasswordSecret: serve-bitwarden-secret
+    existingPasswordSecretKey: rabbitmq-password
     erlangCookie:
   commonAnnotations: {"reloader.stakater.com/auto": "true"}
   podLabels: {"app":"studio-app","allow-api-access": "true"}
