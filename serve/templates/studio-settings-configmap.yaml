@@ -252,9 +252,10 @@ data:
             {{ if .Values.studio.connectionPool.enabled }}
             "OPTIONS": {
                 "pool": {
-                    "min_size": {{ .Values.studio.connectionPool.minSize | default 2 }},
-                    "max_size": {{ .Values.studio.connectionPool.maxSize | default 4 }},
-                    "timeout": {{ .Values.studio.connectionPool.timeout | default 10 }},
+                    "min_size": {{ .Values.studio.connectionPool.minSize | default 4 }},
+                    "max_size": {{ .Values.studio.connectionPool.maxSize | default 10 }},
+                    "timeout": {{ .Values.studio.connectionPool.timeout | default 30 }},
+                    "max_idle": {{ .Values.studio.connectionPool.maxIdle | default 300 }},
                 }
             },
             {{ end }}
