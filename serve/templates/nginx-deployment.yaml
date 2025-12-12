@@ -10,7 +10,7 @@ spec:
   selector:
     matchLabels:
       release: {{ .Release.Name }}
-      app: stackn-studio
+      app: studio-app
       type: app
       pod: nginx-static
   strategy:
@@ -23,7 +23,7 @@ spec:
         prometheus.io/port: "8501"
       labels:
         release: {{ .Release.Name }}
-        app: stackn-studio
+        app: studio-app
         type: app
         pod: nginx-static
     spec:

@@ -17,7 +17,7 @@ spec:
     metadata:
       labels:
         name: {{ .Release.Name }}-event-listener
-        app: stackn-studio
+        app: studio-app
         allow-api-access: "true"
     spec:
       serviceAccountName: {{ include "common.names.fullname" .}}
@@ -62,15 +62,15 @@ spec:
         - name: APP_PROBE_STATUSES
           value: {{ .Values.eventListener.appProbeStatuses | default "Running,Deleted" | quote }}
         - name: USERNAME
-          value: {{ include "stackn.studio.eventuser.email" . }}
+          value: {{ include "studio.eventuser.email" . }}
         - name: PASSWORD
           valueFrom:
             secretKeyRef:
-              {{- if .Values.global.bitwarden.enabled }}
+              {{- if .Values.bitwarden.enabled }}
               name: serve-bitwarden-secret
               key: event-user-password
               {{- else }}
-              name: {{ include "stackn.secretName" . }}
+              name: {{ include "studio.secretName" . }}
               key: event-user-password
               {{- end }}
         resources:

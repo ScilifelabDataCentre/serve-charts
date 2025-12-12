@@ -1,8 +1,8 @@
 {{/*
 Return true if a secret object should be created
 */}}
-{{- define "stackn.createSecret" -}}
-{{- if not (include "stackn.useExistingSecret" .) -}}
+{{- define "studio.createSecret" -}}
+{{- if not (include "studio.useExistingSecret" .) -}}
     {{- true -}}
 {{- end -}}
 {{- end -}}
@@ -10,18 +10,18 @@ Return true if a secret object should be created
 {{/*
 Return true if we should use an existingSecret.
 */}}
-{{- define "stackn.useExistingSecret" -}}
-{{- if or .Values.global.studio.existingSecret .Values.existingSecret -}}
+{{- define "studio.useExistingSecret" -}}
+{{- if or .Values.studio.existingSecret .Values.existingSecret -}}
     {{- true -}}
 {{- end -}}
 {{- end -}}
 
 {{/*
-Get the STACKn password secret.
+Get the Studio password secret.
 */}}
-{{- define "stackn.secretName" -}}
-{{- if .Values.global.studio.existingSecret }}
-    {{- printf "%s" (tpl .Values.global.studio.existingSecret $) -}}
+{{- define "studio.secretName" -}}
+{{- if .Values.studio.existingSecret }}
+    {{- printf "%s" (tpl .Values.studio.existingSecret $) -}}
 {{- else if .Values.existingSecret -}}
     {{- printf "%s" (tpl .Values.existingSecret $) -}}
 {{- else -}}
@@ -30,12 +30,10 @@ Get the STACKn password secret.
 {{- end -}}
 
 {{/*
-Return STACKn studio superuser
+Return Studio superuser
 */}}
-{{- define "stackn.studio.superuser" -}}
-{{- if .Values.global.studio.superUser }}
-    {{- .Values.global.studio.superUser -}}
-{{- else if .Values.studio.superUser -}}
+{{- define "studio.superuser" -}}
+{{- if .Values.studio.superUser }}
     {{- .Values.studio.superUser -}}
 {{- else -}}
     admin
@@ -43,12 +41,10 @@ Return STACKn studio superuser
 {{- end -}}
 
 {{/*
-Return STACKn studio superuser password
+Return Studio superuser password
 */}}
-{{- define "stackn.studio.superuser.password" -}}
-{{- if .Values.global.studio.superuserPassword }}
-    {{- .Values.global.studio.superuserPassword -}}
-{{- else if .Values.studio.superuserPassword -}}
+{{- define "studio.superuser.password" -}}
+{{- if .Values.studio.superuserPassword }}
     {{- .Values.studio.superuserPassword -}}
 {{- else -}}
     {{- randAlphaNum 10 -}}
@@ -56,45 +52,31 @@ Return STACKn studio superuser password
 {{- end -}}
 
 {{/*
-Return STACKn studio superuser email
+Return Studio superuser email
 */}}
-{{- define "stackn.studio.superuser.email" -}}
-{{- if .Values.global.studio.superuserEmail }}
-    {{- .Values.global.studio.superuserEmail -}}
-{{- else if .Values.studio.superuserEmail -}}
+{{- define "studio.superuser.email" -}}
+{{- if .Values.studio.superuserEmail }}
     {{- .Values.studio.superuserEmail -}}
 {{- else -}}
     admin@test.com
 {{- end -}}
 {{- end -}}
 
-
 {{/*
-Return STACKn studio postgres password
+Return Studio PostgreSQL password
 */}}
-{{- define "stackn.studio.postgres.password" -}}
-{{- if .Values.postgresql.global.postgresql.auth.password -}}
-    {{- .Values.postgresql.global.postgresql.auth.password -}}
+{{- define "studio.postgres.password" -}}
+{{- if .Values.postgresql.auth.password -}}
+    {{- .Values.postgresql.auth.password -}}
 {{- else -}}
     {{- randAlphaNum 10 -}}
 {{- end -}}
 {{- end -}}
 
 {{/*
-Return STACKn studio postgresql-postgres password
+Return PostgreSQL secret
 */}}
-{{- define "stackn.studio.postgresql-postgres.password" -}}
-{{- if .Values.postgresql.global.postgresql.auth.postgresPassword -}}
-    {{- .Values.postgresql.global.postgresql.auth.postgresPassword -}}
-{{- else -}}
-    {{- randAlphaNum 10 -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Return postgres secret
-*/}}
-{{- define "stackn.postgres.secretName" -}}
+{{- define "studio.postgresql.secretName" -}}
 {{- if .Values.postgresql.enabled }}
     {{- include "postgresql.secretName" .Subcharts.postgresql -}}
 {{- else -}}
@@ -103,95 +85,84 @@ Return postgres secret
 {{- end -}}
 
 {{/*
-Return redis secret
+Return Redis secret
 */}}
-{{- define "stackn.redis.secretName" -}}
+{{- define "studio.redis.secretName" -}}
 {{- include "redis.secretName" .Subcharts.redis -}}
 {{- end -}}
 
-
 {{/*
-Return redis secret password key
+Return Redis secret password key
 */}}
-{{- define "stackn.redis.secretPasswordKey" -}}
+{{- define "studio.redis.secretPasswordKey" -}}
 {{- include "redis.secretPasswordKey" .Subcharts.redis -}}
 {{- end -}}
 
 {{/*
-Return STACKn studio storageClass
+Return RabbitMQ username
 */}}
-{{- define "stackn.studio.storageclass" -}}
-{{- if .Values.global.studio.storageClass }}
-    {{- .Values.global.studio.storageClass -}}
-{{- else if .Values.studio.storage.storageClass -}}
-    {{- .Values.studio.storage.storageClass -}}
-{{- else -}}
-    {{- .Values.global.postgresql.storageClass -}}
-{{- end -}}
+{{- define "studio.rabbitmq.username" -}}
+{{- .Values.rabbitmq.auth.username -}}
 {{- end -}}
 
 {{/*
-Return STACKn studio media storageClass
+Return RabbitMQ password
 */}}
-{{- define "stackn.studio.media.storageclass" -}}
-{{- if .Values.global.studio.storageClass }}
-    {{- .Values.global.studio.storageClass -}}
-{{- else if .Values.studio.media.storage.storageClass -}}
-    {{- .Values.studio.media.storage.storageClass -}}
-{{- else -}}
-    {{- .Values.global.postgresql.storageClass -}}
-{{- end -}}
-{{- end -}}
-
-
-{{/*
-Return STACKn rabbit password
-*/}}
-{{- define "stackn.rabbit.password" -}}
-{{- if .Values.rabbit.password -}}
-    {{- .Values.rabbit.password -}}
+{{- define "studio.rabbitmq.password" -}}
+{{- if .Values.rabbitmq.auth.password -}}
+    {{- .Values.rabbitmq.auth.password -}}
 {{- else -}}
     {{- randAlphaNum 10 -}}
 {{- end -}}
 {{- end -}}
 
 {{/*
-Return STACKn rabbit username
+Return RabbitMQ secret
 */}}
-{{- define "stackn.rabbit.username" -}}
-{{- .Values.rabbitmq.auth.username -}}
-{{- end -}}
-
-{{/*
-Return STACKn rabbit secret
-*/}}
-{{- define "stackn.rabbit.secretName" -}}
+{{- define "studio.rabbitmq.secretName" -}}
 {{- include "rabbitmq.secretPasswordName" .Subcharts.rabbitmq -}}
 {{- end -}}
 
+{{/*
+Return Studio storageClass
+*/}}
+{{- define "studio.storageclass" -}}
+{{- if .Values.studio.storageClass }}
+    {{- .Values.studio.storageClass -}}
+{{- else -}}
+    {{- .Values.postgresql.primary.persistence.storageClass -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return Studio media storageClass
+*/}}
+{{- define "studio.media.storageclass" -}}
+{{- if .Values.studio.media.storage.storageClass }}
+    {{- .Values.studio.media.storage.storageClass -}}
+{{- else -}}
+    {{- .Values.postgresql.primary.persistence.storageClass -}}
+{{- end -}}
+{{- end -}}
 
 {{/*
     Return eventuser password
-    */}}
-    {{- define "stackn.studio.eventuser.password" -}}
-    {{- if .Values.global.studio.eventuserPassword }}
-        {{- .Values.global.studio.eventuserPassword -}}
-    {{- else if .Values.studio.eventuserPassword -}}
-        {{- .Values.studio.eventuserPassword -}}
-    {{- else -}}
-        {{- randAlphaNum 10 -}}
-    {{- end -}}
-    {{- end -}}
+*/}}
+{{- define "studio.eventuser.password" -}}
+{{- if .Values.studio.eventuserPassword }}
+    {{- .Values.studio.eventuserPassword -}}
+{{- else -}}
+    {{- randAlphaNum 10 -}}
+{{- end -}}
+{{- end -}}
     
-    {{/*
-    Return eventuser email
-    */}}
-    {{- define "stackn.studio.eventuser.email" -}}
-    {{- if .Values.global.studio.eventuserEmail }}
-        {{- .Values.global.studio.eventuserEmail -}}
-    {{- else if .Values.studio.eventuserEmail -}}
-        {{- .Values.studio.eventuserEmail -}}
-    {{- else -}}
-        event_user@test.com
-    {{- end -}}
-    {{- end -}}
+{{/*
+Return eventuser email
+*/}}
+{{- define "studio.eventuser.email" -}}
+{{- if .Values.studio.eventuserEmail }}
+    {{- .Values.studio.eventuserEmail -}}
+{{- else -}}
+    event_user@test.com
+{{- end -}}
+{{- end -}}
