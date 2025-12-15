@@ -7,7 +7,7 @@ metadata:
 spec:
   accessModes:
   - {{ .Values.studio.media.storage.accessModes  }}
-  storageClassName: {{ include "stackn.studio.media.storageclass" . }}
+  storageClassName: {{ include "studio.media.storageclass" . }}
   resources:
     requests:
       storage: {{ .Values.studio.media.storage.size | default "5Gi" }}

@@ -72,7 +72,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: {{ .Values.domain | quote }}
+    - host: {{ .Values.studio.domain | quote }}
       http:
         paths:
           - backend:
@@ -83,7 +83,7 @@ spec:
             path: /{{ .Values.studio.djangoAdminUrlPath }}
             pathType: Exact
 
-    - host: {{ .Values.domain | quote }}
+    - host: {{ .Values.studio.domain | quote }}
       http:
         paths:
           - backend:
@@ -95,5 +95,3 @@ spec:
             pathType: Prefix
 {{- end }}
 {{- end }}
-
-
