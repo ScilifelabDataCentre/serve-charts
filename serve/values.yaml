@@ -152,6 +152,8 @@ studio:
   githubApiUsername:
   dockerhubToken:
   dockerhubUsername:
+  invenioUrl:
+  invenioApiToken:
 
 postgresql:
   enabled: true
