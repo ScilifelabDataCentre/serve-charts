@@ -121,6 +121,7 @@ data:
         "django_password_validators",  # django-password-validators for password validation
         "gmailapi_backend",
         "django_altcha",
+        "django_prose_editor",
     ] + DJANGO_WIKI_APPS
 
     {{ if .Values.studio.custom_apps.enabled }}
@@ -227,6 +228,7 @@ data:
                     'django.contrib.auth.context_processors.auth',
                     'django.contrib.messages.context_processors.messages',
                     'common.context_processors.maintenance_mode',
+                    "js_asset.context_processors.importmap",
                 ]
                 + DJANGO_WIKI_CONTEXT_PROCESSOR,
                 'libraries': {
