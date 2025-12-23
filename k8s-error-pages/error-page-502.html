@@ -2,7 +2,7 @@
 
 <html lang="en"><head>
 <meta content="text/html; charset=utf-8" http-equiv="content-type"/>
-<title>Temporary not available | SciLifeLab Serve (beta)</title>
+<title>Temporarily not available | SciLifeLab Serve (beta)</title>
 <meta charset="utf-8"/>
 <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
 <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
@@ -2716,7 +2716,7 @@ a.collection-logo:hover::after, a:focus::after, a.active::after {
 </div>
 </nav>
 <main class="container mb-3">
-<h1>Service is temporary unavailable (502 error)</h1>
+<h1>Service is temporarily unavailable (502 error)</h1>
 <p style="font-size: x-large">Sorry for the inconvenience. Just try to go to the <a href="https://serve.scilifelab.se/home/">home page</a>
     or attempt what you wanted to do again a bit later.</p>
 <p style="font-size: x-large;"> If the problem persists please contact us via <a href="mailto:serve@scilifelab.se">serve@scilifelab.se</a> and describe the issue.
@@ -2886,18 +2886,20 @@ SciLifeLab Serve is <a href="https://github.com/ScilifelabDataCentre/stackn/">av
     </script>
 <!-- Visitor analytics -->
 <script>
-        var _paq = window._paq = window._paq || [];
-        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-        _paq.push(["disableCookies"]);
-        _paq.push(['trackPageView']);
-        _paq.push(['enableLinkTracking']);
-        (function () {
-            var u = "//matomo.dckube.scilifelab.se/";
-            _paq.push(['setTrackerUrl', u + 'matomo.php']);
-            _paq.push(['setSiteId', '5']);
-            var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
-            g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
-        })();
+        if (!window.location.hostname.includes('nip.io')) {
+            var _paq = window._paq = window._paq || [];
+            /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+            _paq.push(["setCookieDomain", "*.serve.scilifelab.se"]);
+            _paq.push(['trackPageView']);
+            _paq.push(['enableLinkTracking']);
+            (function() {
+                var u="https://matomo.dc.scilifelab.se/";
+                _paq.push(['setTrackerUrl', u+'matomo.php']);
+                _paq.push(['setSiteId', '5']);
+                var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+                g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+            })();
+        }
     </script>
 <button class="btn btn-secondary btn-lg btn-top" id="btn-to-top" type="button">
 <i class="bi bi-arrow-up"></i>
