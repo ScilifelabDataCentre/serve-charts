@@ -325,15 +325,7 @@ spec:
         {{ end }}
          {{ if .Values.studio.invenioApiToken }}
         - name: INVENIO_URL
-          valueFrom:
-            secretKeyRef:
-              {{- if .Values.bitwarden.enabled }}
-              name: serve-bitwarden-secret
-              key: invenio-url
-              {{- else }}
-              name: {{ include "studio.secretName" . }}
-              key: invenio-url
-              {{- end }}
+          value: https://invenio.{{ .Values.studio.domain }}
         - name: INVENIO_API_TOKEN
           valueFrom:
             secretKeyRef:
