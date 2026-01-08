@@ -283,6 +283,8 @@ ingress:
     enabled: true
     # IP address range to allow access to the django admin interface
     whiteListSourceRange: 130.238.0.0/16
+  rateLimit:
+    rpm: "5"  # Requests per minute
 
 chartcontroller:
   enabled: false
