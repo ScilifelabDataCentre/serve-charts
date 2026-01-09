@@ -323,6 +323,25 @@ spec:
               key: email-google-service-account-universe-domain
               {{- end }}
         {{ end }}
+         {{ if .Values.studio.invenioApiToken }}
+        - name: INVENIO_URL
+          value: https://invenio.{{ .Values.studio.domain }}
+        - name: INVENIO_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              {{- if .Values.bitwarden.enabled }}
+              name: serve-bitwarden-secret
+              key: invenio-token
+              {{- else }}
+              name: {{ include "studio.secretName" . }}
+              key: invenio-token
+              {{- end }}
+        {{ else }}
+        - name: INVENIO_URL
+          value: ""
+        - name: INVENIO_API_TOKEN
+          value: ""
+         {{- end }}
         image: {{ .Values.studio.image.repository }}
         imagePullPolicy: {{ .Values.studio.image.pullPolicy }}
         name: {{ .Release.Name }}-studio

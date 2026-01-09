@@ -393,6 +393,10 @@ data:
     GITHUB_API_TOKEN = os.getenv('GITHUB_API_TOKEN')
     GITHUB_API_USERNAME = os.getenv('GITHUB_API_USERNAME')
 
+    # Invenio API
+    INVENIO_URL = os.getenv("INVENIO_URL")
+    INVENIO_API_TOKEN = os.getenv("INVENIO_API_TOKEN")
+
     # Apps
     APPS_MODEL = "apps.Apps"
     APPINSTANCE_MODEL = "apps.BaseAppInstance"
