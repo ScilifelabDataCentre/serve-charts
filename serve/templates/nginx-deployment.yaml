@@ -37,7 +37,7 @@ spec:
           claimName: {{ .Release.Name }}-{{ .Values.studio.media.storage.claimName }}
       containers:
       - name: static
-        image: {{ .Values.studio.static.image }}
+        image: {{ .Values.studio.static.image.repository }}:{{ .Values.studio.static.image.tag }}
         imagePullPolicy: {{ .Values.studio.static.pullPolicy }}
         # securityContext:
         #   runAsUser: 101

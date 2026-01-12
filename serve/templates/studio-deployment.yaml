@@ -342,7 +342,7 @@ spec:
         - name: INVENIO_API_TOKEN
           value: ""
          {{- end }}
-        image: {{ .Values.studio.image.repository }}
+        image: {{ .Values.studio.image.repository }}:{{ .Values.studio.image.tag }}
         imagePullPolicy: {{ .Values.studio.image.pullPolicy }}
         name: {{ .Release.Name }}-studio
         volumeMounts:
