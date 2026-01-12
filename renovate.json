@@ -1,0 +1,18 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "packageRules": [
+   {
+     "matchPackageNames": ["*"],
+     "enabled": false
+   },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/scilifelabdatacentre/serve/serve-studio"],
+      "enabled": true,
+      "allowedVersions": "/^develop-\\d{8}$/",
+      "automerge": false,
+      "schedule": ["* 8-14 * * 1-5"],
+      "prConcurrentLimit": 1
+    }
+  ]
+}
