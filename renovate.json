@@ -7,7 +7,10 @@
    },
     {
       "matchDatasources": ["docker"],
-      "matchPackageNames": ["ghcr.io/scilifelabdatacentre/serve/serve-studio"],
+      "matchPackageNames": [
+        "ghcr.io/scilifelabdatacentre/serve/serve-studio",
+        "ghcr.io/scilifelabdatacentre/serve/serve-ingress"
+      ],
       "enabled": true,
       "allowedVersions": "/^develop-\\d{8}$/",
       "automerge": false,
