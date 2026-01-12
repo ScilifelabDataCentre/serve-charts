@@ -1,10 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "packageRules": [
-   {
+    {
      "matchPackageNames": ["*"],
      "enabled": false
-   },
+    },
     {
       "matchDatasources": ["docker"],
       "matchPackageNames": [
