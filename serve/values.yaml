@@ -50,6 +50,10 @@ studio:
     model: "user.User"
   csrf_trusted_origins: "https://serve-dev.scilifelab.se:8082" #if you want to port-forward the web server
   session_cookie_age: 3600
+  rateLimit:
+    authEndpoint:
+      rate: "10/minute"
+      whitelist: "10.42.0.0/16"
   kubeconfig_file: /app/kubeconfig/config
   kubeconfig_dir: /app/kubeconfig/
   kube_api_request_timeout: 1
@@ -284,7 +288,7 @@ ingress:
     # IP address range to allow access to the django admin interface
     whiteListSourceRange: 130.238.0.0/16
   rateLimit:
-    rpm: "5"  # Requests per minute
+    rpm: "100"  # Requests per minute
 
 chartcontroller:
   enabled: false
