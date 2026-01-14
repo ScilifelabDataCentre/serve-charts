@@ -61,8 +61,10 @@ studio:
     replicas: 1
     strategy:
       type: Recreate
-    image: ghcr.io/scilifelabdatacentre/serve/serve-ingress:develop-20251208
-    pullPolicy: IfNotPresent
+    image:
+      repository: ghcr.io/scilifelabdatacentre/serve/serve-ingress
+      tag: develop-20251208
+      pullPolicy: Always
     resources:
       limits:
         cpu: 1
@@ -71,7 +73,8 @@ studio:
         cpu: "100m"
         memory: "256Mi"
   image:
-    repository: ghcr.io/scilifelabdatacentre/serve/serve-studio:develop-20251208
+    repository: ghcr.io/scilifelabdatacentre/serve/serve-studio
+    tag: develop-20251208
     pullPolicy: Always
   resources:
     limits:

@@ -208,7 +208,7 @@ spec:
         {{- end }}
         - name: DJANGO_ADMIN_URL_PATH
           value: {{ .Values.studio.djangoAdminUrlPath }}
-        image: {{ .Values.studio.image.repository }}
+        image: {{ .Values.studio.image.repository }}:{{ .Values.studio.image.tag }}
         imagePullPolicy: {{ .Values.studio.image.pullPolicy }}
         name: {{ .Release.Name }}-celery-worker
         resources:
