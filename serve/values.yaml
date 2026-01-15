@@ -171,7 +171,9 @@ postgresql:
     database: stackn
     password:
     existingSecret: serve-bitwarden-secret
-    existingSecretPasswordKey: postgresql-password
+    secretKeys:
+      adminPasswordKey: postgresql-password
+      userPasswordKey: postgresql-password
   storageClass: *storage_class
   primary:
     service:
