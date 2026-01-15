@@ -168,10 +168,10 @@ postgresql:
   commonAnnotations: {"reloader.stakater.com/auto": "true"}
   auth:
     username: stackn
-    password:
-    postgresPassword:
     database: stackn
-    existingSecret:
+    password:
+    existingSecret: serve-bitwarden-secret
+    existingSecretPasswordKey: postgres-password
   storageClass: *storage_class
   primary:
     service:
