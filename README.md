@@ -139,11 +139,11 @@ studio:
     image:
       repository: mystudio
       tag: latest
-      imagePullPolicy: Never
+      pullPolicy: Never
   image:
     repository: mystudio
     tag: latest
-    imagePullPolicy: Never
+    pullPolicy: Never
   resources:
     limits:
       cpu: "1000m"
@@ -283,11 +283,11 @@ studio:
     image:
       repository: mystudio
       tag: latest
-      imagePullPolicy: Never
+      pullPolicy: Never
   image:
     repository: mystudio
     tag: latest
-    imagePullPolicy: Never
+    pullPolicy: Never
   resources:
     limits:
       cpu: "1000m"
