@@ -64,7 +64,7 @@ studio:
     image:
       repository: ghcr.io/scilifelabdatacentre/serve/serve-ingress
       tag: develop-20251208
-      pullPolicy: Always
+      imagePullPolicy: Always
     resources:
       limits:
         cpu: 1
@@ -75,7 +75,7 @@ studio:
   image:
     repository: ghcr.io/scilifelabdatacentre/serve/serve-studio
     tag: develop-20251208
-    pullPolicy: Always
+    imagePullPolicy: Always
   resources:
     limits:
       cpu: 16

@@ -1,0 +1,125 @@
+environment: "vscode"
+source_code_path: "/path/to/your/local/serve"
+
+storageClass: &storage_class local-path
+access_mode: &access_mode ReadWriteOnce
+accessmode: *access_mode
+accessModes:
+  - ReadWriteOnce
+
+bitwarden:
+  enabled: false
+
+namespace: default
+
+studio:
+  domain: studio.127.0.0.1.nip.io
+  session_cookie_domain: .127.0.0.1.nip.io
+  superuserPassword: "yourpassword"
+  superuserEmail: "your.email@example.com"
+  djangoAdminUrlPath: "admin"
+  storageClass: *storage_class
+  debug: true
+  inactive_users: false
+  storage:
+    storageClass: *storage_class
+  media:
+    storage:
+      storageClass: *storage_class
+      accessModes: *access_mode
+  csrf_trusted_origins: "https://studio.127.0.0.1.nip.io:8080"
+  superUser: admin
+  static:
+    image:
+      repository: mystudio
+      tag: latest
+      imagePullPolicy: Never
+  image:
+    repository: mystudio
+    tag: latest
+    imagePullPolicy: Never
+  resources:
+    limits:
+      cpu: "1000m"
+      memory: "4Gi"
+    requests:
+      cpu: "400m"
+    media:
+      mountStudio: false
+  emailService:
+    enabled: false
+
+securityContext:
+  enabled: false
+
+readinessProbe:
+  enabled: false
+
+livenessProbe:
+  enabled: false
+
+rabbitmq:
+  auth:
+    erlangCookie:
+    existingPasswordSecret: ""
+    existingPasswordSecretKey: ""
+    erlangCookie:
+  resources:
+    limits:
+      cpu:
+      ephemeral-storage: 50Mi
+      memory:
+    requests:
+      cpu:
+      ephemeral-storage: 50Mi
+      memory:
+
+redis:
+  enabled: true
+  auth:
+    existingSecret: ""
+    existingSecretPasswordKey: ""
+
+celeryFlower:
+  enabled: true
+
+bitwarden:
+  enabled: false
+
+networkPolicy:
+  enable: false
+  kubernetes:
+    cidr:
+    port: 6443 
+  internal_cidr:
+    - 10.0.0.0/8
+    - 192.168.0.0/16
+    - 172.0.0.0/20
+  ingress_controller_namespace: kube-system
+
+ingress:
+  djangoAdminAccessRestriction:
+    enabled: false
+  hosts:
+    - host: studio.127.0.0.1.nip.io
+  tls: []
+
+reloader:
+  enabled: true
+  namespace: default
+
+postgresql:
+  storageClass: *storage_class
+  auth:
+    username: postgres
+    database: postgres
+    password:
+    existingSecret: ""
+    secretKeys:
+      adminPasswordKey: ""
+      userPasswordKey: ""
+  primary:
+    persistence:
+      storageClass: *storage_class
+      accessModes:
+        - *access_mode
