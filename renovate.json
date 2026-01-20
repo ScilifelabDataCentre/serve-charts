@@ -13,6 +13,8 @@
       ],
       "enabled": true,
       "allowedVersions": "/^develop-\\d{8}$/",
+      "versioning": "docker",
+      "pinDigests": true,
       "automerge": false,
       "schedule": ["* 8-14 * * 1-5"],
       "prConcurrentLimit": 1
