@@ -138,6 +138,6 @@ repos/
 serve/charts/*.tgz
 
 #Other
-values-local*
+values-local.yaml
 
 requirements.lock

@@ -81,41 +81,7 @@ $ cd serve-charts/serve
 
 Now you need to create an override file for the `values.yaml` file.
 
-Create a file called `values-local.yaml` and add the following content:
-
-```yaml filename="values-local.yaml"
-# https://helm.sh/docs/chart_template_guide/yaml_techniques/#yaml-anchors
-# for local development
-storageClass: &storage_class local-path
-#storage access mode
-access_mode: &access_mode ReadWriteOnce
-accessmode: *access_mode
-
-global:
-  studio:
-    superuserPassword: "Test@12345"
-    superuserEmail: "admin@sll.se"
-    storageClass: *storage_class
-  postgresql:
-    storageClass: *storage_class
-
-studio:
-  # Only locally on a debug environment
-  debug: true
-  storage:
-    storageClass: *storage_class
-  media:
-    storage:
-      storageClass: *storage_class
-      accessModes: *access_mode
-
-postgresql:
-  primary:
-    persistence:
-      storageClass: *storage_class
-      accessModes:
-        - *access_mode
-```
+Create a file called `values-local.yaml` from the example template `values-local.example.yaml`.
 
 This is necessary because the default values are set for a production environment. Specifically, the storage class 
 has to change because the default storage class is not available in a Rancher Desktop environment.
@@ -138,61 +104,131 @@ As a result you should have a running instance of Serve on your local machine av
   $ git clone https://github.com/ScilifelabDataCentre/serve-charts.git
   $ cd serve-charts/serve
   $ cat <<EOF > values-local.yaml
-environment: "local"
-# Path will be mounted using rancher desktop to the /app path in the container
-source_code_path: "/Users/nikch187/Projects/sll/serve"
-# https://helm.sh/docs/chart_template_guide/yaml_techniques/#yaml-anchors
-# for local development
+environment: "vscode"
+source_code_path: "/path/to/your/local/serve"
+
 storageClass: &storage_class local-path
-#storage access mode
 access_mode: &access_mode ReadWriteOnce
 accessmode: *access_mode
+accessModes:
+  - ReadWriteOnce
 
-global:
-  studio:
-    superuserPassword: "Test@12345"
-    superuserEmail: "admin@sll.se"
-    storageClass: *storage_class
-  postgresql:
-    storageClass: *storage_class
+bitwarden:
+  enabled: false
+
+namespace: default
 
 studio:
-  # Only locally on a debug environment
+  domain: studio.127.0.0.1.nip.io
+  session_cookie_domain: .127.0.0.1.nip.io
+  superuserPassword: "yourpassword"
+  superuserEmail: "your.email@example.com"
+  djangoAdminUrlPath: "admin"
+  storageClass: *storage_class
   debug: true
+  inactive_users: false
   storage:
     storageClass: *storage_class
   media:
     storage:
       storageClass: *storage_class
       accessModes: *access_mode
-
-  # We use pull policy Never because see the following link:
-  # https://github.com/rancher-sandbox/rancher-desktop/issues/952#issuecomment-993135128
+  csrf_trusted_origins: "https://studio.127.0.0.1.nip.io:8080"
+  superUser: admin
   static:
-    image: mystudio
-    pullPolicy: Never
-
+    image:
+      repository: mystudio
+      tag: latest
+      pullPolicy: Never
   image:
     repository: mystudio
+    tag: latest
     pullPolicy: Never
-
-  securityContext:
-    # Disables security context for local development
-    # Essentially allow the container to run as root
+  resources:
+    limits:
+      cpu: "1000m"
+      memory: "4Gi"
+    requests:
+      cpu: "400m"
+    media:
+      mountStudio: false
+  emailService:
     enabled: false
 
-  readinessProbe:
-    enabled: false
+securityContext:
+  enabled: false
 
-  livenessProbe:
+readinessProbe:
+  enabled: false
+
+livenessProbe:
+  enabled: false
+
+rabbitmq:
+  auth:
+    erlangCookie:
+    existingPasswordSecret: ""
+    existingPasswordSecretKey: ""
+    erlangCookie:
+  resources:
+    limits:
+      cpu:
+      ephemeral-storage: 50Mi
+      memory:
+    requests:
+      cpu:
+      ephemeral-storage: 50Mi
+      memory:
+
+redis:
+  enabled: true
+  auth:
+    existingSecret: ""
+    existingSecretPasswordKey: ""
+
+celeryFlower:
+  enabled: true
+
+bitwarden:
+  enabled: false
+
+networkPolicy:
+  enable: false
+  kubernetes:
+    cidr:
+    port: 6443 
+  internal_cidr:
+    - 10.0.0.0/8
+    - 192.168.0.0/16
+    - 172.0.0.0/20
+  ingress_controller_namespace: kube-system
+
+ingress:
+  djangoAdminAccessRestriction:
     enabled: false
+  hosts:
+    - host: studio.127.0.0.1.nip.io
+  tls: []
+
+reloader:
+  enabled: true
+  namespace: default
 
 postgresql:
+  storageClass: *storage_class
+  auth:
+    username: postgres
+    database: postgres
+    password:
+    existingSecret: ""
+    secretKeys:
+      adminPasswordKey: ""
+      userPasswordKey: ""
   primary:
     persistence:
       storageClass: *storage_class
       accessModes:
-        - *access_mode 
+        - *access_mode
   EOF
   $ helm upgrade serve . -f values.yaml -f values-local.yaml
   ```
@@ -208,97 +244,135 @@ Now that everything is running, you can swap the default image with the one you 
 
 Go back to the `values-local.yaml` file update it with the following content:
 
-```yaml filename="values-local.yaml"
-environment: "local"
-
-# Path will be mounted using rancher desktop to the /app path in the container
-source_code_path: "/absolute/path/to/your/serve"
-# https://helm.sh/docs/chart_template_guide/yaml_techniques/#yaml-anchors
-# ...
-studio:
-  # Append the following to the end of the studio section
-  
-  # We use pull policy Never because see the following link:
-  # https://github.com/rancher-sandbox/rancher-desktop/issues/952#issuecomment-993135128
-  static:
-    image: mystudio
-    pullPolicy: Never
-
-  image:
-    repository: mystudio
-    pullPolicy: Never
-
-  securityContext:
-    # Disables security context for local development
-    # Essentially allow the container to run as root
-    enabled: false
-
-  readinessProbe:
-    enabled: false
-
-  livenessProbe:
-    enabled: false 
-```
-
 <details>
   <summary>Full content of the values-local.yaml file</summary>
   
 ```yaml
-  environment: "local"
-  # Path will be mounted using rancher desktop to the /app path in the container
-  source_code_path: "/Users/nikch187/Projects/sll/serve"
-  # https://helm.sh/docs/chart_template_guide/yaml_techniques/#yaml-anchors
-  # for local development
-  storageClass: &storage_class local-path
-  #storage access mode
-  access_mode: &access_mode ReadWriteOnce
-  accessmode: *access_mode
+environment: "vscode"
+source_code_path: "/path/to/your/local/serve"
 
-  global:
-    studio:
-      superuserPassword: "Test@12345"
-      superuserEmail: "admin@sll.se"
-      storageClass: *storage_class
-    postgresql:
-      storageClass: *storage_class
+storageClass: &storage_class local-path
+access_mode: &access_mode ReadWriteOnce
+accessmode: *access_mode
+accessModes:
+  - ReadWriteOnce
 
-  studio:
-    # Only locally on a debug environment
-    debug: true
+bitwarden:
+  enabled: false
+
+namespace: default
+
+studio:
+  domain: studio.127.0.0.1.nip.io
+  session_cookie_domain: .127.0.0.1.nip.io
+  superuserPassword: "yourpassword"
+  superuserEmail: "your.email@example.com"
+  djangoAdminUrlPath: "admin"
+  storageClass: *storage_class
+  debug: true
+  inactive_users: false
+  storage:
+    storageClass: *storage_class
+  media:
     storage:
       storageClass: *storage_class
-    media:
-      storage:
-        storageClass: *storage_class
-        accessModes: *access_mode
-
-    # We use pull policy Never because see the following link:
-    # https://github.com/rancher-sandbox/rancher-desktop/issues/952#issuecomment-993135128
-    static:
-      image: mystudio
-      pullPolicy: Never
-
+      accessModes: *access_mode
+  csrf_trusted_origins: "https://studio.127.0.0.1.nip.io:8080"
+  superUser: admin
+  static:
     image:
       repository: mystudio
+      tag: latest
       pullPolicy: Never
+  image:
+    repository: mystudio
+    tag: latest
+    pullPolicy: Never
+  resources:
+    limits:
+      cpu: "1000m"
+      memory: "4Gi"
+    requests:
+      cpu: "400m"
+    media:
+      mountStudio: false
+  emailService:
+    enabled: false
 
-    securityContext:
-      # Disables security context for local development
-      # Essentially allow the container to run as root
-      enabled: false
+securityContext:
+  enabled: false
 
-    readinessProbe:
-      enabled: false
+readinessProbe:
+  enabled: false
 
-    livenessProbe:
-      enabled: false
+livenessProbe:
+  enabled: false
 
-  postgresql:
-    primary:
-      persistence:
-        storageClass: *storage_class
-        accessModes:
-          - *access_mode
+rabbitmq:
+  auth:
+    erlangCookie:
+    existingPasswordSecret: ""
+    existingPasswordSecretKey: ""
+    erlangCookie:
+  resources:
+    limits:
+      cpu:
+      ephemeral-storage: 50Mi
+      memory:
+    requests:
+      cpu:
+      ephemeral-storage: 50Mi
+      memory:
+
+redis:
+  enabled: true
+  auth:
+    existingSecret: ""
+    existingSecretPasswordKey: ""
+
+celeryFlower:
+  enabled: true
+
+bitwarden:
+  enabled: false
+
+networkPolicy:
+  enable: false
+  kubernetes:
+    cidr:
+    port: 6443 
+  internal_cidr:
+    - 10.0.0.0/8
+    - 192.168.0.0/16
+    - 172.0.0.0/20
+  ingress_controller_namespace: kube-system
+
+ingress:
+  djangoAdminAccessRestriction:
+    enabled: false
+  hosts:
+    - host: studio.127.0.0.1.nip.io
+  tls: []
+
+reloader:
+  enabled: true
+  namespace: default
+
+postgresql:
+  storageClass: *storage_class
+  auth:
+    username: postgres
+    database: postgres
+    password:
+    existingSecret: ""
+    secretKeys:
+      adminPasswordKey: ""
+      userPasswordKey: ""
+  primary:
+    persistence:
+      storageClass: *storage_class
+      accessModes:
+        - *access_mode
   ```
 
 </details>
