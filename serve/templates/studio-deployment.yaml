@@ -323,7 +323,7 @@ spec:
               key: email-google-service-account-universe-domain
               {{- end }}
         {{ end }}
-         {{ if .Values.studio.invenioEnabled }}
+        {{ if .Values.studio.invenioEnabled }}
         - name: INVENIO_URL
           {{- if .Values.studio.invenioUrl }}
           value: {{ .Values.studio.invenioUrl | quote }}
