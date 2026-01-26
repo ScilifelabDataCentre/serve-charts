@@ -110,8 +110,10 @@ studio:
     privileged: false
   readinessProbe:
     enabled: true
-    tcpSocket:
+    httpGet:
+      path: /status
       port: 8080
+      scheme: HTTP
     initialDelaySeconds: 20
     periodSeconds: 10
   livenessProbe:
