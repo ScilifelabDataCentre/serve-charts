@@ -159,7 +159,7 @@ studio:
   githubApiUsername:
   dockerhubToken:
   dockerhubUsername:
-  invenioEnabled: true
+  invenioEnabled: false
   invenioUrl:
   invenioApiToken:
 
