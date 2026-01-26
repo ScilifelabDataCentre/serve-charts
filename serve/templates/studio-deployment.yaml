@@ -385,8 +385,10 @@ spec:
         {{- end }}
         {{- if .Values.studio.readinessProbe.enabled }}
         readinessProbe:
-          tcpSocket:
-            port: {{ .Values.studio.readinessProbe.tcpSocket.port }}
+          httpGet:
+            path: {{ .Values.studio.readinessProbe.httpGet.path }}
+            port: {{ .Values.studio.readinessProbe.httpGet.port }}
+            scheme: {{ .Values.studio.readinessProbe.httpGet.scheme }}
           initialDelaySeconds: {{ .Values.studio.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.studio.readinessProbe.periodSeconds }}
         {{- end }}
