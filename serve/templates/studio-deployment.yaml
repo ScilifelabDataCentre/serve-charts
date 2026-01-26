@@ -323,9 +323,13 @@ spec:
               key: email-google-service-account-universe-domain
               {{- end }}
         {{ end }}
-         {{ if .Values.studio.invenioApiToken }}
+         {{ if .Values.studio.invenioEnabled }}
         - name: INVENIO_URL
+          {{- if .Values.studio.invenioUrl }}
+          value: {{ .Values.studio.invenioUrl | quote }}
+          {{- else }}
           value: https://invenio.{{ .Values.studio.domain }}
+          {{- end }}
         - name: INVENIO_API_TOKEN
           valueFrom:
             secretKeyRef:
@@ -341,7 +345,7 @@ spec:
           value: ""
         - name: INVENIO_API_TOKEN
           value: ""
-         {{- end }}
+        {{- end }}
         image: {{ .Values.studio.image.repository }}:{{ .Values.studio.image.tag }}
         imagePullPolicy: {{ .Values.studio.image.pullPolicy }}
         name: {{ .Release.Name }}-studio
