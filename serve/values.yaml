@@ -63,7 +63,7 @@ studio:
       type: Recreate
     image:
       repository: ghcr.io/scilifelabdatacentre/serve/serve-ingress
-      tag: develop-20251208
+      tag: develop-20251208@sha256:c096e37bc924970c0fa8845bbcd3b0b5fbc7021c49dfb72dbbc48db7eb3a88a4
       pullPolicy: Always
     resources:
       limits:
@@ -74,7 +74,7 @@ studio:
         memory: "256Mi"
   image:
     repository: ghcr.io/scilifelabdatacentre/serve/serve-studio
-    tag: develop-20251208
+    tag: develop-20251208@sha256:1d6e3f79c3b3cacc04d5a44e56277f2dd5d145821355d814a83b49a07e50191b
     pullPolicy: Always
   resources:
     limits:
