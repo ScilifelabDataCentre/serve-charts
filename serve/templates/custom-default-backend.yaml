@@ -15,7 +15,7 @@ spec:
   - to:
     - ipBlock:
         cidr: 0.0.0.0/0
-      ports:
+    ports:
       - protocol: TCP
         port: 443
 ---
@@ -99,7 +99,7 @@ spec:
       port:
         number: 80
   rules:
-  - host: '*.{{ .Values.domain }}'
+  - host: '*.{{ .Values.studio.domain }}'
     http:
       paths:
       - backend:
@@ -111,6 +111,5 @@ spec:
         pathType: ImplementationSpecific
   tls:
   - hosts:
-    - '*.{{ .Values.domain }}'
+    - '*.{{ .Values.studio.domain }}'
     secretName: prod-ingress
-

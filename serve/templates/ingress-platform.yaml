@@ -9,6 +9,9 @@ metadata:
   {{- end }}
     nginx.ingress.kubernetes.io/custom-http-errors: "503,502"
     nginx.ingress.kubernetes.io/default-backend: nginx-errors
+    nginx.ingress.kubernetes.io/limit-rpm: "{{ .Values.ingress.rateLimit.rpm }}"
+    nginx.ingress.kubernetes.io/limit-burst-multiplier: "1"
+    nginx.ingress.kubernetes.io/limit-whitelist: "{{ .Values.ingress.djangoAdminAccessRestriction.whiteListSourceRange }}"
   labels:
     io.kompose.service: {{ .Release.Name }}-ingress
 spec:
@@ -72,7 +75,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: {{ .Values.domain | quote }}
+    - host: {{ .Values.studio.domain | quote }}
       http:
         paths:
           - backend:
@@ -83,7 +86,7 @@ spec:
             path: /{{ .Values.studio.djangoAdminUrlPath }}
             pathType: Exact
 
-    - host: {{ .Values.domain | quote }}
+    - host: {{ .Values.studio.domain | quote }}
       http:
         paths:
           - backend:
@@ -95,5 +98,3 @@ spec:
             pathType: Prefix
 {{- end }}
 {{- end }}
-
-

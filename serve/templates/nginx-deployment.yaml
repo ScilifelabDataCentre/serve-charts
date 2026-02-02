@@ -10,7 +10,7 @@ spec:
   selector:
     matchLabels:
       release: {{ .Release.Name }}
-      app: stackn-studio
+      app: studio-app
       type: app
       pod: nginx-static
   strategy:
@@ -23,7 +23,7 @@ spec:
         prometheus.io/port: "8501"
       labels:
         release: {{ .Release.Name }}
-        app: stackn-studio
+        app: studio-app
         type: app
         pod: nginx-static
     spec:
@@ -37,8 +37,8 @@ spec:
           claimName: {{ .Release.Name }}-{{ .Values.studio.media.storage.claimName }}
       containers:
       - name: static
-        image: {{ .Values.studio.static.image }}
-        imagePullPolicy: {{ .Values.studio.static.pullPolicy }}
+        image: {{ .Values.studio.static.image.repository }}:{{ .Values.studio.static.image.tag }}
+        imagePullPolicy: {{ .Values.studio.static.image.pullPolicy }}
         # securityContext:
         #   runAsUser: 101
         #   runAsGroup: 101
