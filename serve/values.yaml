@@ -296,7 +296,7 @@ ingress:
   djangoAdminAccessRestriction:
     enabled: true
     # IP address range to allow access to the django admin interface
-    whiteListSourceRange: 130.238.0.0/16
+    whiteListSourceRange: "130.238.0.0/16,130.237.0.0/16,130.229.0.0/16"
   rateLimit:
     rpm: "100"  # Requests per minute
 
