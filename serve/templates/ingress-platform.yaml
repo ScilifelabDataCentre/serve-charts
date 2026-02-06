@@ -66,7 +66,7 @@ kind: Ingress
 metadata:
   name: admin-ingress
   annotations:
-    # POI: here we are allowing access to /admin/* only to 130.238.0.0/16
+    # POI: here we are allowing access to /admin/* only to 130.238.0.0/16 and 130.237.0.0/16
     nginx.ingress.kubernetes.io/whitelist-source-range: {{.Values.ingress.djangoAdminAccessRestriction.whiteListSourceRange}}
     nginx.ingress.kubernetes.io/custom-http-errors: "403"
     nginx.ingress.kubernetes.io/default-backend: nginx-errors
