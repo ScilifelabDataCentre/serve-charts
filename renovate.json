@@ -2,21 +2,27 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "packageRules": [
     {
-     "matchPackageNames": ["*"],
-     "enabled": false
+      // Ignore all other packages
+      "matchPackageNames": ["*"],
+      "enabled": false
     },
     {
-      "matchDatasources": ["docker"],
+      // Only update the Serve images used in the charts
       "matchPackageNames": [
         "ghcr.io/scilifelabdatacentre/serve/serve-studio",
         "ghcr.io/scilifelabdatacentre/serve/serve-ingress"
       ],
       "enabled": true,
-      "allowedVersions": "/^develop-\\d{8}$/",
-      "versioning": "docker",
-      "pinDigests": true,
+      // Update both images in the same PR
+      "groupName": "serve images",
+      // Use a regex to extract the version components from the tag, which is in the format "develop-YYYYMMDD"
+      "versioning": "regex:^develop-(?<major>\\d{4})(?<minor>\\d{2})(?<patch>\\d{2})$",
+      "branchName": "update-serve-images-{{newMajor}}-{{newMinor}}-{{newPatch}}",
+      "prTitle": "Update Serve Images to {{newValue}}",
+      "prBody": "Updates Serve images to version {{newValue}} ({{newVersion}})\n\n### Changes\n{{#each updates}}- {{depName}}: `{{currentValue}}` → `{{newValue}}`\n{{/each}}",
       "automerge": false,
-      "schedule": ["* 8-14 * * 1-5"],
+      "schedule": ["* 8-16 * * 1-5"],
+      // Limit to 1 PR at a time to avoid conflicts
       "prConcurrentLimit": 1
     }
   ]
