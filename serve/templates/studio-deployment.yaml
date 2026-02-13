@@ -323,7 +323,30 @@ spec:
               key: email-google-service-account-universe-domain
               {{- end }}
         {{ end }}
-        image: {{ .Values.studio.image.repository }}
+        {{ if .Values.studio.invenioEnabled }}
+        - name: INVENIO_URL
+          {{- if .Values.studio.invenioUrl }}
+          value: {{ .Values.studio.invenioUrl | quote }}
+          {{- else }}
+          value: https://invenio.{{ .Values.studio.domain }}
+          {{- end }}
+        - name: INVENIO_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              {{- if .Values.bitwarden.enabled }}
+              name: serve-bitwarden-secret
+              key: invenio-token
+              {{- else }}
+              name: {{ include "studio.secretName" . }}
+              key: invenio-token
+              {{- end }}
+        {{ else }}
+        - name: INVENIO_URL
+          value: ""
+        - name: INVENIO_API_TOKEN
+          value: ""
+        {{- end }}
+        image: {{ .Values.studio.image.repository }}:{{ .Values.studio.image.tag }}
         imagePullPolicy: {{ .Values.studio.image.pullPolicy }}
         name: {{ .Release.Name }}-studio
         volumeMounts:
@@ -362,8 +385,10 @@ spec:
         {{- end }}
         {{- if .Values.studio.readinessProbe.enabled }}
         readinessProbe:
-          tcpSocket:
-            port: {{ .Values.studio.readinessProbe.tcpSocket.port }}
+          httpGet:
+            path: {{ .Values.studio.readinessProbe.httpGet.path }}
+            port: {{ .Values.studio.readinessProbe.httpGet.port }}
+            scheme: {{ .Values.studio.readinessProbe.httpGet.scheme }}
           initialDelaySeconds: {{ .Values.studio.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.studio.readinessProbe.periodSeconds }}
         {{- end }}

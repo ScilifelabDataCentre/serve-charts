@@ -236,7 +236,7 @@ spec:
               key: email-google-service-account-universe-domain
               {{- end }}
         {{- end }}
-        image: {{ .Values.studio.image.repository }}
+        image: {{ .Values.studio.image.repository }}:{{ .Values.studio.image.tag }}
         imagePullPolicy: {{ .Values.studio.image.pullPolicy }}
         name: {{ .Release.Name }}-celery-beat
         resources:

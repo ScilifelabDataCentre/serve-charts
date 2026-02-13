@@ -50,6 +50,10 @@ studio:
     model: "user.User"
   csrf_trusted_origins: "https://serve-dev.scilifelab.se:8082" #if you want to port-forward the web server
   session_cookie_age: 3600
+  rateLimit:
+    authEndpoint:
+      rate: "10/minute" # Empty = disabled
+      whitelist: "10.42.0.0/16" # Empty = no whitelist
   kubeconfig_file: /app/kubeconfig/config
   kubeconfig_dir: /app/kubeconfig/
   kube_api_request_timeout: 1
@@ -57,8 +61,10 @@ studio:
     replicas: 1
     strategy:
       type: Recreate
-    image: ghcr.io/scilifelabdatacentre/serve/serve-ingress:develop-20251208
-    pullPolicy: IfNotPresent
+    image:
+      repository: ghcr.io/scilifelabdatacentre/serve/serve-ingress
+      tag: develop-20260129
+      pullPolicy: Always
     resources:
       limits:
         cpu: 1
@@ -67,7 +73,8 @@ studio:
         cpu: "100m"
         memory: "256Mi"
   image:
-    repository: ghcr.io/scilifelabdatacentre/serve/serve-studio:develop-20251208
+    repository: ghcr.io/scilifelabdatacentre/serve/serve-studio
+    tag: develop-20260129
     pullPolicy: Always
   resources:
     limits:
@@ -103,8 +110,10 @@ studio:
     privileged: false
   readinessProbe:
     enabled: true
-    tcpSocket:
+    httpGet:
+      path: /status
       port: 8080
+      scheme: HTTP
     initialDelaySeconds: 20
     periodSeconds: 10
   livenessProbe:
@@ -152,6 +161,9 @@ studio:
   githubApiUsername:
   dockerhubToken:
   dockerhubUsername:
+  invenioEnabled: false
+  invenioUrl:
+  invenioApiToken:
 
 postgresql:
   enabled: true
@@ -159,10 +171,12 @@ postgresql:
   commonAnnotations: {"reloader.stakater.com/auto": "true"}
   auth:
     username: stackn
-    password:
-    postgresPassword:
     database: stackn
-    existingSecret:
+    password:
+    existingSecret: serve-bitwarden-secret
+    secretKeys:
+      adminPasswordKey: postgresql-password
+      userPasswordKey: postgresql-password
   storageClass: *storage_class
   primary:
     service:
@@ -234,7 +248,7 @@ celeryFlower:
   enabled: false
 
 eventListener:
-  image: ghcr.io/scilifelabdatacentre/serve-event-listener/event-listener:v1.3.1
+  image: ghcr.io/scilifelabdatacentre/serve-event-listener/event-listener:v1.4.0
   debug: true
   tlsSSLVerification: "1"            # "0" / "1" / "/path/to/ca.pem"
   appProbeStatuses: "Running,Deleted"  # "" disables probing completely
@@ -282,7 +296,9 @@ ingress:
   djangoAdminAccessRestriction:
     enabled: true
     # IP address range to allow access to the django admin interface
-    whiteListSourceRange: 130.238.0.0/16
+    whiteListSourceRange: "130.238.0.0/16,130.237.0.0/16,130.229.0.0/16"
+  rateLimit:
+    rpm: "100"  # Requests per minute
 
 chartcontroller:
   enabled: false

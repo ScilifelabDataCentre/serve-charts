@@ -162,6 +162,11 @@ data:
         "DEFAULT_PARSER_CLASSES": ("rest_framework.parsers.JSONParser",),
     }
 
+    # Rate limiting configuration
+    AUTH_RATE_LIMIT_VALUE = {{ .Values.studio.rateLimit.authEndpoint.rate | default "" | quote }}
+    AUTH_RATE_LIMIT_WHITELIST_RAW = {{ .Values.studio.rateLimit.authEndpoint.whitelist | default "" | quote }}
+    AUTH_RATE_LIMIT_WHITELIST = [ip.strip() for ip in AUTH_RATE_LIMIT_WHITELIST_RAW.split(",")]
+
     # Default primary key field type
     # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -393,6 +398,10 @@ data:
     GITHUB_API_TOKEN = os.getenv('GITHUB_API_TOKEN')
     GITHUB_API_USERNAME = os.getenv('GITHUB_API_USERNAME')
 
+    # Invenio API
+    INVENIO_URL = os.getenv("INVENIO_URL")
+    INVENIO_API_TOKEN = os.getenv("INVENIO_API_TOKEN")
+
     # Apps
     APPS_MODEL = "apps.Apps"
     APPINSTANCE_MODEL = "apps.BaseAppInstance"
@@ -592,7 +601,7 @@ data:
         )
 
     # k8s cluster version for validation of manifests
-    CLUSTER_VERSION = "1.32"
+    CLUSTER_VERSION = "1.33"
 
     # Serve profiling image
     PROFILING_ENABLED = os.getenv("PROFILING_ENABLED", "false").lower() == "true"
