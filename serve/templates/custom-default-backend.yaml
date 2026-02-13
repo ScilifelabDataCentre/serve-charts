@@ -12,6 +12,16 @@ spec:
   policyTypes:
   - Egress
   egress:
+  # Allow DNS lookups (required for curl to resolve raw.githubusercontent.com)
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
   - to:
     - ipBlock:
         cidr: 0.0.0.0/0
@@ -62,7 +72,6 @@ spec:
         - -c
         - |
           mkdir -p /www
-          curl -o /www/401.html https://raw.githubusercontent.com/ScilifelabDataCentre/serve-charts/refs/heads/develop/k8s-error-pages/error-page-401.html
           curl -o /www/403.html https://raw.githubusercontent.com/ScilifelabDataCentre/serve-charts/refs/heads/develop/k8s-error-pages/error-page-403.html
           curl -o /www/404.html https://raw.githubusercontent.com/ScilifelabDataCentre/serve-charts/refs/heads/develop/k8s-error-pages/error-page-404.html
           curl -o /www/503.html https://raw.githubusercontent.com/ScilifelabDataCentre/serve-charts/refs/heads/develop/k8s-error-pages/error-page-503.html
@@ -89,7 +98,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    nginx.ingress.kubernetes.io/custom-http-errors: 503,502,500,401,404,403
+    nginx.ingress.kubernetes.io/custom-http-errors: 503,502,500,404,403
     nginx.ingress.kubernetes.io/default-backend: nginx-errors
   name: wildcard-serve-errors-ingress
   namespace: {{ .Values.namespace }}
