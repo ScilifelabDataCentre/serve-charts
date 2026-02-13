@@ -389,6 +389,17 @@ spec:
             path: {{ .Values.studio.readinessProbe.httpGet.path }}
             port: {{ .Values.studio.readinessProbe.httpGet.port }}
             scheme: {{ .Values.studio.readinessProbe.httpGet.scheme }}
+            httpHeaders:
+            {{ if .Values.readinessProbe.httpGet.httpHeaders }}
+              {{- range .Values.readinessProbe.httpGet.httpHeaders }}
+              - name: {{ .name | quote }}
+                value: {{ .value | quote }}
+              {{- end }}
+            {{ else }}
+              - name: "host"
+                value: {{ .Release.Name }}-studio.{{ .Values.namespace | default "default" }}.svc.{{ .Values.cluster_domain | default "cluster.local"}}
+            {{ end }}
+
           initialDelaySeconds: {{ .Values.studio.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.studio.readinessProbe.periodSeconds }}
         {{- end }}
