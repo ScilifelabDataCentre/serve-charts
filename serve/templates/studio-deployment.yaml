@@ -390,8 +390,8 @@ spec:
             port: {{ .Values.studio.readinessProbe.httpGet.port }}
             scheme: {{ .Values.studio.readinessProbe.httpGet.scheme }}
             httpHeaders:
-            {{ if .Values.readinessProbe.httpGet.httpHeaders }}
-              {{- range .Values.readinessProbe.httpGet.httpHeaders }}
+            {{ if .Values.studio.readinessProbe.httpGet.httpHeaders }}
+              {{- range .Values.studio.readinessProbe.httpGet.httpHeaders }}
               - name: {{ .name | quote }}
                 value: {{ .value | quote }}
               {{- end }}
