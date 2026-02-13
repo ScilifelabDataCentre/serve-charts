@@ -12,6 +12,16 @@ spec:
   policyTypes:
   - Egress
   egress:
+  # Allow DNS lookups (required for curl to resolve raw.githubusercontent.com)
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
   - to:
     - ipBlock:
         cidr: 0.0.0.0/0

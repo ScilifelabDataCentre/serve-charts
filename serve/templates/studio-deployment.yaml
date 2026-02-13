@@ -118,7 +118,7 @@ spec:
               key: postgresql-password
               {{- else }}
               name: {{ include "studio.postgresql.secretName" . }}
-              key: password
+              key: {{ include "postgresql.userPasswordKey" .Subcharts.postgresql }}
               {{- end }}
         - name: POSTGRES_USER
           {{- if .Values.bitwarden.enabled }}
@@ -127,7 +127,7 @@ spec:
               name: serve-bitwarden-secret
               key: postgresql-username
           {{- else }}
-          value: {{ .Values.postgresql.auth.user }}
+          value: {{ .Values.postgresql.auth.username }}
           {{- end }}
         - name: REDIS_PASSWORD
           valueFrom:
