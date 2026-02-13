@@ -114,6 +114,7 @@ studio:
       path: /status
       port: 8080
       scheme: HTTP
+      httpHeaders:
     initialDelaySeconds: 20
     periodSeconds: 10
   livenessProbe:
