@@ -63,7 +63,6 @@ rabbitmq:
     erlangCookie:
     existingPasswordSecret: ""
     existingPasswordSecretKey: ""
-    erlangCookie:
   resources:
     limits:
       cpu:
@@ -82,9 +81,6 @@ redis:
 
 celeryFlower:
   enabled: true
-
-bitwarden:
-  enabled: false
 
 networkPolicy:
   enable: false
