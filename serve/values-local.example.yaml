@@ -48,15 +48,12 @@ studio:
       mountStudio: false
   emailService:
     enabled: false
-
-securityContext:
-  enabled: false
-
-readinessProbe:
-  enabled: false
-
-livenessProbe:
-  enabled: false
+  readinessProbe:
+    enabled: false
+  livenessProbe:
+    enabled: false
+  securityContext:
+    enabled: false
 
 rabbitmq:
   auth:
