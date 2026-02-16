@@ -42,7 +42,11 @@ jobs:
           # Build a JSON object mapping HELM_NAME -> NEW_CHART_VERSION
           UPDATES_JSON='{}'
           while IFS= read -r chart_path; do
-            APP_NAME="$(echo "$chart_path" | sed -E 's|^apps/([^/]+)/(Chart\.yaml|chart/Chart\.yaml)$|\1|')"
+            # chart_path is one of:
+            # - apps/<app>/Chart.yaml
+            # - apps/<app>/chart/Chart.yaml
+            # so the app name is always the 2nd path segment.
+            APP_NAME="$(echo "$chart_path" | cut -d/ -f2)"
 
             # Map the app name to helm name
             case "$APP_NAME" in
