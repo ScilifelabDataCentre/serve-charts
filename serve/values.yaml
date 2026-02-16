@@ -63,7 +63,7 @@ studio:
       type: Recreate
     image:
       repository: ghcr.io/scilifelabdatacentre/serve/serve-ingress
-      tag: develop-20251208
+      tag: develop-20260129
       pullPolicy: Always
     resources:
       limits:
@@ -74,7 +74,7 @@ studio:
         memory: "256Mi"
   image:
     repository: ghcr.io/scilifelabdatacentre/serve/serve-studio
-    tag: develop-20251208
+    tag: develop-20260129
     pullPolicy: Always
   resources:
     limits:
@@ -296,7 +296,7 @@ ingress:
   djangoAdminAccessRestriction:
     enabled: true
     # IP address range to allow access to the django admin interface
-    whiteListSourceRange: 130.238.0.0/16
+    whiteListSourceRange: "130.238.0.0/16,130.237.0.0/16,130.229.0.0/16"
   rateLimit:
     rpm: "100"  # Requests per minute
 

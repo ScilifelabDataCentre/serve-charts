@@ -38,7 +38,7 @@ spec:
       containers:
       - name: static
         image: {{ .Values.studio.static.image.repository }}:{{ .Values.studio.static.image.tag }}
-        imagePullPolicy: {{ .Values.studio.static.pullPolicy }}
+        imagePullPolicy: {{ .Values.studio.static.image.pullPolicy }}
         # securityContext:
         #   runAsUser: 101
         #   runAsGroup: 101
