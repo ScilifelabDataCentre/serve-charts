@@ -13,6 +13,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          # Use the PR head commit to make base..head diffs reliable
+          ref: ${{ github.event.pull_request.head.sha }}
           token: ${{ secrets.TW_PAT }}
           
       - name: Find changed Chart.yaml files and build updates map
@@ -21,7 +23,7 @@ jobs:
           set -euo pipefail
 
           BASE_SHA="${{ github.event.pull_request.base.sha }}"
-          HEAD_SHA="${{ github.sha }}"
+          HEAD_SHA="${{ github.event.pull_request.head.sha }}"
 
           # Find all changed Chart.yaml files in the PR range (not just the last commit).
           # Support both:
