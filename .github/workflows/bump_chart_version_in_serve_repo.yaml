@@ -33,8 +33,10 @@ jobs:
           
           if [ -z "$CHANGED_FILES" ]; then
             echo "No Chart.yaml files changed. Exiting."
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
 
           echo "Changed chart files:"
           echo "$CHANGED_FILES"
@@ -83,6 +85,7 @@ jobs:
           echo "JSON_FILE_PATH=fixtures/apps_fixtures.json" >> "$GITHUB_ENV"
 
       - name: Set up the SSH key
+        if: steps.find-charts.outputs.has_changes == 'true'
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.TW_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
@@ -90,6 +93,7 @@ jobs:
           ssh-keyscan github.com >> ~/.ssh/known_hosts
 
       - name: Clone the Serve repository
+        if: steps.find-charts.outputs.has_changes == 'true'
         run: |
           git config --global user.name "$GITHUB_ACTOR"
           git config --global user.email "teamwhale@scilifelab.se"
@@ -101,6 +105,7 @@ jobs:
           git clone git@github.com:ScilifelabDataCentre/serve.git
 
       - name: Import GPG key and configure commit signing
+        if: steps.find-charts.outputs.has_changes == 'true'
         run: |
           echo "${{ secrets.TW_GPG_PRIVATE_KEY }}" | gpg --batch --import
           git config --global user.signingkey "${{ secrets.GPG_KEY_ID }}"
@@ -109,6 +114,8 @@ jobs:
           GPG_PRIVATE_KEY: ${{ secrets.TW_GPG_PRIVATE_KEY }}
 
       - name: Update JSON file in the Serve repository
+        if: steps.find-charts.outputs.has_changes == 'true'
+        id: update-serve-fixtures
         run: |
           cd serve
           git checkout develop
@@ -123,7 +130,7 @@ jobs:
                 .fields.chart |= (
                   reduce ($updates | to_entries[]) as $e
                     (.;
-                      if startswith($e.key + ":")
+                      if contains($e.key + ":")
                       then sub(":[^:]+$"; ":" + $e.value)
                       else .
                       end
@@ -143,15 +150,18 @@ jobs:
           git add $JSON_FILE_PATH
           if git diff --staged --quiet; then
             echo "No changes to commit. The chart version might already be up-to-date."
-            exit 1
+            echo "changes_made=false" >> "$GITHUB_OUTPUT"
+            exit 0
           else
             git commit -S -m "Update chart versions in fixtures"
             git push -u origin update/charts-fixtures-${{ github.event.pull_request.number }}-${{ github.run_id }}
+            echo "changes_made=true" >> "$GITHUB_OUTPUT"
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.TW_PAT }}
 
       - name: Create a pull request in the Serve repository
+        if: steps.update-serve-fixtures.outputs.changes_made == 'true'
         run: |
           gh pr create \
             --repo ScilifelabDataCentre/serve \
