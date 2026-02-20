@@ -346,6 +346,33 @@ spec:
         - name: INVENIO_API_TOKEN
           value: ""
         {{- end }}
+        {{ if .Values.studio.orcid_client_id }}
+        - name: ORCID_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              {{- if .Values.bitwarden.enabled }}
+              name: serve-bitwarden-secret
+              key: orcid-client-id
+              {{- else }}
+              name: {{ include "studio.secretName" . }}
+              key: orcid-client-id
+              {{- end }}
+        - name: ORCID_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              {{- if .Values.bitwarden.enabled }}
+              name: serve-bitwarden-secret
+              key: orcid-client-secret
+              {{- else }}
+              name: {{ include "studio.secretName" . }}
+              key: orcid-client-secret
+              {{- end }}
+        {{ else }}
+        - name: ORCID_CLIENT_ID
+          value: ""
+        - name: ORCID_CLIENT_SECRET
+          value: ""
+        {{ end }}
         image: {{ .Values.studio.image.repository }}:{{ .Values.studio.image.tag }}
         imagePullPolicy: {{ .Values.studio.image.pullPolicy }}
         name: {{ .Release.Name }}-studio
