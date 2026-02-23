@@ -402,6 +402,9 @@ data:
     INVENIO_URL = os.getenv("INVENIO_URL")
     INVENIO_API_TOKEN = os.getenv("INVENIO_API_TOKEN")
 
+    # Invenio keywords data path
+    VOCABULARY_DATA_PATH = os.getenv("VOCABULARY_DATA_PATH", os.path.join(BASE_DIR, "common", "data", "invenio_keywords"))
+
     # Apps
     APPS_MODEL = "apps.Apps"
     APPINSTANCE_MODEL = "apps.BaseAppInstance"
