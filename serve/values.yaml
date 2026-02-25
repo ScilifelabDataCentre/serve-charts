@@ -165,6 +165,8 @@ studio:
   invenioEnabled: false
   invenioUrl:
   invenioApiToken:
+  orcid_client_id:
+  orcid_client_secret:
 
 postgresql:
   enabled: true
