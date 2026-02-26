@@ -83,7 +83,7 @@ spec:
           mountPath: /www
       containers:
       - name: nginx-error-server
-        image: registry.k8s.io/ingress-nginx/custom-error-pages:v1.0.2@sha256:b2259cf6bfda813548a64bded551b1854cb600c4f095738b49b4c5cdf8ab9d21
+        image: registry.k8s.io/ingress-nginx/custom-error-pages:v1.2.7@sha256:bc95ae1de9f36ef75cc9ea323893e406c58a2264de21c278879be63e60a659ca
         ports:
         - containerPort: 8080
         volumeMounts:
