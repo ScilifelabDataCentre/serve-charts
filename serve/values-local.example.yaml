@@ -48,6 +48,10 @@ studio:
       mountStudio: false
   emailService:
     enabled: false
+  invenioEnabled: false
+  invenioUrl: ""
+  invenioApiToken: ""
+  invenioMockMode: true
   readinessProbe:
     enabled: false
   livenessProbe:
