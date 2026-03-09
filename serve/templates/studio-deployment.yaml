@@ -346,6 +346,8 @@ spec:
         - name: INVENIO_API_TOKEN
           value: ""
         {{- end }}
+        - name: INVENIO_MOCK_MODE
+          value: {{ .Values.studio.invenioMockMode | quote }}
         {{ if .Values.studio.orcid_client_id }}
         - name: ORCID_CLIENT_ID
           valueFrom:
