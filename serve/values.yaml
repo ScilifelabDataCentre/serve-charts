@@ -158,6 +158,7 @@ studio:
     maxSize: 10
     timeout: 30
     maxIdle: 300
+  githubApiTokenToggle: true
   githubApiToken:
   githubApiUsername:
   dockerhubToken:

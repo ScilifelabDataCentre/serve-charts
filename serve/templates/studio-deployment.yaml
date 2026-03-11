@@ -139,7 +139,7 @@ spec:
               name: {{ include "studio.redis.secretName" . }}
               key: {{ include "studio.redis.secretPasswordKey" . }}
               {{- end }}
-        {{ if .Values.studio.githubApiToken }}
+        {{ if .Values.studio.githubApiTokenToggle }}
         - name: GITHUB_API_TOKEN
           valueFrom:
             secretKeyRef:
