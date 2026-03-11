@@ -48,6 +48,8 @@ studio:
       mountStudio: false
   emailService:
     enabled: false
+  dockerhubToken:
+  dockerhubUsername:
   invenioEnabled: false
   invenioUrl: ""
   invenioApiToken: ""
