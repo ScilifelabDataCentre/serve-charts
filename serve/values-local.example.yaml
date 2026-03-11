@@ -48,6 +48,7 @@ studio:
       mountStudio: false
   emailService:
     enabled: false
+  githubApiTokenToggle:
   dockerhubToken:
   dockerhubUsername:
   invenioEnabled: false
