@@ -401,6 +401,10 @@ data:
     # Invenio API
     INVENIO_URL = os.getenv("INVENIO_URL")
     INVENIO_API_TOKEN = os.getenv("INVENIO_API_TOKEN")
+    INVENIO_MOCK_MODE = os.getenv("INVENIO_MOCK_MODE", "true").lower() == "true"
+
+    # Invenio keywords data path
+    VOCABULARY_DATA_PATH = os.getenv("VOCABULARY_DATA_PATH", os.path.join(BASE_DIR, "common", "data", "invenio_keywords"))
 
     # Apps
     APPS_MODEL = "apps.Apps"
@@ -626,3 +630,14 @@ data:
             "TIMEOUT": 7200,
         }
     }
+
+    # ORCID Integration (Public API)
+    # Register credentials at: https://orcid.org/developer-tools (production)
+    # or https://sandbox.orcid.org/developer-tools (sandbox/testing)
+    ORCID_CLIENT_ID = os.environ.get("ORCID_CLIENT_ID", "")
+    ORCID_CLIENT_SECRET = os.environ.get("ORCID_CLIENT_SECRET", "")
+    ORCID_REDIRECT_URI = os.environ.get("ORCID_REDIRECT_URI", f"https://{DOMAIN}/orcid/callback/")
+
+    # For testing use sandbox:  https://sandbox.orcid.org
+    # For production use:       https://orcid.org
+    ORCID_BASE_URL = "https://orcid.org"

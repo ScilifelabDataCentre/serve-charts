@@ -63,7 +63,7 @@ studio:
       type: Recreate
     image:
       repository: ghcr.io/scilifelabdatacentre/serve/serve-ingress
-      tag: develop-20251208
+      tag: develop-20260311
       pullPolicy: Always
     resources:
       limits:
@@ -74,7 +74,7 @@ studio:
         memory: "256Mi"
   image:
     repository: ghcr.io/scilifelabdatacentre/serve/serve-studio
-    tag: develop-20251208
+    tag: develop-20260311
     pullPolicy: Always
   resources:
     limits:
@@ -114,6 +114,7 @@ studio:
       path: /status
       port: 8080
       scheme: HTTP
+      httpHeaders:
     initialDelaySeconds: 20
     periodSeconds: 10
   livenessProbe:
@@ -157,13 +158,17 @@ studio:
     maxSize: 10
     timeout: 30
     maxIdle: 300
+  githubApiTokenToggle: true
   githubApiToken:
   githubApiUsername:
   dockerhubToken:
-  dockerhubUsername:
+  dockerhubUsername: scilifelabteamwhale
   invenioEnabled: false
   invenioUrl:
   invenioApiToken:
+  invenioMockMode: true
+  orcid_client_id:
+  orcid_client_secret:
 
 postgresql:
   enabled: true
@@ -296,7 +301,7 @@ ingress:
   djangoAdminAccessRestriction:
     enabled: true
     # IP address range to allow access to the django admin interface
-    whiteListSourceRange: 130.238.0.0/16
+    whiteListSourceRange: "130.238.0.0/16,130.237.0.0/16,130.229.0.0/16"
   rateLimit:
     rpm: "100"  # Requests per minute
 

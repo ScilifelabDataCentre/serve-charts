@@ -48,22 +48,25 @@ studio:
       mountStudio: false
   emailService:
     enabled: false
-
-securityContext:
-  enabled: false
-
-readinessProbe:
-  enabled: false
-
-livenessProbe:
-  enabled: false
+  githubApiTokenToggle:
+  dockerhubToken:
+  dockerhubUsername:
+  invenioEnabled: false
+  invenioUrl: ""
+  invenioApiToken: ""
+  invenioMockMode: true
+  readinessProbe:
+    enabled: false
+  livenessProbe:
+    enabled: false
+  securityContext:
+    enabled: false
 
 rabbitmq:
   auth:
     erlangCookie:
     existingPasswordSecret: ""
     existingPasswordSecretKey: ""
-    erlangCookie:
   resources:
     limits:
       cpu:
@@ -82,9 +85,6 @@ redis:
 
 celeryFlower:
   enabled: true
-
-bitwarden:
-  enabled: false
 
 networkPolicy:
   enable: false

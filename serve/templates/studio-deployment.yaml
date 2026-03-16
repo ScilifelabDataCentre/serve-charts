@@ -118,7 +118,7 @@ spec:
               key: postgresql-password
               {{- else }}
               name: {{ include "studio.postgresql.secretName" . }}
-              key: password
+              key: {{ include "postgresql.userPasswordKey" .Subcharts.postgresql }}
               {{- end }}
         - name: POSTGRES_USER
           {{- if .Values.bitwarden.enabled }}
@@ -127,7 +127,7 @@ spec:
               name: serve-bitwarden-secret
               key: postgresql-username
           {{- else }}
-          value: {{ .Values.postgresql.auth.user }}
+          value: {{ .Values.postgresql.auth.username }}
           {{- end }}
         - name: REDIS_PASSWORD
           valueFrom:
@@ -139,7 +139,7 @@ spec:
               name: {{ include "studio.redis.secretName" . }}
               key: {{ include "studio.redis.secretPasswordKey" . }}
               {{- end }}
-        {{ if .Values.studio.githubApiToken }}
+        {{ if .Values.studio.githubApiTokenToggle }}
         - name: GITHUB_API_TOKEN
           valueFrom:
             secretKeyRef:
@@ -346,6 +346,28 @@ spec:
         - name: INVENIO_API_TOKEN
           value: ""
         {{- end }}
+        - name: INVENIO_MOCK_MODE
+          value: {{ .Values.studio.invenioMockMode | quote }}
+        - name: ORCID_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              {{- if .Values.bitwarden.enabled }}
+              name: serve-bitwarden-secret
+              key: orcid-client-id
+              {{- else }}
+              name: {{ include "studio.secretName" . }}
+              key: orcid-client-id
+              {{- end }}
+        - name: ORCID_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              {{- if .Values.bitwarden.enabled }}
+              name: serve-bitwarden-secret
+              key: orcid-client-secret
+              {{- else }}
+              name: {{ include "studio.secretName" . }}
+              key: orcid-client-secret
+              {{- end }}
         image: {{ .Values.studio.image.repository }}:{{ .Values.studio.image.tag }}
         imagePullPolicy: {{ .Values.studio.image.pullPolicy }}
         name: {{ .Release.Name }}-studio
@@ -389,6 +411,17 @@ spec:
             path: {{ .Values.studio.readinessProbe.httpGet.path }}
             port: {{ .Values.studio.readinessProbe.httpGet.port }}
             scheme: {{ .Values.studio.readinessProbe.httpGet.scheme }}
+            httpHeaders:
+            {{- if .Values.studio.readinessProbe.httpGet.httpHeaders }}
+              {{- range $i, $h := .Values.studio.readinessProbe.httpGet.httpHeaders }}
+              - name: {{ $h.name | quote }}
+                value: {{ $h.value | quote }}
+              {{- end }}
+              {{- else }}
+              - name: "host"
+                value: {{ .Release.Name }}-studio.{{ .Values.namespace | default "default" }}.svc.{{ .Values.cluster_domain | default "cluster.local"}}
+            {{ end }}
+
           initialDelaySeconds: {{ .Values.studio.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.studio.readinessProbe.periodSeconds }}
         {{- end }}
