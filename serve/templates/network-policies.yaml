@@ -424,5 +424,23 @@ spec:
         port: 8080
       - protocol: TCP
         port: 9091
+---
+# Allow egress from studio app to invenio namespace
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-from-studio-to-invenio
+  namespace: {{ .Values.namespace | default "default" }}
+spec:
+  podSelector:
+    matchLabels:
+      app: studio-app
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: invenio-dev
 {{- end }}
 {{- end }}
