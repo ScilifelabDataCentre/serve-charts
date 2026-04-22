@@ -278,6 +278,7 @@ networkPolicy:
     - 192.168.0.0/16
     - 172.0.0.0/20
   ingress_controller_namespace: kube-system
+  invenio_namespace: invenio-dev
 
 serviceAccount:
   create: true
