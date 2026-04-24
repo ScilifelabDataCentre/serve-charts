@@ -30,7 +30,7 @@ studio:
   strategy:
     type: RollingUpdate
   debug: true
-  init: true
+  init: false
   reset_db: false
   enable_project_extra_settings: false
   inactive_users: true
