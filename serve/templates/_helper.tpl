@@ -177,14 +177,6 @@ Studio container environment variables
 {{- else }}
   value: "false"
 {{- end }}
-- name: INIT
-  value: {{ .Values.studio.init | quote }}
-- name: RESET_DB
-  value: {{ .Values.studio.reset_db | quote }}
-- name: STUDIO_STORAGECLASS
-  value: {{ include "studio.storageclass" . }}
-- name: STUDIO_ACCESSMODE
-  value: {{ .Values.access_mode }}
 - name: DJANGO_SUPERUSER
   value: {{ include "studio.superuser" . }}
 - name: DJANGO_SUPERUSER_EMAIL
@@ -302,6 +294,12 @@ Studio container environment variables
       name: {{ include "studio.rabbitmq.secretName" . }}
       key: rabbitmq-password
       {{- end }}
+- name: RABBITMQ_HOST
+  value: {{ .Release.Name }}-rabbitmq
+- name: RABBITMQ_USER
+  value: {{ include "studio.rabbitmq.username" . | quote }}
+- name: REDIS_HOST
+  value: {{ .Release.Name }}-redis-master
 {{- if .Values.chartcontroller.addSecret }}
 - name: KUBECONFIG
   value: {{ .Values.studio.kubeconfig_file | quote }}
