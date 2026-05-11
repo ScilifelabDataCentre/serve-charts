@@ -30,7 +30,7 @@ studio:
   strategy:
     type: RollingUpdate
   debug: true
-  init: true
+  init: false
   reset_db: false
   enable_project_extra_settings: false
   inactive_users: true
@@ -63,7 +63,7 @@ studio:
       type: Recreate
     image:
       repository: ghcr.io/scilifelabdatacentre/serve/serve-ingress
-      tag: develop-20260311
+      tag: develop-20260508
       pullPolicy: Always
     resources:
       limits:
@@ -74,7 +74,7 @@ studio:
         memory: "256Mi"
   image:
     repository: ghcr.io/scilifelabdatacentre/serve/serve-studio
-    tag: develop-20260311
+    tag: develop-20260508
     pullPolicy: Always
   resources:
     limits:
@@ -278,6 +278,7 @@ networkPolicy:
     - 192.168.0.0/16
     - 172.0.0.0/20
   ingress_controller_namespace: kube-system
+  invenio_namespace: invenio-dev
 
 serviceAccount:
   create: true

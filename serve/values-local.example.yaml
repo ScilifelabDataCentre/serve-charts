@@ -20,6 +20,7 @@ studio:
   djangoAdminUrlPath: "admin"
   storageClass: *storage_class
   debug: true
+  init: true
   inactive_users: false
   storage:
     storageClass: *storage_class
@@ -48,9 +49,11 @@ studio:
       mountStudio: false
   emailService:
     enabled: false
-  githubApiTokenToggle:
+  githubApiTokenToggle: false
   dockerhubToken:
-  dockerhubUsername:
+  dockerhubUsername: ""
+  orcid_client_id: "dummy"
+  orcid_client_secret: "dummy"
   invenioEnabled: false
   invenioUrl: ""
   invenioApiToken: ""
