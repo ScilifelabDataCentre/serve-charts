@@ -306,6 +306,22 @@ ingress:
   rateLimit:
     rpm: "100"  # Requests per minute
 
+gateway:
+  create: false
+  enabled: false
+  name: default
+  namespace: gateway
+  gatewayClassName: nginx
+  port: 80
+  domain: gw.serve-dev.scilifelab.se
+  snippetsFilter:
+    enabled: false
+  # IP ranges allowed to access admin endpoints
+  allowedCIDRs:
+    - "130.238.0.0/16"
+    - "130.237.0.0/16"
+    - "130.229.0.0/16"
+
 chartcontroller:
   enabled: false
   #addSecret -- if true create chart-controller-secret from cluster_config, if false it must be added manually

@@ -1,0 +1,17 @@
+{{- if .Values.gateway.create }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: {{ .Values.gateway.name | default "default" }}
+  namespace: {{ .Values.gateway.namespace | default "gateway" }}
+spec:
+  gatewayClassName: {{ .Values.gateway.gatewayClassName | default "nginx" }}
+  listeners:
+  - name: http
+    port: 80
+    protocol: HTTP
+    hostname: {{ .Values.gateway.domain | quote }}
+    allowedRoutes:
+      namespaces:
+        from: All
+{{- end }}
