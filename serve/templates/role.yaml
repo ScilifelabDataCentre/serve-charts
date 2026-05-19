@@ -15,6 +15,9 @@ rules:
   - apiGroups: ["", "apps", "networking.k8s.io", "autoscaling","batch"]
     resources: ["*"]
     verbs: ["*"]
+  - apiGroups: ["gateway.networking.k8s.io"]
+    resources: ["httproutes"]
+    verbs: ["*"]
 {{- end }}
 ---
 kind: Role

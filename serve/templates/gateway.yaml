@@ -14,4 +14,11 @@ spec:
     allowedRoutes:
       namespaces:
         from: All
+  - name: http-wildcard
+    port: 80
+    protocol: HTTP
+    hostname: "*.{{ .Values.gateway.domain }}"
+    allowedRoutes:
+      namespaces:
+        from: All
 {{- end }}

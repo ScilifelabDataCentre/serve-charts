@@ -37,6 +37,11 @@ ingress:
   secretName: prod-ingress
   clientMaxBodySize: 100M
 
+gateway:
+  enabled: true
+  name: default
+  namespace: default
+
 podSecurityContext:
   seccompProfile:
     type: RuntimeDefault
