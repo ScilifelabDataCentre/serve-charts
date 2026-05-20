@@ -18,6 +18,9 @@ rules:
   - apiGroups: ["gateway.networking.k8s.io"]
     resources: ["httproutes"]
     verbs: ["*"]
+  - apiGroups: ["gateway.nginx.org"]
+    resources: ["snippetsfilters"]
+    verbs: ["*"]
 {{- end }}
 ---
 kind: Role

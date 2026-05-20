@@ -22,4 +22,12 @@ spec:
     - path:
         type: PathPrefix
         value: /
+    {{- if and (ne .Values.permission "public") (ne .Values.permission "link") }}
+    filters:
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.nginx.org
+        kind: SnippetsFilter
+        name: {{ .Release.Name }}-auth
+    {{- end }}
 {{- end }}
