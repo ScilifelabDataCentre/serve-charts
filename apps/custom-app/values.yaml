@@ -44,7 +44,7 @@ gateway:
   port: 80
   rateLimit:
     enabled: false
-    rate: "10r/s"
+    rate: "2r/s"
     burst: 20
     noDelay: true
     zoneSize: "10m"

@@ -308,22 +308,22 @@ ingress:
 
 gateway:
   create: false
-  enabled: false
+  enabled: true
   name: default
   namespace: gateway
   gatewayClassName: nginx
   port: 80
   domain: gw.serve-dev.scilifelab.se
-  snippetsFilter:
-    enabled: false
-  # IP ranges allowed to access admin endpoints
-  allowedCIDRs:
-    - "130.238.0.0/16"
-    - "130.237.0.0/16"
-    - "130.229.0.0/16"
+  whitelistingSnippetsFilter:
+    enabled: true
+    # IP ranges allowed to access admin endpoints
+    allowedCIDRs:
+      - "130.238.0.0/16"
+      - "130.237.0.0/16"
+      - "130.229.0.0/16"
   rateLimit:
-    enabled: false
-    rate: "10r/s"
+    enabled: true
+    rate: "2r/s"
     burst: 20
     noDelay: true
     zoneSize: "10m"

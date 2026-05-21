@@ -11,7 +11,7 @@ spec:
     namespace: {{ .Release.Namespace }}
   rateLimits:
   - key: ${binary_remote_addr}
-    rate: {{ .Values.gateway.rateLimit.rate | default "10r/s" }}
+    rate: {{ .Values.gateway.rateLimit.rate | default "2r/s" }}
     burst: {{ .Values.gateway.rateLimit.burst | default 20 }}
     noDelay: {{ .Values.gateway.rateLimit.noDelay | default true }}
     zoneSize: {{ .Values.gateway.rateLimit.zoneSize | default "10m" }}

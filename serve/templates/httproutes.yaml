@@ -30,7 +30,7 @@ spec:
     - path:
         type: PathPrefix
         value: /{{ .Values.studio.djangoAdminUrlPath }}/
-    {{- if .Values.gateway.snippetsFilter.enabled }}
+    {{- if .Values.gateway.whitelistingSnippetsFilter.enabled }}
     filters:
     - type: ExtensionRef
       extensionRef:
