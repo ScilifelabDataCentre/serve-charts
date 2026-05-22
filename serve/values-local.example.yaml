@@ -111,12 +111,31 @@ gateway:
   create: true
   enabled: true
   name: default
-  namespace: gateway
+  namespace: default
   gatewayClassName: nginx
   port: 80
   domain: studio.127.0.0.1.nip.io
-  snippetsFilter:
-    enabled: false
+  whitelistingSnippetsFilter:
+    enabled: true
+    # IP ranges allowed to access admin endpoints
+    allowedCIDRs:
+      - "10.0.0.0/8"
+      - "130.238.0.0/16"
+      - "130.237.0.0/16"
+      - "130.229.0.0/16"
+      - "192.168.0.0/16"
+      - "172.0.0.0/20"
+  rateLimit:
+    enabled: true
+    rate: "2r/s"
+    burst: 20
+    noDelay: true
+    zoneSize: "10m"
+    condition:
+      type: Header
+      header:
+        name: X-Forwarded-For
+        value: ".*"
 
 reloader:
   enabled: true
