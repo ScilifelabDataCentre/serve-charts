@@ -37,6 +37,18 @@ ingress:
   secretName: prod-ingress
   clientMaxBodySize: 5500m
 
+gateway:
+  enabled: true
+  name: default
+  namespace: default
+  port: 80
+  rateLimit:
+    enabled: false
+    rate: "2r/s"
+    burst: 20
+    noDelay: true
+    zoneSize: "10m"
+
 mlflow:
   url: ""
   s3url: ""

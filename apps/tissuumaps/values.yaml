@@ -13,7 +13,7 @@ apps:
   volumeK8s:
 
 appconfig:
-  image: docker.io/cavenel/tissuumaps:3
+  image: ghcr.io/scilifelabdatacentre/tissuumaps:3
   path: /mnt/data/
 
 service:
@@ -24,6 +24,18 @@ service:
 ingress:
   secretName: prod-ingress
   clientMaxBodySize: 100M
+
+gateway:
+  enabled: true
+  name: default
+  namespace: default
+  port: 80
+  rateLimit:
+    enabled: false
+    rate: "2r/s"
+    burst: 20
+    noDelay: true
+    zoneSize: "10m"
 
 podSecurityContext:
   seccompProfile:

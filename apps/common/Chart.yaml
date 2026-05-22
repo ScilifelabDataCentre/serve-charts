@@ -1,0 +1,8 @@
+apiVersion: v2
+name: common
+version: 0.1.0
+type: library
+description: Shared Helm templates for serve app charts
+maintainers:
+  - name: Team Whale
+    email: serve@scilifelab.se

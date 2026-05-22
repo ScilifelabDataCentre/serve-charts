@@ -14,6 +14,13 @@ spec:
         - podSelector:
             matchLabels:
               project: {{ .Values.project.slug }}
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: nginx-gateway-fabric
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: gateway
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -30,7 +37,7 @@ spec:
     - from:
         - podSelector:
             matchLabels:
-              app: stackn-studio
+              app: studio-app
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -48,3 +55,31 @@ spec:
     - podSelector:
         matchLabels:
           project: {{ .Values.project.slug }}
+  - to:
+    - ipBlock:
+        cidr: {{ .Values.kubeDnsCIDR | default "10.43.0.10/32" }}
+    ports:
+    - port: 53
+      protocol: UDP
+    - port: 53
+      protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-allow-api-access
+  namespace: {{ .Release.Namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      allow-api-access: "true"
+      project: {{ .Values.project.slug }}
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: {{ .Values.kubernetesApiCIDR | default "10.43.0.1/32" }}
+    ports:
+    - port: 443
+      protocol: TCP

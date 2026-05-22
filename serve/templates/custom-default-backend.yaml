@@ -94,6 +94,7 @@ spec:
       - name: error-pages
         emptyDir: {}
 ---
+{{- if not .Values.gateway.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -123,3 +124,4 @@ spec:
   - hosts:
     - '*.{{ .Values.studio.domain }}'
     secretName: prod-ingress
+{{- end }}

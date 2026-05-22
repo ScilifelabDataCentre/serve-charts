@@ -24,10 +24,23 @@ apps:
 
 service:
   name: shinyproxy-svc
+  port: 80
 
 ingress:
   secretName: prod-ingress
   clientMaxBodySize: 2000M
+
+gateway:
+  enabled: true
+  name: default
+  namespace: default
+  port: 80
+  rateLimit:
+    enabled: false
+    rate: "2r/s"
+    burst: 20
+    noDelay: true
+    zoneSize: "10m"
 
 s3sync:
   image: scaleoutsystems/s3-sync:latest
