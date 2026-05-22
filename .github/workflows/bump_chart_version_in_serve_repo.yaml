@@ -66,6 +66,10 @@ jobs:
               "tissuumaps") HELM_NAME="tissuumaps" ;;
               "vscode") HELM_NAME="vscode" ;;
               "volumek8s") HELM_NAME="volumek8s" ;;
+              "common")
+                echo "Skipping version bump for library chart 'common'."
+                continue 
+                ;;
               *)
                 echo "Unknown app: $APP_NAME. Exiting."
                 exit 1
