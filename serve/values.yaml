@@ -312,7 +312,6 @@ gateway:
   name: default
   namespace: gateway
   gatewayClassName: nginx
-  port: 80
   domain: gw.serve-dev.scilifelab.se
   whitelistingSnippetsFilter:
     enabled: true

@@ -116,7 +116,7 @@ gateway:
   port: 80
   domain: studio.127.0.0.1.nip.io
   whitelistingSnippetsFilter:
-    enabled: true
+    enabled: false
     # IP ranges allowed to access admin endpoints
     allowedCIDRs:
       - "10.0.0.0/8"
@@ -126,7 +126,7 @@ gateway:
       - "192.168.0.0/16"
       - "172.0.0.0/20"
   rateLimit:
-    enabled: true
+    enabled: false
     rate: "2r/s"
     burst: 20
     noDelay: true

@@ -94,7 +94,30 @@ spec:
       - name: error-pages
         emptyDir: {}
 ---
-{{- if not .Values.gateway.enabled }}
+{{- if .Values.gateway.enabled }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: wildcard-serve-errors-route
+  namespace: {{ .Values.namespace }}
+spec:
+  parentRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: {{ .Values.gateway.name | default "default" }}
+    namespace: {{ .Values.gateway.namespace | default "gateway" }}
+    port: {{ .Values.gateway.port | default 443 }}
+  hostnames:
+  - "*.{{ .Values.studio.domain }}"
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: nginx-errors
+      port: 80
+{{- else }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
