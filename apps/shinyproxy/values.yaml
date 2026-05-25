@@ -29,7 +29,7 @@ service:
     - name: access
       protocol: TCP
       port: 80
-      targetPort: 8080 # Uses .Values.appconfig.proxyport
+      targetPort: 8080  # Uses .Values.appconfig.proxyport
     - name: management
       port: 9091
       targetPort: management
