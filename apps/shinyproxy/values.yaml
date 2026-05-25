@@ -25,6 +25,15 @@ apps:
 service:
   name: shinyproxy-svc
   port: 80
+  ports:
+    - name: access
+      protocol: TCP
+      port: 80
+      targetPort: 8080 # Uses .Values.appconfig.proxyport
+    - name: management
+      port: 9091
+      targetPort: management
+      protocol: TCP
 
 ingress:
   secretName: prod-ingress
