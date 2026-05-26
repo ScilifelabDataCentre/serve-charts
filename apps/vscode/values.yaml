@@ -38,8 +38,7 @@ ingress:
 gateway:
   enabled: true
   name: default
-  namespace: default
-  port: 80
+  namespace: gateway
   rateLimit:
     enabled: false
     rate: "2r/s"
