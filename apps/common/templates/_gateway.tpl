@@ -61,7 +61,7 @@ spec:
     value: |
       location /auth/ {
         internal;
-        proxy_pass http://serve-studio.{{ .Release.Namespace }}.svc.cluster.local:8080/auth/?release={{ .Release.Name }};
+        proxy_pass {{ .Values.global.protocol | lower }}://{{ .Values.global.auth_domain }}:8080/auth/?release={{ .Values.release | default .Release.Name }};
         proxy_pass_request_body off;
         proxy_set_header Content-Length "";
         proxy_set_header X-Original-URI $request_uri;

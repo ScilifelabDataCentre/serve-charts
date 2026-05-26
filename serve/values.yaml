@@ -317,6 +317,7 @@ gateway:
     enabled: true
     # IP ranges allowed to access admin endpoints
     allowedCIDRs:
+      - "10.0.0.0/8"
       - "130.238.0.0/16"
       - "130.237.0.0/16"
       - "130.229.0.0/16"
