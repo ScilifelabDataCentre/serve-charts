@@ -20,7 +20,7 @@ spec:
               app.kubernetes.io/name: nginx-gateway-fabric
           namespaceSelector:
             matchLabels:
-              kubernetes.io/metadata.name: gateway
+              kubernetes.io/metadata.name: nginx-gateway
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -38,6 +38,13 @@ spec:
         - podSelector:
             matchLabels:
               app: studio-app
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: nginx-gateway-fabric
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: nginx-gateway
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy

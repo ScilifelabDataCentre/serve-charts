@@ -11,12 +11,13 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   hostnames:
-  - "{{ .Release.Name }}.{{ .Values.global.domain }}"
+  - "{{ .Release.Name }}.gw.{{ .Values.global.domain }}"
   parentRefs:
   - group: gateway.networking.k8s.io
     kind: Gateway
     name: {{ .Values.gateway.name | default "default" }}
     namespace: {{ .Values.gateway.namespace | default "gateway" }}
+    sectionName: {{ .Values.gateway.sectionName | default "serve-dev-subdomains" }}
     port: {{ .Values.gateway.port | default 443 }}
   rules:
   - backendRefs:
@@ -61,13 +62,14 @@ spec:
     value: |
       location /auth/ {
         internal;
+        resolver 10.43.0.10;
         proxy_pass {{ .Values.global.protocol | lower }}://{{ .Values.global.auth_domain }}:8080/auth/?release={{ .Values.release | default .Release.Name }};
         proxy_pass_request_body off;
         proxy_set_header Content-Length "";
         proxy_set_header X-Original-URI $request_uri;
       }
       location @login_redirect {
-        return 302 {{ $scheme }}://{{ .Values.global.domain }}/accounts/login/?next=$request_uri;
+        return 302 {{ $scheme }}://gw.{{ .Values.global.domain }}/accounts/login/?next=$request_uri;
       }
 {{- end }}
 {{- end }}
