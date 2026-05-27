@@ -16,9 +16,9 @@ spec:
   - group: gateway.networking.k8s.io
     kind: Gateway
     name: {{ .Values.gateway.name | default "default" }}
-    namespace: {{ .Values.gateway.namespace | default "gateway" }}
-    sectionName: {{ .Values.gateway.sectionName | default "serve-dev-subdomains" }}
-    port: {{ .Values.gateway.port | default 443 }}
+    namespace: {{ .Values.gateway.namespace | default "default" }}
+    sectionName: {{ .Values.gateway.sectionName | default "http" }}
+    port: {{ .Values.gateway.port | default 80 }}
   rules:
   - backendRefs:
     - name: {{ .Values.service.name }}

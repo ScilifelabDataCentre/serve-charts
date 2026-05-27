@@ -18,6 +18,8 @@ appconfig:
 
 global:
   domain: localhost
+  protocol: TCP
+  auth_domain: studio.127.0.0.1.nip.io
 
 apps:
   volumeK8s:
