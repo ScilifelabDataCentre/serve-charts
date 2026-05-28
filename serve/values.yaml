@@ -38,8 +38,8 @@ studio:
     enabled: true
     apps:
     - "common"
-  domain: serve-dev.scilifelab.se
-  session_cookie_domain: .serve-dev.scilifelab.se
+  domain: gw.serve-dev.scilifelab.se
+  session_cookie_domain: .gw.serve-dev.scilifelab.se
   custom_migrations:
     enabled: false
     apps:
@@ -48,7 +48,7 @@ studio:
   auth_user_model:
     override: false
     model: "user.User"
-  csrf_trusted_origins: "https://serve-dev.scilifelab.se:8082" #if you want to port-forward the web server
+  csrf_trusted_origins: "https://gw.serve-dev.scilifelab.se:8082" #if you want to port-forward the web server
   session_cookie_age: 3600
   rateLimit:
     authEndpoint:
@@ -312,6 +312,7 @@ gateway:
   name: default
   namespace: gateway
   gatewayClassName: nginx
+  port: 443
   domain: gw.serve-dev.scilifelab.se
   sectionName: serve-dev-subdomains
   studioSectionName: serve-dev-subdomains
