@@ -106,9 +106,10 @@ spec:
     kind: Gateway
     name: {{ .Values.gateway.name | default "default" }}
     namespace: {{ .Values.gateway.namespace | default "gateway" }}
-    port: {{ .Values.gateway.port | default 443 }}
+    port: {{ .Values.gateway.port | default 80 }}
   hostnames:
-  - "*.{{ .Values.studio.domain }}"
+  - {{ .Values.gateway.domain | quote }}
+  - "*.{{ .Values.gateway.domain }}"
   rules:
   - matches:
     - path:

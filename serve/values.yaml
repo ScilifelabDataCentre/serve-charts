@@ -313,9 +313,10 @@ gateway:
   namespace: gateway
   gatewayClassName: nginx
   domain: gw.serve-dev.scilifelab.se
-  sectionName: serve-dev-subdomains
+  sectionName: http
+  appSectionName: serve-dev-subdomains
   whitelistingSnippetsFilter:
-    enabled: true
+    enabled: false
     # IP ranges allowed to access admin endpoints
     allowedCIDRs:
       - "10.0.0.0/8"
@@ -323,7 +324,7 @@ gateway:
       - "130.237.0.0/16"
       - "130.229.0.0/16"
   rateLimit:
-    enabled: true
+    enabled: false
     rate: "2r/s"
     burst: 20
     noDelay: true

@@ -11,13 +11,13 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   hostnames:
-  - "{{ .Release.Name }}.gw.{{ .Values.global.domain }}"
+  - "{{ .Release.Name }}.{{ .Values.global.domain }}"
   parentRefs:
   - group: gateway.networking.k8s.io
     kind: Gateway
     name: {{ .Values.gateway.name | default "default" }}
-    namespace: {{ .Values.gateway.namespace | default "default" }}
-    sectionName: {{ .Values.gateway.sectionName | default "http" }}
+    namespace: {{ .Values.gateway.namespace | default "gateway" }}
+    sectionName: {{ .Values.gateway.appSectionName | default "http-wildcard" }}
     port: {{ .Values.gateway.port | default 80 }}
   rules:
   - backendRefs:
@@ -69,7 +69,7 @@ spec:
         proxy_set_header X-Original-URI $request_uri;
       }
       location @login_redirect {
-        return 302 {{ $scheme }}://gw.{{ .Values.global.domain }}/accounts/login/?next=$request_uri;
+        return 302 {{ $scheme }}://{{ .Values.global.domain }}/accounts/login/?next=$request_uri;
       }
 {{- end }}
 {{- end }}

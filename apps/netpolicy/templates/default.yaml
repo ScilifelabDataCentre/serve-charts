@@ -17,10 +17,10 @@ spec:
     - from:
         - podSelector:
             matchLabels:
-              app.kubernetes.io/name: nginx-gateway-fabric
+              app.kubernetes.io/managed-by: ngf-nginx
           namespaceSelector:
             matchLabels:
-              kubernetes.io/metadata.name: nginx-gateway
+              kubernetes.io/metadata.name: gateway
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -41,10 +41,10 @@ spec:
     - from:
         - podSelector:
             matchLabels:
-              app.kubernetes.io/name: nginx-gateway-fabric
+              app.kubernetes.io/managed-by: ngf-nginx
           namespaceSelector:
             matchLabels:
-              kubernetes.io/metadata.name: nginx-gateway
+              kubernetes.io/metadata.name: gateway
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy

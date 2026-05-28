@@ -111,10 +111,12 @@ gateway:
   create: true
   enabled: true
   name: default
-  namespace: default
+  namespace: gateway
   gatewayClassName: nginx
   port: 80
-  domain: studio.127.0.0.1.nip.io
+  domain: gw.studio.127.0.0.1.nip.io
+  sectionName: http
+  appSectionName: http-wildcard
   whitelistingSnippetsFilter:
     enabled: false
     # IP ranges allowed to access admin endpoints
