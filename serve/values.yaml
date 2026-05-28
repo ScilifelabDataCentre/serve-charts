@@ -317,7 +317,7 @@ gateway:
   sectionName: serve-dev-subdomains
   studioSectionName: serve-dev-subdomains
   whitelistingSnippetsFilter:
-    enabled: false
+    enabled: true
     # IP ranges allowed to access admin endpoints
     allowedCIDRs:
       - "10.0.0.0/8"
