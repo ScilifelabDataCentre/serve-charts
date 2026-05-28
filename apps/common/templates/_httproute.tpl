@@ -17,7 +17,7 @@ spec:
     kind: Gateway
     name: {{ .Values.gateway.name | default "default" }}
     namespace: {{ .Values.gateway.namespace | default "gateway" }}
-    sectionName: {{ .Values.gateway.appSectionName | default "http-wildcard" }}
+    sectionName: {{ .Values.gateway.sectionName | default "serve-dev-subdomains" }}
     port: {{ .Values.gateway.port | default 80 }}
   rules:
   - backendRefs:

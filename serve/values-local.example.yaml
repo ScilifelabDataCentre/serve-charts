@@ -115,8 +115,7 @@ gateway:
   gatewayClassName: nginx
   port: 80
   domain: gw.studio.127.0.0.1.nip.io
-  sectionName: http
-  appSectionName: http-wildcard
+  sectionName: serve-dev-subdomains
   whitelistingSnippetsFilter:
     enabled: false
     # IP ranges allowed to access admin endpoints

@@ -14,7 +14,7 @@ spec:
     allowedRoutes:
       namespaces:
         from: All
-  - name: http-wildcard
+  - name: serve-dev-subdomains
     port: 80
     protocol: HTTP
     hostname: "*.{{ .Values.gateway.domain }}"

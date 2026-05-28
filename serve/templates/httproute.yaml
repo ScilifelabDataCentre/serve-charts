@@ -12,8 +12,8 @@ spec:
     kind: Gateway
     name: {{ .Values.gateway.name | default "default" }}
     namespace: {{ .Values.gateway.namespace | default "gateway" }}
-    sectionName: {{ .Values.gateway.sectionName | default "http" }}
-    port: {{ .Values.gateway.port | default 443 }}
+    sectionName: {{ .Values.gateway.studioSectionName | default .Values.gateway.sectionName | default "http" }}
+    port: {{ .Values.gateway.port | default 80 }}
   rules:
   - backendRefs:
     - name: {{ .Release.Name }}-studio
