@@ -13,7 +13,7 @@ spec:
     name: {{ .Values.gateway.name | default "default" }}
     namespace: {{ .Values.gateway.namespace | default "gateway" }}
     sectionName: {{ .Values.gateway.studioSectionName | default .Values.gateway.sectionName | default "http" }}
-    port: {{ .Values.gateway.port | default 443 }}
+    port: {{ .Values.gateway.port | default (eq .Values.environment "vscode" | ternary 80 443) }}
   rules:
   - backendRefs:
     - name: {{ .Release.Name }}-studio

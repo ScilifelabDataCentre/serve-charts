@@ -1,4 +1,6 @@
-environment: "vscode"
+global:
+  environment: "vscode"
+
 source_code_path: "/path/to/your/local/serve"
 
 storageClass: &storage_class local-path
@@ -114,7 +116,7 @@ gateway:
   namespace: gateway
   gatewayClassName: nginx
   port: 80
-  domain: gw.studio.127.0.0.1.nip.io
+  domain: studio.127.0.0.1.nip.io
   sectionName: serve-dev-subdomains
   whitelistingSnippetsFilter:
     enabled: false

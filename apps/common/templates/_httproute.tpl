@@ -18,7 +18,7 @@ spec:
     name: {{ .Values.gateway.name | default "default" }}
     namespace: {{ .Values.gateway.namespace | default "gateway" }}
     sectionName: {{ .Values.gateway.sectionName | default "serve-dev-subdomains" }}
-    port: {{ .Values.gateway.port | default 443 }}
+    port: {{ .Values.gateway.port | default (eq .Values.global.environment "vscode" | ternary 80 443) }}
   rules:
   - backendRefs:
     - name: {{ .Values.service.name }}
