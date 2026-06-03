@@ -9,7 +9,6 @@ global:
   protocol: TCP
   domain: studio.127.0.0.1.nip.io
   auth_domain: studio.127.0.0.1.nip.io
-  environment: vscode
 
 ingress:
   secretName: prod-ingress
