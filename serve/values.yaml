@@ -50,10 +50,18 @@ studio:
     model: "user.User"
   csrf_trusted_origins: "https://serve-dev.scilifelab.se:8082" #if you want to port-forward the web server
   session_cookie_age: 3600
+  sessionCache:
+    enabled: true
   rateLimit:
     authEndpoint:
       rate: "10/minute" # Empty = disabled
       whitelist: "10.42.0.0/16" # Empty = no whitelist
+  authPermissionCache:
+    enabled: true
+    timeout: 30
+    denyTimeout: 5
+  authRequestLogging:
+    enabled: true
   kubeconfig_file: /app/kubeconfig/config
   kubeconfig_dir: /app/kubeconfig/
   kube_api_request_timeout: 1
