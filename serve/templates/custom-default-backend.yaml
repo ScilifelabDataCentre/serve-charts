@@ -110,6 +110,7 @@ spec:
     port: {{ .Values.gateway.port | default (contains "nip.io" .Values.gateway.domain | ternary 80 443) }}
   hostnames:
   - "*.{{ .Values.gateway.domain }}"
+  - "*.gw.{{ .Values.gateway.domain }}"
   rules:
   - matches:
     - path:

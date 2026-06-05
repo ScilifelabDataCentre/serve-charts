@@ -12,6 +12,7 @@ metadata:
 spec:
   hostnames:
   - "{{ .Release.Name }}.{{ .Values.global.domain }}"
+  - "gw.{{ .Release.Name }}.{{ .Values.global.domain }}"
   parentRefs:
   - group: gateway.networking.k8s.io
     kind: Gateway
