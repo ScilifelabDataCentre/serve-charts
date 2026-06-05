@@ -226,6 +226,10 @@ Studio container environment variables
   {{- else }}
   value: {{ .Values.postgresql.auth.username }}
   {{- end }}
+- name: POSTGRES_IDLE_SESSION_TIMEOUT
+  value: {{ .Values.studio.connectionPool.idleSessionTimeout | default "30m" | quote }}
+- name: POSTGRES_IDLE_IN_TRANSACTION_SESSION_TIMEOUT
+  value: {{ .Values.studio.connectionPool.idleInTransactionSessionTimeout | default "10m" | quote }}
 - name: REDIS_PASSWORD
   valueFrom:
     secretKeyRef:

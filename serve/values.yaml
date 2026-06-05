@@ -154,10 +154,13 @@ studio:
       - ''
   connectionPool:
     enabled: true
+    healthChecks: true
     minSize: 4
     maxSize: 10
     timeout: 30
     maxIdle: 300
+    idleSessionTimeout: 30m
+    idleInTransactionSessionTimeout: 10m
   githubApiTokenToggle: true
   githubApiToken:
   githubApiUsername:
