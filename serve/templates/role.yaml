@@ -19,7 +19,7 @@ rules:
     resources: ["httproutes"]
     verbs: ["*"]
   - apiGroups: ["gateway.nginx.org"]
-    resources: ["snippetsfilters"]
+    resources: ["snippetsfilters", "ratelimitpolicies"]
     verbs: ["*"]
 {{- end }}
 ---
