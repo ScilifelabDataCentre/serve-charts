@@ -159,8 +159,8 @@ studio:
     maxSize: 10
     timeout: 30
     maxIdle: 300
-    idleSessionTimeout: 30m
-    idleInTransactionSessionTimeout: 10m
+    idleSessionTimeout: 30min
+    idleInTransactionSessionTimeout: 10min
   githubApiTokenToggle: true
   githubApiToken:
   githubApiUsername:

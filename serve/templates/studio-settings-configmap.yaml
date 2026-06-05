@@ -252,8 +252,8 @@ data:
 
     # Database
     # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-    POSTGRES_IDLE_SESSION_TIMEOUT = os.getenv("POSTGRES_IDLE_SESSION_TIMEOUT", "{{ .Values.studio.connectionPool.idleSessionTimeout | default "30m" }}")
-    POSTGRES_IDLE_IN_TRANSACTION_SESSION_TIMEOUT = os.getenv("POSTGRES_IDLE_IN_TRANSACTION_SESSION_TIMEOUT", "{{ .Values.studio.connectionPool.idleInTransactionSessionTimeout | default "10m" }}")
+    POSTGRES_IDLE_SESSION_TIMEOUT = os.getenv("POSTGRES_IDLE_SESSION_TIMEOUT", "{{ .Values.studio.connectionPool.idleSessionTimeout | default "30min" }}")
+    POSTGRES_IDLE_IN_TRANSACTION_SESSION_TIMEOUT = os.getenv("POSTGRES_IDLE_IN_TRANSACTION_SESSION_TIMEOUT", "{{ .Values.studio.connectionPool.idleInTransactionSessionTimeout | default "10min" }}")
 
 
     def postgres_session_options() -> str:
