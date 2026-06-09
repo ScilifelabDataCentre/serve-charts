@@ -252,20 +252,38 @@ data:
 
     # Database
     # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+    POSTGRES_IDLE_SESSION_TIMEOUT = os.getenv("POSTGRES_IDLE_SESSION_TIMEOUT", "{{ .Values.studio.connectionPool.idleSessionTimeout | default "30min" }}")
+    POSTGRES_IDLE_IN_TRANSACTION_SESSION_TIMEOUT = os.getenv("POSTGRES_IDLE_IN_TRANSACTION_SESSION_TIMEOUT", "{{ .Values.studio.connectionPool.idleInTransactionSessionTimeout | default "10min" }}")
+
+
+    def postgres_session_options() -> str:
+        options = []
+        if POSTGRES_IDLE_SESSION_TIMEOUT:
+            options.append(f"-c idle_session_timeout={POSTGRES_IDLE_SESSION_TIMEOUT}")
+        if POSTGRES_IDLE_IN_TRANSACTION_SESSION_TIMEOUT:
+            options.append(f"-c idle_in_transaction_session_timeout={POSTGRES_IDLE_IN_TRANSACTION_SESSION_TIMEOUT}")
+        return " ".join(options)
+
 
     DATABASES = {
         'default': {
             "ENGINE": "django.db.backends.postgresql",
-            {{ if .Values.studio.connectionPool.enabled }}
+            {{- if hasKey .Values.studio.connectionPool "healthChecks" }}
+            "CONN_HEALTH_CHECKS": {{ ternary "True" "False" .Values.studio.connectionPool.healthChecks }},
+            {{- else }}
+            "CONN_HEALTH_CHECKS": True,
+            {{- end }}
             "OPTIONS": {
+                "options": postgres_session_options(),
+                {{ if .Values.studio.connectionPool.enabled }}
                 "pool": {
                     "min_size": {{ .Values.studio.connectionPool.minSize | default 4 }},
                     "max_size": {{ .Values.studio.connectionPool.maxSize | default 10 }},
                     "timeout": {{ .Values.studio.connectionPool.timeout | default 30 }},
                     "max_idle": {{ .Values.studio.connectionPool.maxIdle | default 300 }},
-                }
+                },
+                {{ end }}
             },
-            {{ end }}
             'NAME': '{{ .Values.postgresql.auth.database }}',
             'USER': '{{ .Values.postgresql.auth.username }}',
             'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
