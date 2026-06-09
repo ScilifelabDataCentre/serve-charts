@@ -49,6 +49,15 @@ studio:
       mountStudio: false
   emailService:
     enabled: false
+  connectionPool:
+    enabled: true
+    healthChecks: true
+    minSize: 4
+    maxSize: 10
+    timeout: 30
+    maxIdle: 300
+    idleSessionTimeout: 30min
+    idleInTransactionSessionTimeout: 10min
   githubApiTokenToggle: false
   dockerhubToken:
   dockerhubUsername: ""
