@@ -166,6 +166,7 @@ data:
     AUTH_RATE_LIMIT_VALUE = {{ .Values.studio.rateLimit.authEndpoint.rate | default "" | quote }}
     AUTH_RATE_LIMIT_WHITELIST_RAW = {{ .Values.studio.rateLimit.authEndpoint.whitelist | default "" | quote }}
     AUTH_RATE_LIMIT_WHITELIST = [ip.strip() for ip in AUTH_RATE_LIMIT_WHITELIST_RAW.split(",")]
+    PROMETHEUS_METRICS_ENABLED = {{ if .Values.studio.metrics.enabled }}True{{ else }}False{{ end }}
 
     # Default primary key field type
     # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

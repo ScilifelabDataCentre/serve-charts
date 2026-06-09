@@ -71,6 +71,8 @@ studio:
     enabled: false
   livenessProbe:
     enabled: false
+  metrics:
+    enabled: false
   securityContext:
     enabled: false
 
