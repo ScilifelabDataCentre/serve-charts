@@ -70,6 +70,10 @@ studio:
     denyTimeout: 5
   authRequestLogging:
     enabled: true
+  publicAppsCache:
+    timeout: 30
+  projectPermissionCache:
+    timeout: 5
   securityContext:
     enabled: false
 

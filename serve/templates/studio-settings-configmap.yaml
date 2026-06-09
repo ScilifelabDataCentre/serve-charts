@@ -170,6 +170,8 @@ data:
     AUTH_PERMISSION_CACHE_TIMEOUT = {{ .Values.studio.authPermissionCache.timeout | default 30 }}
     AUTH_PERMISSION_CACHE_DENY_TIMEOUT = {{ .Values.studio.authPermissionCache.denyTimeout | default 5 }}
     AUTH_REQUEST_LOGGING_ENABLED = {{ if .Values.studio.authRequestLogging.enabled }}True{{ else }}False{{ end }}
+    PUBLIC_APPS_CACHE_TIMEOUT = {{ .Values.studio.publicAppsCache.timeout | default 30 }}
+    PROJECT_PERMISSION_CACHE_TIMEOUT = {{ .Values.studio.projectPermissionCache.timeout | default 5 }}
 
     # Default primary key field type
     # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

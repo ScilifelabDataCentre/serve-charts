@@ -62,6 +62,10 @@ studio:
     denyTimeout: 5
   authRequestLogging:
     enabled: true
+  publicAppsCache:
+    timeout: 30
+  projectPermissionCache:
+    timeout: 5
   kubeconfig_file: /app/kubeconfig/config
   kubeconfig_dir: /app/kubeconfig/
   kube_api_request_timeout: 1
