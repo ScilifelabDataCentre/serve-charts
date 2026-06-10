@@ -1,0 +1,15 @@
+{{- if and .Values.gateway.enabled .Values.gateway.whitelistingSnippetsFilter.enabled }}
+apiVersion: gateway.nginx.org/v1alpha1
+kind: SnippetsFilter
+metadata:
+  name: {{ .Release.Name }}-admin-ip-allowlist
+  namespace: {{ .Release.Namespace }}
+spec:
+  snippets:
+    - context: http.server.location
+      value: |
+        {{- range .Values.gateway.whitelistingSnippetsFilter.allowedCIDRs }}
+        allow {{ . }};
+        {{- end }}
+        deny all;
+{{- end }}

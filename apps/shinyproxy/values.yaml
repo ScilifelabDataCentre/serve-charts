@@ -18,16 +18,39 @@ appconfig:
 
 global:
   domain: localhost
+  protocol: TCP
+  auth_domain: studio.127.0.0.1.nip.io
 
 apps:
   volumeK8s:
 
 service:
   name: shinyproxy-svc
+  port: 80
+  ports:
+    - name: access
+      protocol: TCP
+      port: 80
+      targetPort: 8080  # Uses .Values.appconfig.proxyport
+    - name: management
+      port: 9091
+      targetPort: management
+      protocol: TCP
 
 ingress:
   secretName: prod-ingress
   clientMaxBodySize: 2000M
+
+gateway:
+  enabled: true
+  name: default
+  namespace: gateway
+  rateLimit:
+    enabled: false
+    rate: "2r/s"
+    burst: 20
+    noDelay: true
+    zoneSize: "10m"
 
 s3sync:
   image: scaleoutsystems/s3-sync:latest
