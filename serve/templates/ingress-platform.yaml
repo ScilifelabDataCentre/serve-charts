@@ -1,3 +1,4 @@
+{{- if not .Values.gateway.enabled }}
 {{- if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -110,5 +111,6 @@ spec:
                   number: 8080
             path: /{{ .Values.studio.djangoAdminUrlPath }}/
             pathType: Prefix
+{{- end }}
 {{- end }}
 {{- end }}

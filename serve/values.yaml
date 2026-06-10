@@ -311,6 +311,36 @@ ingress:
   rateLimit:
     rpm: "100"  # Requests per minute
 
+gateway:
+  create: false
+  enabled: true
+  name: default
+  namespace: gateway
+  gatewayClassName: nginx
+  port: 443
+  domain: serve-dev.scilifelab.se
+  sectionName: serve-dev-subdomains
+  studioSectionName: serve-dev-subdomains
+  whitelistingSnippetsFilter:
+    enabled: true
+    # IP ranges allowed to access admin endpoints
+    allowedCIDRs:
+      - "10.0.0.0/8"
+      - "130.238.0.0/16"
+      - "130.237.0.0/16"
+      - "130.229.0.0/16"
+  rateLimit:
+    enabled: false
+    rate: "2r/s"
+    burst: 20
+    noDelay: true
+    zoneSize: "10m"
+    condition:
+      type: Header
+      header:
+        name: X-Forwarded-For
+        value: ".*"
+
 chartcontroller:
   enabled: false
   #addSecret -- if true create chart-controller-secret from cluster_config, if false it must be added manually

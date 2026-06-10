@@ -1,4 +1,6 @@
-environment: "vscode"
+global:
+  environment: "vscode"
+
 source_code_path: "/path/to/your/local/serve"
 
 storageClass: &storage_class local-path
@@ -117,6 +119,37 @@ ingress:
   hosts:
     - host: studio.127.0.0.1.nip.io
   tls: []
+
+gateway:
+  create: true
+  enabled: true
+  name: default
+  namespace: gateway
+  gatewayClassName: nginx
+  port: 80
+  domain: studio.127.0.0.1.nip.io
+  sectionName: serve-dev-subdomains
+  whitelistingSnippetsFilter:
+    enabled: false
+    # IP ranges allowed to access admin endpoints
+    allowedCIDRs:
+      - "10.0.0.0/8"
+      - "130.238.0.0/16"
+      - "130.237.0.0/16"
+      - "130.229.0.0/16"
+      - "192.168.0.0/16"
+      - "172.0.0.0/20"
+  rateLimit:
+    enabled: false
+    rate: "2r/s"
+    burst: 20
+    noDelay: true
+    zoneSize: "10m"
+    condition:
+      type: Header
+      header:
+        name: X-Forwarded-For
+        value: ".*"
 
 reloader:
   enabled: true

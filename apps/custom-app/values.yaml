@@ -37,6 +37,17 @@ ingress:
   secretName: prod-ingress
   clientMaxBodySize: 100M
 
+gateway:
+  enabled: true
+  name: default
+  namespace: gateway
+  rateLimit:
+    enabled: false
+    rate: "2r/s"
+    burst: 20
+    noDelay: true
+    zoneSize: "10m"
+
 podSecurityContext:
   seccompProfile:
     type: RuntimeDefault
