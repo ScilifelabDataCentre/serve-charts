@@ -76,6 +76,27 @@ spec:
 {{- end }}
 
 {{/*
+ClientSettingsPolicy for body size limit on the app's HTTPRoute.
+Usage: {{ include "common.clientSettingsPolicy" . }}
+*/}}
+{{- define "common.clientSettingsPolicy" -}}
+{{- if and .Values.gateway.enabled .Values.ingress.clientMaxBodySize }}
+apiVersion: gateway.nginx.org/v1alpha1
+kind: ClientSettingsPolicy
+metadata:
+  name: {{ .Release.Name }}-client-settings
+  namespace: {{ .Release.Namespace }}
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: {{ .Release.Name }}-httproute
+  body:
+    maxSize: "{{ .Values.ingress.clientMaxBodySize | lower }}"
+{{- end }}
+{{- end }}
+
+{{/*
 RateLimitPolicy targeting the app's HTTPRoute.
 Usage: {{ include "common.rateLimitPolicy" . }}
 */}}
