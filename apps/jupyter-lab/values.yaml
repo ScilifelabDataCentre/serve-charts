@@ -15,6 +15,8 @@ affinity:
 
 global:
   domain: localhost
+  protocol: TCP
+  auth_domain: studio.127.0.0.1.nip.io
 
 apps:
   volumek8s:
@@ -36,6 +38,17 @@ ingress:
   v1beta1: false
   secretName: prod-ingress
   clientMaxBodySize: 5500m
+
+gateway:
+  enabled: true
+  name: default
+  namespace: gateway
+  rateLimit:
+    enabled: false
+    rate: "2r/s"
+    burst: 20
+    noDelay: true
+    zoneSize: "10m"
 
 mlflow:
   url: ""

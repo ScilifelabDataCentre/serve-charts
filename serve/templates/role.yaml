@@ -15,6 +15,12 @@ rules:
   - apiGroups: ["", "apps", "networking.k8s.io", "autoscaling","batch"]
     resources: ["*"]
     verbs: ["*"]
+  - apiGroups: ["gateway.networking.k8s.io"]
+    resources: ["httproutes"]
+    verbs: ["*"]
+  - apiGroups: ["gateway.nginx.org"]
+    resources: ["snippetsfilters", "ratelimitpolicies"]
+    verbs: ["*"]
 {{- end }}
 ---
 kind: Role
