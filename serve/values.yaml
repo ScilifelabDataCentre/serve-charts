@@ -66,6 +66,10 @@ studio:
     timeout: 30
   projectPermissionCache:
     timeout: 5
+  backgroundTaskStatusCache:
+    timeout: 2
+  maintenanceModeCache:
+    timeout: 30
   kubeconfig_file: /app/kubeconfig/config
   kubeconfig_dir: /app/kubeconfig/
   kube_api_request_timeout: 1
