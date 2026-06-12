@@ -170,6 +170,12 @@ data:
     AUTH_RATE_LIMIT_WHITELIST = [ip.strip() for ip in AUTH_RATE_LIMIT_WHITELIST_RAW.split(",")]
     DB_POOL_STATS_LOGGING_ENABLED = {{ if .Values.studio.connectionPool.dbPoolStatsLogging }}True{{ else }}False{{ end }}
     PROMETHEUS_METRICS_ENABLED = {{ if .Values.studio.metrics.enabled }}True{{ else }}False{{ end }}
+    AUTH_PERMISSION_CACHE_ENABLED = {{ if .Values.studio.authPermissionCache.enabled }}True{{ else }}False{{ end }}
+    AUTH_PERMISSION_CACHE_TIMEOUT = {{ .Values.studio.authPermissionCache.timeout | default 30 }}
+    AUTH_PERMISSION_CACHE_DENY_TIMEOUT = {{ .Values.studio.authPermissionCache.denyTimeout | default 5 }}
+    AUTH_REQUEST_LOGGING_ENABLED = {{ if .Values.studio.authRequestLogging.enabled }}True{{ else }}False{{ end }}
+    PUBLIC_APPS_CACHE_TIMEOUT = {{ .Values.studio.publicAppsCache.timeout | default 30 }}
+    PROJECT_PERMISSION_CACHE_TIMEOUT = {{ .Values.studio.projectPermissionCache.timeout | default 5 }}
 
     # Default primary key field type
     # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -303,6 +309,10 @@ data:
     SESSION_SAVE_EVERY_REQUEST = True
     # Whether to expire the session when the user closes their browser:
     SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+    SESSION_CACHE_ENABLED = {{ if .Values.studio.sessionCache.enabled }}True{{ else }}False{{ end }}
+    if SESSION_CACHE_ENABLED:
+        SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
+        SESSION_CACHE_ALIAS = "default"
 
     # The expiration duration in seconds for authentication tokens. Default set to 1 day:
     AUTH_TOKEN_EXPIRATION = {{ .Values.studio.auth_token_expiration | default 86400 }}
