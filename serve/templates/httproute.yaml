@@ -17,6 +17,17 @@ spec:
     port: {{ .Values.gateway.port | default (eq .Values.environment "vscode" | ternary 80 443) }}
   rules:
   - backendRefs:
+    - name: nginx-errors
+      kind: Service
+      port: 80
+    matches:
+    - path:
+        type: Exact
+        value: /metrics
+    - path:
+        type: PathPrefix
+        value: /metrics/
+  - backendRefs:
     - name: {{ .Release.Name }}-studio
       kind: Service
       port: 8080

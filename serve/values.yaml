@@ -157,6 +157,7 @@ studio:
   connectionPool:
     enabled: true
     healthChecks: true
+    dbPoolStatsLogging: false
     minSize: 4
     maxSize: 10
     timeout: 30
