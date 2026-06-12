@@ -22,9 +22,6 @@ spec:
       port: 80
     matches:
     - path:
-        type: Exact
-        value: /metrics
-    - path:
         type: PathPrefix
         value: /metrics/
   - backendRefs:
