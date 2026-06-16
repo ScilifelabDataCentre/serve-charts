@@ -142,6 +142,7 @@ gateway:
   port: 80
   domain: studio.127.0.0.1.nip.io
   sectionName: serve-dev-subdomains
+  studioSectionName: http
   whitelistingSnippetsFilter:
     enabled: false
     # IP ranges allowed to access admin endpoints
