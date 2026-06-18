@@ -18,6 +18,7 @@ studio:
   domain: studio.127.0.0.1.nip.io
   session_cookie_domain: .127.0.0.1.nip.io
   superuserPassword: "yourpassword"
+  gpu_total_capacity: 0
   superuserEmail: "your.email@example.com"
   djangoAdminUrlPath: "admin"
   storageClass: *storage_class

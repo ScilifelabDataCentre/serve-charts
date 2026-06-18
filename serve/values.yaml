@@ -40,6 +40,7 @@ studio:
     - "common"
   domain: serve-dev.scilifelab.se
   session_cookie_domain: .serve-dev.scilifelab.se
+  gpu_total_capacity: 0
   custom_migrations:
     enabled: false
     apps:
