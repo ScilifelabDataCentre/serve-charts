@@ -1,3 +1,4 @@
+{{- if not .Values.gateway.enabled }}
 {{ if .Values.ingress.v1beta1 }}
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -55,4 +56,5 @@ spec:
     - secretName: {{ .Values.ingress.secretName }}
       hosts:
         - {{ .Values.global.domain }}
+{{- end }}
 {{- end }}

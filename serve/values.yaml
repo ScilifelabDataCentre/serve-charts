@@ -50,10 +50,24 @@ studio:
     model: "user.User"
   csrf_trusted_origins: "https://serve-dev.scilifelab.se:8082" #if you want to port-forward the web server
   session_cookie_age: 3600
+  sessionCache:
+    enabled: true
   rateLimit:
     authEndpoint:
       rate: "10/minute" # Empty = disabled
       whitelist: "10.42.0.0/16" # Empty = no whitelist
+  metrics:
+    enabled: false
+  authPermissionCache:
+    enabled: true
+    timeout: 30
+    denyTimeout: 5
+  authRequestLogging:
+    enabled: true
+  publicAppsCache:
+    timeout: 30
+  projectPermissionCache:
+    timeout: 5
   kubeconfig_file: /app/kubeconfig/config
   kubeconfig_dir: /app/kubeconfig/
   kube_api_request_timeout: 1
@@ -154,10 +168,14 @@ studio:
       - ''
   connectionPool:
     enabled: true
+    healthChecks: true
+    dbPoolStatsLogging: false
     minSize: 4
     maxSize: 10
     timeout: 30
     maxIdle: 300
+    idleSessionTimeout: 30min
+    idleInTransactionSessionTimeout: 10min
   githubApiTokenToggle: true
   githubApiToken:
   githubApiUsername:
@@ -306,6 +324,36 @@ ingress:
     whiteListSourceRange: "130.238.0.0/16,130.237.0.0/16,130.229.0.0/16"
   rateLimit:
     rpm: "100"  # Requests per minute
+
+gateway:
+  create: false
+  enabled: true
+  name: default
+  namespace: gateway
+  gatewayClassName: nginx
+  port: 443
+  domain: serve-dev.scilifelab.se
+  sectionName: serve-dev-subdomains
+  studioSectionName: serve-dev-subdomains
+  whitelistingSnippetsFilter:
+    enabled: true
+    # IP ranges allowed to access admin endpoints
+    allowedCIDRs:
+      - "10.0.0.0/8"
+      - "130.238.0.0/16"
+      - "130.237.0.0/16"
+      - "130.229.0.0/16"
+  rateLimit:
+    enabled: false
+    rate: "2r/s"
+    burst: 20
+    noDelay: true
+    zoneSize: "10m"
+    condition:
+      type: Header
+      header:
+        name: X-Forwarded-For
+        value: ".*"
 
 chartcontroller:
   enabled: false

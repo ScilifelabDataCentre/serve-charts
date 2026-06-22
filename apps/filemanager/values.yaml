@@ -12,7 +12,18 @@ global:
 
 ingress:
   secretName: prod-ingress
-  clientMaxBodySize: 10000M
+  clientMaxBodySize: 10g
+
+gateway:
+  enabled: true
+  name: default
+  namespace: gateway
+  rateLimit:
+    enabled: false
+    rate: "2r/s"
+    burst: 20
+    noDelay: true
+    zoneSize: "10m"
 
 apps:
   volumeK8s: {}

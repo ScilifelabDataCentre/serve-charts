@@ -136,6 +136,7 @@ repos/
 # Downloaded charts
 /tmpcharts
 serve/charts/*.tgz
+apps/*/charts/*.tgz
 
 #Other
 values-local.yaml
