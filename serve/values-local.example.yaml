@@ -64,6 +64,7 @@ studio:
     enabled: false
   securityContext:
     enabled: false
+  doiPrefix: "10.83812/SCILIFELAB"
 
 rabbitmq:
   auth:
