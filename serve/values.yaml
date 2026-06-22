@@ -56,6 +56,8 @@ studio:
     authEndpoint:
       rate: "10/minute" # Empty = disabled
       whitelist: "10.42.0.0/16" # Empty = no whitelist
+  metrics:
+    enabled: false
   authPermissionCache:
     enabled: true
     timeout: 30
@@ -171,6 +173,7 @@ studio:
   connectionPool:
     enabled: true
     healthChecks: true
+    dbPoolStatsLogging: false
     minSize: 4
     maxSize: 10
     timeout: 30

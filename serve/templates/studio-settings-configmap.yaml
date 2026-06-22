@@ -146,6 +146,8 @@ data:
             "corsheaders.middleware.CorsMiddleware",
             "axes.middleware.AxesMiddleware",
             "studio.middleware.ExceptionLoggingMiddleware",
+            "studio.middleware.PrometheusHttpMetricsMiddleware",
+            "studio.middleware.DatabasePoolStatsLoggingMiddleware",
             "waffle.middleware.WaffleMiddleware"
         ] 
         + DJANGO_WIKI_MIDDLEWARE
@@ -166,6 +168,8 @@ data:
     AUTH_RATE_LIMIT_VALUE = {{ .Values.studio.rateLimit.authEndpoint.rate | default "" | quote }}
     AUTH_RATE_LIMIT_WHITELIST_RAW = {{ .Values.studio.rateLimit.authEndpoint.whitelist | default "" | quote }}
     AUTH_RATE_LIMIT_WHITELIST = [ip.strip() for ip in AUTH_RATE_LIMIT_WHITELIST_RAW.split(",")]
+    DB_POOL_STATS_LOGGING_ENABLED = {{ if .Values.studio.connectionPool.dbPoolStatsLogging }}True{{ else }}False{{ end }}
+    PROMETHEUS_METRICS_ENABLED = {{ if .Values.studio.metrics.enabled }}True{{ else }}False{{ end }}
     AUTH_PERMISSION_CACHE_ENABLED = {{ if .Values.studio.authPermissionCache.enabled }}True{{ else }}False{{ end }}
     AUTH_PERMISSION_CACHE_TIMEOUT = {{ .Values.studio.authPermissionCache.timeout | default 30 }}
     AUTH_PERMISSION_CACHE_DENY_TIMEOUT = {{ .Values.studio.authPermissionCache.denyTimeout | default 5 }}
