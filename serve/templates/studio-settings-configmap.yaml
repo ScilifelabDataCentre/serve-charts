@@ -440,6 +440,9 @@ data:
     # Invenio keywords data path
     VOCABULARY_DATA_PATH = os.getenv("VOCABULARY_DATA_PATH", os.path.join(BASE_DIR, "common", "data", "invenio_keywords"))
 
+    # DataCite/Invenio integration options
+    DOI_PREFIX = os.getenv("DOI_PREFIX", "10.83812/SCILIFELAB")
+
     # Apps
     APPS_MODEL = "apps.Apps"
     APPINSTANCE_MODEL = "apps.BaseAppInstance"

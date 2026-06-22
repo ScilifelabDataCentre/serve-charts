@@ -94,6 +94,7 @@ studio:
     timeout: 30
   securityContext:
     enabled: false
+  doiPrefix: "10.83812/SCILIFELAB"
 
 rabbitmq:
   auth:

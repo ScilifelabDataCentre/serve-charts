@@ -475,4 +475,6 @@ Studio container environment variables
       name: {{ include "studio.secretName" . }}
       key: orcid-client-secret
       {{- end }}
+- name: DOI_PREFIX
+  value: {{ .Values.studio.doiPrefix | quote }}
 {{- end -}}

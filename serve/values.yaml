@@ -191,6 +191,7 @@ studio:
   invenioMockMode: true
   orcid_client_id:
   orcid_client_secret:
+  doiPrefix: "10.83812/SCILIFELAB"
 
 postgresql:
   enabled: true
