@@ -468,6 +468,8 @@ data:
     SESSION_COOKIE_DOMAIN = {{ .Values.studio.session_cookie_domain | quote }}
     CSRF_TRUSTED_ORIGINS = ['https://*{{ .Values.studio.session_cookie_domain }}','https://*.127.0.0.1'] + [{{ .Values.studio.csrf_trusted_origins | quote}}]
     GPU_TOTAL_CAPACITY = int(os.environ.get("GPU_TOTAL_CAPACITY", "{{ .Values.studio.gpu_total_capacity | default 0 }}"))
+    DEVELOP_APP_MAX_AGE_DAYS = int(os.environ.get("DEVELOP_APP_MAX_AGE_DAYS", "{{ .Values.studio.develop_app_max_age_days | default 7 }}"))
+    GPU_DEVELOP_APP_MAX_AGE_DAYS = int(os.environ.get("GPU_DEVELOP_APP_MAX_AGE_DAYS", "{{ .Values.studio.gpu_develop_app_max_age_days | default 1 }}"))
 
     # Email
     DEFAULT_FROM_EMAIL = "noreply-serve@scilifelab.se"
