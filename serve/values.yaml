@@ -43,6 +43,7 @@ studio:
   gpu_total_capacity: 0
   develop_app_max_age_days: 7
   gpu_develop_app_max_age_days: 1
+  filemanager_max_age_days: 1
   custom_migrations:
     enabled: false
     apps:
