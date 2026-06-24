@@ -418,6 +418,11 @@ data:
     NAMESPACE = {{ .Values.namespace | default "default" | quote }}
     KUBE_API_REQUEST_TIMEOUT = {{ .Values.studio.kube_api_request_timeout }}
     STORAGECLASS = {{ include "studio.storageclass" . | quote }}
+    GATEWAY_ENABLED = {{ if .Values.gateway.enabled }}True{{ else }}False{{ end }}
+    GATEWAY_NAME = os.getenv("GATEWAY_NAME", "{{ .Values.gateway.name }}")
+    GATEWAY_NAMESPACE = os.getenv("GATEWAY_NAMESPACE", "{{ .Values.gateway.namespace }}")
+    GATEWAY_SECTION_NAME = os.getenv("GATEWAY_SECTION_NAME", "{{ .Values.gateway.sectionName }}")
+    GATEWAY_PORT = int(os.getenv("GATEWAY_PORT", "{{ .Values.gateway.port | default 80 }}"))
     
     # App dependencies
 
