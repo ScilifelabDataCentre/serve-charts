@@ -61,7 +61,7 @@ studio:
       rate: "10/minute" # Empty = disabled
       whitelist: "10.42.0.0/16" # Empty = no whitelist
   metrics:
-    enabled: false
+    enabled: true
   authPermissionCache:
     enabled: true
     timeout: 30
@@ -72,6 +72,10 @@ studio:
     timeout: 30
   projectPermissionCache:
     timeout: 5
+  backgroundTaskStatusCache:
+    timeout: 2
+  maintenanceModeCache:
+    timeout: 30
   kubeconfig_file: /app/kubeconfig/config
   kubeconfig_dir: /app/kubeconfig/
   kube_api_request_timeout: 1
@@ -173,7 +177,7 @@ studio:
   connectionPool:
     enabled: true
     healthChecks: true
-    dbPoolStatsLogging: false
+    dbPoolStatsLogging: true
     minSize: 4
     maxSize: 10
     timeout: 30
@@ -191,6 +195,7 @@ studio:
   invenioMockMode: true
   orcid_client_id:
   orcid_client_secret:
+  doiPrefix: "10.83812/SCILIFELAB"
 
 postgresql:
   enabled: true
@@ -263,6 +268,7 @@ rabbitmq:
 
 celeryWorkers:
   replicas: 2
+  concurrency: 4
   resources:
     requests:
       cpu: "100m"

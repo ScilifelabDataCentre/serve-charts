@@ -66,6 +66,8 @@ spec:
         env:
         - name: BASE_PATH
           value: "/app"
+        - name: CELERY_CONCURRENCY
+          value: {{ .Values.celeryWorkers.concurrency | default 4 | quote }}
         {{- include "studio.env" . | nindent 8 }}
         image: {{ .Values.studio.image.repository }}:{{ .Values.studio.image.tag }}
         imagePullPolicy: {{ .Values.studio.image.pullPolicy }}
