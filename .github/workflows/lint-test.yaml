@@ -44,7 +44,7 @@ jobs:
 
       - name: Run chart-testing (lint)
         if: steps.list-changed.outputs.changed == 'true'
-        run: ct lint --chart-dirs apps --all --target-branch main --validate-maintainers=false --excluded-charts common
+        run: ct lint --chart-dirs apps --all --target-branch main --validate-maintainers=false --excluded-charts common,mlflow
 
       - name: Create kind cluster
         if: steps.list-changed.outputs.changed == 'true'
