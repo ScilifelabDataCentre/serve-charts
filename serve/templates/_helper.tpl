@@ -477,12 +477,4 @@ Studio container environment variables
       {{- end }}
 - name: DOI_PREFIX
   value: {{ .Values.studio.doiPrefix | quote }}
-- name: GATEWAY_ENABLED
-  value: {{ .Values.gateway.enabled | default false | quote }}
-- name: GATEWAY_NAME
-  value: {{ .Values.gateway.name | default "" | quote }}
-- name: GATEWAY_NAMESPACE
-  value: {{ .Values.gateway.namespace | default "" | quote }}
-- name: GATEWAY_SECTION_NAME
-  value: {{ .Values.gateway.sectionName | default "" | quote }}
 {{- end -}}
