@@ -55,7 +55,14 @@ data:
     if DEBUG:
         ALLOWED_HOSTS = ['*']
     else:
-        ALLOWED_HOSTS = ['{{ .Values.studio.domain }}', '{{ .Release.Name }}-{{ .Values.studio.servicename }}', '{{ .Release.Name }}-studio.{{ .Values.namespace | default "default" }}.svc.{{ .Values.cluster_domain | default "cluster.local"}}']
+        ALLOWED_HOSTS = [
+            {{ .Values.studio.domain | quote }},
+            {{ printf "%s-%s" .Release.Name .Values.studio.servicename | quote }},
+            {{ printf "%s-studio.%s.svc.%s" .Release.Name (.Values.namespace | default "default") (.Values.cluster_domain | default "cluster.local") | quote }},
+            {{- range .Values.studio.allowedHosts.extra }}
+            {{ . | quote }},
+            {{- end }}
+        ]
 
     # For django-wiki
     SITE_ID = 1
