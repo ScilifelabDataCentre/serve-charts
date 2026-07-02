@@ -54,6 +54,9 @@ studio:
   auth_user_model:
     override: false
     model: "user.User"
+  # Extra Django ALLOWED_HOSTS
+  allowedHosts:
+    extra: []
   csrf_trusted_origins: "https://serve-dev.scilifelab.se:8082" #if you want to port-forward the web server
   session_cookie_age: 3600
   sessionCache:

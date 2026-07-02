@@ -38,6 +38,8 @@ studio:
   sessionCache:
     enabled: true
   superUser: admin
+  allowedHosts:
+    extra: []
   static:
     image:
       repository: mystudio
