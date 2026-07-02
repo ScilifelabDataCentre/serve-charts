@@ -32,6 +32,8 @@ studio:
   debug: true
   init: false
   reset_db: false
+  initContainer:
+    enabled: true
   enable_project_extra_settings: false
   inactive_users: true
   custom_apps:
