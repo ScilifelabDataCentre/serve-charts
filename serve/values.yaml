@@ -279,6 +279,9 @@ rabbitmq:
 celeryWorkers:
   replicas: 2
   concurrency: 4
+  metrics:
+    enabled: true
+    port: 8001
   connectionPool:
     minSize: 0
     maxSize: 2
