@@ -222,6 +222,11 @@ postgresql:
     extraEnvVars:
       - name: POSTGRESQL_MAX_CONNECTIONS
         value: "300"
+    extendedConfiguration: |-
+      log_connections = on
+      log_disconnections = on
+      log_lock_waits = on
+      log_min_error_statement = error
     persistence:
       enabled: true
       size: "10Gi"
@@ -274,6 +279,11 @@ rabbitmq:
 celeryWorkers:
   replicas: 2
   concurrency: 4
+  connectionPool:
+    minSize: 0
+    maxSize: 2
+    timeout: 30
+    maxIdle: 60
   resources:
     requests:
       cpu: "100m"
@@ -281,6 +291,13 @@ celeryWorkers:
     limits:
       cpu: "1000m"
       memory: "8Gi"
+
+celeryBeat:
+  connectionPool:
+    minSize: 0
+    maxSize: 1
+    timeout: 30
+    maxIdle: 60
 
 celeryFlower:
   enabled: false
