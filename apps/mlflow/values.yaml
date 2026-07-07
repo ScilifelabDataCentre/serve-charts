@@ -701,6 +701,9 @@ tracking:
       ##         port: 5000
       ##
       extraRules: []
+      ## @param tracking.httproute.clientMaxBodySize Maximum allowed size of the client request body. Leave empty to use the default.
+      ##
+      clientMaxBodySize: "1000m"
   ## Network Policy configuration
   ## ref: https://kubernetes.io/docs/concepts/services-networking/network-policies/
   ##
