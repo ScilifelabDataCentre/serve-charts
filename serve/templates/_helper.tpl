@@ -226,6 +226,10 @@ Studio container environment variables
   {{- else }}
   value: {{ .Values.postgresql.auth.username }}
   {{- end }}
+- name: POSTGRES_IDLE_SESSION_TIMEOUT
+  value: {{ .Values.studio.connectionPool.idleSessionTimeout | default "30min" | quote }}
+- name: POSTGRES_IDLE_IN_TRANSACTION_SESSION_TIMEOUT
+  value: {{ .Values.studio.connectionPool.idleInTransactionSessionTimeout | default "10min" | quote }}
 - name: REDIS_PASSWORD
   valueFrom:
     secretKeyRef:
@@ -471,4 +475,6 @@ Studio container environment variables
       name: {{ include "studio.secretName" . }}
       key: orcid-client-secret
       {{- end }}
+- name: DOI_PREFIX
+  value: {{ .Values.studio.doiPrefix | quote }}
 {{- end -}}

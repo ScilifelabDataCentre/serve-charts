@@ -19,6 +19,11 @@ spec:
       annotations:
         kompose.cmd: kompose convert
         kompose.version: 1.20.0 ()
+        {{- if .Values.celeryWorkers.metrics.enabled }}
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: {{ .Values.celeryWorkers.metrics.port | default 8001 | quote }}
+        {{- end }}
       creationTimestamp: null
       labels:
         io.kompose.service: {{ .Release.Name }}-celery-worker
@@ -66,10 +71,31 @@ spec:
         env:
         - name: BASE_PATH
           value: "/app"
+        - name: CELERY_CONCURRENCY
+          value: {{ .Values.celeryWorkers.concurrency | default 4 | quote }}
+        - name: DB_POOL_MIN_SIZE
+          value: {{ .Values.celeryWorkers.connectionPool.minSize | default 0 | quote }}
+        - name: DB_POOL_MAX_SIZE
+          value: {{ .Values.celeryWorkers.connectionPool.maxSize | default 2 | quote }}
+        - name: DB_POOL_TIMEOUT
+          value: {{ .Values.celeryWorkers.connectionPool.timeout | default .Values.studio.connectionPool.timeout | default 30 | quote }}
+        - name: DB_POOL_MAX_IDLE
+          value: {{ .Values.celeryWorkers.connectionPool.maxIdle | default 60 | quote }}
+        {{- if .Values.celeryWorkers.metrics.enabled }}
+        - name: PROMETHEUS_MULTIPROC_DIR
+          value: /tmp/prometheus
+        - name: CELERY_METRICS_PORT
+          value: {{ .Values.celeryWorkers.metrics.port | default 8001 | quote }}
+        {{- end }}
         {{- include "studio.env" . | nindent 8 }}
         image: {{ .Values.studio.image.repository }}:{{ .Values.studio.image.tag }}
         imagePullPolicy: {{ .Values.studio.image.pullPolicy }}
         name: {{ .Release.Name }}-celery-worker
+        {{- if .Values.celeryWorkers.metrics.enabled }}
+        ports:
+        - containerPort: {{ .Values.celeryWorkers.metrics.port | default 8001 }}
+          name: metrics
+        {{- end }}
         resources:
           limits:
             cpu: {{ .Values.celeryWorkers.resources.limits.cpu }}
@@ -86,12 +112,20 @@ spec:
           - mountPath: /app/studio/settings.py
             subPath: settings.py
             name: {{ .Release.Name}}-settings-configmap
+          {{- if .Values.celeryWorkers.metrics.enabled }}
+          - mountPath: /tmp/prometheus
+            name: prometheus-multiproc
+          {{- end }}
       restartPolicy: Always
       volumes:
       {{- if .Values.chartcontroller.addSecret }}
       - name: config
         secret:
           secretName: {{ .Release.Name }}-chart-controller-secret
+      {{- end }}
+      {{- if .Values.celeryWorkers.metrics.enabled }}
+      - name: prometheus-multiproc
+        emptyDir: {}
       {{- end }}
       - name: {{ .Release.Name}}-settings-configmap
         configMap:

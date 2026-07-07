@@ -67,6 +67,14 @@ spec:
         env:
         - name: BASE_PATH
           value: "/app"
+        - name: DB_POOL_MIN_SIZE
+          value: {{ .Values.celeryBeat.connectionPool.minSize | default 0 | quote }}
+        - name: DB_POOL_MAX_SIZE
+          value: {{ .Values.celeryBeat.connectionPool.maxSize | default 1 | quote }}
+        - name: DB_POOL_TIMEOUT
+          value: {{ .Values.celeryBeat.connectionPool.timeout | default .Values.studio.connectionPool.timeout | default 30 | quote }}
+        - name: DB_POOL_MAX_IDLE
+          value: {{ .Values.celeryBeat.connectionPool.maxIdle | default 60 | quote }}
         {{- include "studio.env" . | nindent 8 }}
         image: {{ .Values.studio.image.repository }}:{{ .Values.studio.image.tag }}
         imagePullPolicy: {{ .Values.studio.image.pullPolicy }}

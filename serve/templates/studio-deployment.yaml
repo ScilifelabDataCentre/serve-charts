@@ -16,6 +16,12 @@ spec:
       name: {{ .Release.Name }}-studio
   template:
     metadata:
+      {{- if .Values.studio.metrics.enabled }}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "8080"
+      {{- end }}
       labels:
         io.kompose.service: {{ .Release.Name }}-studio
         name: {{ .Release.Name }}-studio
@@ -51,6 +57,7 @@ spec:
             requests:
               cpu: "100m"
               memory: "512Mi"
+        {{- if .Values.studio.initContainer.enabled }}
         - name: studio-init
           image: {{ .Values.studio.image.repository }}:{{ .Values.studio.image.tag }}
           imagePullPolicy: {{ .Values.studio.image.pullPolicy }}
@@ -89,6 +96,7 @@ spec:
             requests:
               cpu: {{ .Values.studio.resources.requests.cpu }}
               memory: {{ .Values.studio.resources.requests.memory }}
+        {{- end }}
       containers:
       - args:
         - sh

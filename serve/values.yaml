@@ -32,6 +32,8 @@ studio:
   debug: true
   init: false
   reset_db: false
+  initContainer:
+    enabled: true
   enable_project_extra_settings: false
   inactive_users: true
   custom_apps:
@@ -40,6 +42,10 @@ studio:
     - "common"
   domain: serve-dev.scilifelab.se
   session_cookie_domain: .serve-dev.scilifelab.se
+  gpu_total_capacity: 0
+  develop_app_max_age_days: 7
+  gpu_develop_app_max_age_days: 1
+  filemanager_max_age_days: 1
   custom_migrations:
     enabled: false
     apps:
@@ -48,12 +54,33 @@ studio:
   auth_user_model:
     override: false
     model: "user.User"
+  # Extra Django ALLOWED_HOSTS
+  allowedHosts:
+    extra: []
   csrf_trusted_origins: "https://serve-dev.scilifelab.se:8082" #if you want to port-forward the web server
   session_cookie_age: 3600
+  sessionCache:
+    enabled: true
   rateLimit:
     authEndpoint:
       rate: "10/minute" # Empty = disabled
       whitelist: "10.42.0.0/16" # Empty = no whitelist
+  metrics:
+    enabled: true
+  authPermissionCache:
+    enabled: true
+    timeout: 30
+    denyTimeout: 5
+  authRequestLogging:
+    enabled: true
+  publicAppsCache:
+    timeout: 30
+  projectPermissionCache:
+    timeout: 5
+  backgroundTaskStatusCache:
+    timeout: 2
+  maintenanceModeCache:
+    timeout: 30
   kubeconfig_file: /app/kubeconfig/config
   kubeconfig_dir: /app/kubeconfig/
   kube_api_request_timeout: 1
@@ -154,10 +181,14 @@ studio:
       - ''
   connectionPool:
     enabled: true
+    healthChecks: true
+    dbPoolStatsLogging: true
     minSize: 4
     maxSize: 10
     timeout: 30
     maxIdle: 300
+    idleSessionTimeout: 30min
+    idleInTransactionSessionTimeout: 10min
   githubApiTokenToggle: true
   githubApiToken:
   githubApiUsername:
@@ -169,6 +200,7 @@ studio:
   invenioMockMode: true
   orcid_client_id:
   orcid_client_secret:
+  doiPrefix: "10.83812/SCILIFELAB"
 
 postgresql:
   enabled: true
@@ -190,6 +222,11 @@ postgresql:
     extraEnvVars:
       - name: POSTGRESQL_MAX_CONNECTIONS
         value: "300"
+    extendedConfiguration: |-
+      log_connections = on
+      log_disconnections = on
+      log_lock_waits = on
+      log_min_error_statement = error
     persistence:
       enabled: true
       size: "10Gi"
@@ -241,6 +278,15 @@ rabbitmq:
 
 celeryWorkers:
   replicas: 2
+  concurrency: 4
+  metrics:
+    enabled: true
+    port: 8001
+  connectionPool:
+    minSize: 0
+    maxSize: 2
+    timeout: 30
+    maxIdle: 60
   resources:
     requests:
       cpu: "100m"
@@ -248,6 +294,13 @@ celeryWorkers:
     limits:
       cpu: "1000m"
       memory: "8Gi"
+
+celeryBeat:
+  connectionPool:
+    minSize: 0
+    maxSize: 1
+    timeout: 30
+    maxIdle: 60
 
 celeryFlower:
   enabled: false
@@ -305,6 +358,36 @@ ingress:
     whiteListSourceRange: "130.238.0.0/16,130.237.0.0/16,130.229.0.0/16"
   rateLimit:
     rpm: "100"  # Requests per minute
+
+gateway:
+  create: false
+  enabled: true
+  name: default
+  namespace: gateway
+  gatewayClassName: nginx
+  port: 443
+  domain: serve-dev.scilifelab.se
+  sectionName: serve-dev-subdomains
+  studioSectionName: serve-dev-subdomains
+  whitelistingSnippetsFilter:
+    enabled: true
+    # IP ranges allowed to access admin endpoints
+    allowedCIDRs:
+      - "10.0.0.0/8"
+      - "130.238.0.0/16"
+      - "130.237.0.0/16"
+      - "130.229.0.0/16"
+  rateLimit:
+    enabled: false
+    rate: "2r/s"
+    burst: 20
+    noDelay: true
+    zoneSize: "10m"
+    condition:
+      type: Header
+      header:
+        name: X-Forwarded-For
+        value: ".*"
 
 chartcontroller:
   enabled: false
