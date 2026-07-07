@@ -32,6 +32,8 @@ studio:
   debug: true
   init: false
   reset_db: false
+  initContainer:
+    enabled: true
   enable_project_extra_settings: false
   inactive_users: true
   custom_apps:
@@ -40,6 +42,10 @@ studio:
     - "common"
   domain: serve-dev.scilifelab.se
   session_cookie_domain: .serve-dev.scilifelab.se
+  gpu_total_capacity: 0
+  develop_app_max_age_days: 7
+  gpu_develop_app_max_age_days: 1
+  filemanager_max_age_days: 1
   custom_migrations:
     enabled: false
     apps:
@@ -48,6 +54,9 @@ studio:
   auth_user_model:
     override: false
     model: "user.User"
+  # Extra Django ALLOWED_HOSTS
+  allowedHosts:
+    extra: []
   csrf_trusted_origins: "https://serve-dev.scilifelab.se:8082" #if you want to port-forward the web server
   session_cookie_age: 3600
   sessionCache:
@@ -213,6 +222,11 @@ postgresql:
     extraEnvVars:
       - name: POSTGRESQL_MAX_CONNECTIONS
         value: "300"
+    extendedConfiguration: |-
+      log_connections = on
+      log_disconnections = on
+      log_lock_waits = on
+      log_min_error_statement = error
     persistence:
       enabled: true
       size: "10Gi"
@@ -265,6 +279,14 @@ rabbitmq:
 celeryWorkers:
   replicas: 2
   concurrency: 4
+  metrics:
+    enabled: true
+    port: 8001
+  connectionPool:
+    minSize: 0
+    maxSize: 2
+    timeout: 30
+    maxIdle: 60
   resources:
     requests:
       cpu: "100m"
@@ -272,6 +294,13 @@ celeryWorkers:
     limits:
       cpu: "1000m"
       memory: "8Gi"
+
+celeryBeat:
+  connectionPool:
+    minSize: 0
+    maxSize: 1
+    timeout: 30
+    maxIdle: 60
 
 celeryFlower:
   enabled: false
