@@ -55,7 +55,14 @@ data:
     if DEBUG:
         ALLOWED_HOSTS = ['*']
     else:
-        ALLOWED_HOSTS = ['{{ .Values.studio.domain }}', '{{ .Release.Name }}-{{ .Values.studio.servicename }}', '{{ .Release.Name }}-studio.{{ .Values.namespace | default "default" }}.svc.{{ .Values.cluster_domain | default "cluster.local"}}']
+        ALLOWED_HOSTS = [
+            {{ .Values.studio.domain | quote }},
+            {{ printf "%s-%s" .Release.Name .Values.studio.servicename | quote }},
+            {{ printf "%s-studio.%s.svc.%s" .Release.Name (.Values.namespace | default "default") (.Values.cluster_domain | default "cluster.local") | quote }},
+            {{- range .Values.studio.allowedHosts.extra }}
+            {{ . | quote }},
+            {{- end }}
+        ]
 
     # For django-wiki
     SITE_ID = 1
@@ -169,6 +176,10 @@ data:
     AUTH_RATE_LIMIT_WHITELIST_RAW = {{ .Values.studio.rateLimit.authEndpoint.whitelist | default "" | quote }}
     AUTH_RATE_LIMIT_WHITELIST = [ip.strip() for ip in AUTH_RATE_LIMIT_WHITELIST_RAW.split(",")]
     DB_POOL_STATS_LOGGING_ENABLED = {{ if .Values.studio.connectionPool.dbPoolStatsLogging }}True{{ else }}False{{ end }}
+    DB_POOL_MIN_SIZE = int(os.getenv("DB_POOL_MIN_SIZE", "{{ .Values.studio.connectionPool.minSize | default 4 }}"))
+    DB_POOL_MAX_SIZE = int(os.getenv("DB_POOL_MAX_SIZE", "{{ .Values.studio.connectionPool.maxSize | default 10 }}"))
+    DB_POOL_TIMEOUT = int(os.getenv("DB_POOL_TIMEOUT", "{{ .Values.studio.connectionPool.timeout | default 30 }}"))
+    DB_POOL_MAX_IDLE = int(os.getenv("DB_POOL_MAX_IDLE", "{{ .Values.studio.connectionPool.maxIdle | default 300 }}"))
     PROMETHEUS_METRICS_ENABLED = {{ if .Values.studio.metrics.enabled }}True{{ else }}False{{ end }}
     AUTH_PERMISSION_CACHE_ENABLED = {{ if .Values.studio.authPermissionCache.enabled }}True{{ else }}False{{ end }}
     AUTH_PERMISSION_CACHE_TIMEOUT = {{ .Values.studio.authPermissionCache.timeout | default 30 }}
@@ -277,6 +288,15 @@ data:
         return " ".join(options)
 
 
+    def log_db_pool_reconnect_failed(pool: object) -> None:
+        stats = pool.get_stats() if hasattr(pool, "get_stats") else {}
+        logging.getLogger("psycopg_pool").error(
+            "Django DB pool reconnect failed pool_name=%s stats=%s",
+            getattr(pool, "name", None),
+            stats,
+        )
+
+
     DATABASES = {
         'default': {
             "ENGINE": "django.db.backends.postgresql",
@@ -289,10 +309,11 @@ data:
                 "options": postgres_session_options(),
                 {{ if .Values.studio.connectionPool.enabled }}
                 "pool": {
-                    "min_size": {{ .Values.studio.connectionPool.minSize | default 4 }},
-                    "max_size": {{ .Values.studio.connectionPool.maxSize | default 10 }},
-                    "timeout": {{ .Values.studio.connectionPool.timeout | default 30 }},
-                    "max_idle": {{ .Values.studio.connectionPool.maxIdle | default 300 }},
+                    "min_size": DB_POOL_MIN_SIZE,
+                    "max_size": DB_POOL_MAX_SIZE,
+                    "timeout": DB_POOL_TIMEOUT,
+                    "max_idle": DB_POOL_MAX_IDLE,
+                    "reconnect_failed": log_db_pool_reconnect_failed,
                 },
                 {{ end }}
             },
@@ -408,6 +429,7 @@ data:
     CELERY_ACCEPT_CONTENT = ['json']
     CELERY_TIMEZONE = "UTC"
     CELERY_ENABLE_UTC = True
+    CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
     # For Model Objects creation (check models/models.py, pre_save_model() )
     VERSION_BACKEND = 'studio.version.Version'
 
@@ -477,6 +499,10 @@ data:
     # To enable sticky sessions for k8s ingress
     SESSION_COOKIE_DOMAIN = {{ .Values.studio.session_cookie_domain | quote }}
     CSRF_TRUSTED_ORIGINS = ['https://*{{ .Values.studio.session_cookie_domain }}','https://*.127.0.0.1'] + [{{ .Values.studio.csrf_trusted_origins | quote}}]
+    GPU_TOTAL_CAPACITY = int(os.environ.get("GPU_TOTAL_CAPACITY", "{{ .Values.studio.gpu_total_capacity | default 0 }}"))
+    DEVELOP_APP_MAX_AGE_DAYS = int(os.environ.get("DEVELOP_APP_MAX_AGE_DAYS", "{{ .Values.studio.develop_app_max_age_days | default 7 }}"))
+    GPU_DEVELOP_APP_MAX_AGE_DAYS = int(os.environ.get("GPU_DEVELOP_APP_MAX_AGE_DAYS", "{{ .Values.studio.gpu_develop_app_max_age_days | default 1 }}"))
+    FILEMANAGER_MAX_AGE_DAYS = int(os.environ.get("FILEMANAGER_MAX_AGE_DAYS", "{{ .Values.studio.filemanager_max_age_days | default 1 }}"))
 
     # Email
     DEFAULT_FROM_EMAIL = "noreply-serve@scilifelab.se"
@@ -621,6 +647,11 @@ data:
             "django.server": {
                 "handlers": ["console" if DEVELOP_LOGS_ENABLED else "json"],
                 "level": "WARNING",
+                "propagate": False,
+            },
+            "psycopg_pool": {
+                "handlers": ["console" if DEVELOP_LOGS_ENABLED else "json"],
+                "level": os.getenv("PSYCOPG_POOL_LOG_LEVEL", "WARNING"),
                 "propagate": False,
             },
         },

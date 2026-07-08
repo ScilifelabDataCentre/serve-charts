@@ -57,6 +57,7 @@ spec:
             requests:
               cpu: "100m"
               memory: "512Mi"
+        {{- if .Values.studio.initContainer.enabled }}
         - name: studio-init
           image: {{ .Values.studio.image.repository }}:{{ .Values.studio.image.tag }}
           imagePullPolicy: {{ .Values.studio.image.pullPolicy }}
@@ -95,6 +96,7 @@ spec:
             requests:
               cpu: {{ .Values.studio.resources.requests.cpu }}
               memory: {{ .Values.studio.resources.requests.memory }}
+        {{- end }}
       containers:
       - args:
         - sh
