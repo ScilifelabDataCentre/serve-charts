@@ -17,7 +17,6 @@
       "commitMessageTopic": "Update Serve Images to {{newValue}}",
       "prBody": "Updates Serve images to version {{newValue}} ({{newVersion}})\n\n### Changes\n{{#each updates}}- {{depName}}: `{{currentValue}}` → `{{newValue}}`\n{{/each}}",
       "automerge": false,
-      "schedule": ["* 8-16 * * 1-5"],
       "prConcurrentLimit": 1
     }
   ]
