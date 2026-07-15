@@ -445,7 +445,7 @@ data:
     GATEWAY_NAMESPACE = os.getenv("GATEWAY_NAMESPACE", "{{ .Values.gateway.namespace }}")
     GATEWAY_SECTION_NAME = os.getenv("GATEWAY_SECTION_NAME", "{{ .Values.gateway.sectionName }}")
     GATEWAY_PORT = int(os.getenv("GATEWAY_PORT", "{{ .Values.gateway.port | default 80 }}"))
-    
+
     # App dependencies
 
     # Docker hub API
