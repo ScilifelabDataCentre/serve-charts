@@ -367,6 +367,7 @@ gateway:
   gatewayClassName: nginx
   port: 443
   domain: serve-dev.scilifelab.se
+  domainSectionName: serve-dev
   sectionName: serve-dev-subdomains
   studioSectionName: serve-dev-subdomains
   whitelistingSnippetsFilter:

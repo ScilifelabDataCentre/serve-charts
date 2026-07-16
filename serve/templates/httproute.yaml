@@ -9,6 +9,14 @@ spec:
   - {{ .Values.gateway.domain | quote }}
   - "gw.{{ .Values.gateway.domain }}"
   parentRefs:
+  {{- if .Values.gateway.domainSectionName }}
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: {{ .Values.gateway.name | default "default" }}
+    namespace: {{ .Values.gateway.namespace | default "gateway" }}
+    sectionName: {{ .Values.gateway.domainSectionName }}
+    port: {{ .Values.gateway.port | default (eq .Values.environment "vscode" | ternary 80 443) }}
+  {{- end }}
   - group: gateway.networking.k8s.io
     kind: Gateway
     name: {{ .Values.gateway.name | default "default" }}
