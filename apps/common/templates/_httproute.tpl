@@ -63,6 +63,9 @@ spec:
     value: |
       location /auth/ {
         internal;
+{{- with .Values.ingress.clientMaxBodySize }}
+        client_max_body_size {{ . | lower }};
+{{- end }}
         resolver 10.43.0.10;
         proxy_pass {{ .Values.global.protocol | lower }}://{{ .Values.global.auth_domain }}:8080/auth/?release={{ .Values.release | default .Release.Name }};
         proxy_pass_request_body off;
