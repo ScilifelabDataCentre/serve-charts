@@ -90,7 +90,7 @@ studio:
       type: Recreate
     image:
       repository: ghcr.io/scilifelabdatacentre/serve/serve-ingress
-      tag: develop-20260508
+      tag: develop-20260727
       pullPolicy: Always
     resources:
       limits:
@@ -101,7 +101,7 @@ studio:
         memory: "256Mi"
   image:
     repository: ghcr.io/scilifelabdatacentre/serve/serve-studio
-    tag: develop-20260508
+    tag: develop-20260727
     pullPolicy: Always
   resources:
     limits:
@@ -367,6 +367,7 @@ gateway:
   gatewayClassName: nginx
   port: 443
   domain: serve-dev.scilifelab.se
+  domainSectionName: serve-dev
   sectionName: serve-dev-subdomains
   studioSectionName: serve-dev-subdomains
   whitelistingSnippetsFilter:
