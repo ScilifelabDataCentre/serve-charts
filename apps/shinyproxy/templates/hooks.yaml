@@ -7,8 +7,10 @@ metadata:
   annotations:
     "helm.sh/hook": pre-delete
     "helm.sh/hook-weight": "-5"
-    "helm.sh/hook-delete-policy": hook-succeeded
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
 spec:
+  backoffLimit: {{ .Values.hooks.deleteUserPods.backoffLimit }}
+  activeDeadlineSeconds: {{ .Values.hooks.deleteUserPods.activeDeadlineSeconds }}
   template:
     metadata:
       name: "delete-user-pods-{{ .Release.Name }}"
@@ -20,7 +22,7 @@ spec:
       serviceAccountName: {{ .Release.Namespace }}-shinyproxy
       containers:
       - name: delete-user-pods
-        image: bitnamilegacy/kubectl:{{ .Capabilities.KubeVersion.Major }}.{{ .Capabilities.KubeVersion.Minor }}
+        image: {{ .Values.hooks.deleteUserPods.image }}
         args:
           - "delete"
           - "pods"

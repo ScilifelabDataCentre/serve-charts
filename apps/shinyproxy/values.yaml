@@ -55,6 +55,12 @@ gateway:
 s3sync:
   image: scaleoutsystems/s3-sync:latest
 
+hooks:
+  deleteUserPods:
+    image: registry.k8s.io/kubectl:v1.33.4
+    backoffLimit: 0
+    activeDeadlineSeconds: 60
+
 podSecurityContext:
   seccompProfile:
     type: RuntimeDefault
