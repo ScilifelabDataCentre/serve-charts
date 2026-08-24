@@ -36,6 +36,7 @@ studio:
     enabled: true
   enable_project_extra_settings: false
   inactive_users: true
+  pod_status_aggregation_enabled: true
   custom_apps:
     enabled: true
     apps:

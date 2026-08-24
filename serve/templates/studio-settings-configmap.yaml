@@ -444,6 +444,7 @@ data:
     NAMESPACE = {{ .Values.namespace | default "default" | quote }}
     KUBE_API_REQUEST_TIMEOUT = {{ .Values.studio.kube_api_request_timeout }}
     STORAGECLASS = {{ include "studio.storageclass" . | quote }}
+    POD_STATUS_AGGREGATION_ENABLED = {{ if .Values.studio.pod_status_aggregation_enabled }}True{{ else }}False{{ end }}
 
     # Gateway API variables
     GATEWAY_ENABLED = {{ if .Values.gateway.enabled }}True{{ else }}False{{ end }}
