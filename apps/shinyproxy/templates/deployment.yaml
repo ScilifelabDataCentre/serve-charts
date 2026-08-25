@@ -65,4 +65,9 @@ spec:
       - name: application-conf-{{ .Release.Name }}
         configMap:
           name: {{ .Release.Name }}-shinyproxy-configmap
+          items:
+            - key: application.yml
+              path: application.yml
+            - key: navbar.html
+              path: templates/fragments/navbar.html
       dnsPolicy: ClusterFirst
