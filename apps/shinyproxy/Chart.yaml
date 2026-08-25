@@ -2,12 +2,12 @@ apiVersion: v2
 name: shinyproxy
 description: A Helm chart to install Shinyproxy
 type: application
-version: 1.4.11
+version: 1.4.12
 appVersion: "0.1"
 maintainers:
   - name: Team Whale
     email: serve@scilifelab.se
 dependencies:
   - name: common
-    version: "0.1.1"
+    version: "0.1.2"
     repository: "file://../common"

@@ -45,6 +45,8 @@ gateway:
   enabled: true
   name: default
   namespace: gateway
+  errorPagesSnippetsFilter:
+    enabled: true
   rateLimit:
     enabled: false
     rate: "2r/s"
