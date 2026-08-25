@@ -51,16 +51,16 @@ spec:
           {{- toYaml .Values.securityContext | nindent 10 }}
         resources:
           limits:
-            cpu: 300m
-            memory: 800Mi
+            cpu: 2
+            memory: 2Gi
           requests:
             cpu: 200m
             memory: 512Mi
         readinessProbe:
           tcpSocket:
             port: {{ .Values.appconfig.proxyport }}
-          initialDelaySeconds: 60
-          periodSeconds: 15
+          initialDelaySeconds: 0
+          periodSeconds: 2
       volumes:
       - name: application-conf-{{ .Release.Name }}
         configMap:
