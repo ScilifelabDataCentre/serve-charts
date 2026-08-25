@@ -145,12 +145,19 @@ studio:
       httpHeaders:
     initialDelaySeconds: 20
     periodSeconds: 10
+    timeoutSeconds: 3
+    failureThreshold: 2
   livenessProbe:
     enabled: true
-    tcpSocket:
+    httpGet:
+      path: /status/liveness
       port: 8080
+      scheme: HTTP
+      httpHeaders:
     initialDelaySeconds: 20
-    periodSeconds: 20
+    periodSeconds: 30
+    timeoutSeconds: 3
+    failureThreshold: 10
   djangoSecret:
   altchaHmacKey:
   axes:
