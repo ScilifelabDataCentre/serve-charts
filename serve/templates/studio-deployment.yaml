@@ -177,13 +177,30 @@ spec:
 
           initialDelaySeconds: {{ .Values.studio.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.studio.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.studio.readinessProbe.timeoutSeconds | default 3 }}
+          failureThreshold: {{ .Values.studio.readinessProbe.failureThreshold | default 2 }}
         {{- end }}
         {{- if .Values.studio.livenessProbe.enabled }}
         livenessProbe:
-          tcpSocket:
-            port: {{ .Values.studio.livenessProbe.tcpSocket.port }}
+          httpGet:
+            path: {{ .Values.studio.livenessProbe.httpGet.path }}
+            port: {{ .Values.studio.livenessProbe.httpGet.port }}
+            scheme: {{ .Values.studio.livenessProbe.httpGet.scheme }}
+            httpHeaders:
+            {{- if .Values.studio.livenessProbe.httpGet.httpHeaders }}
+              {{- range $i, $h := .Values.studio.livenessProbe.httpGet.httpHeaders }}
+              - name: {{ $h.name | quote }}
+                value: {{ $h.value | quote }}
+              {{- end }}
+              {{- else }}
+              - name: "host"
+                value: {{ .Release.Name }}-studio.{{ .Values.namespace | default "default" }}.svc.{{ .Values.cluster_domain | default "cluster.local"}}
+            {{ end }}
+
           initialDelaySeconds: {{ .Values.studio.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.studio.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.studio.livenessProbe.timeoutSeconds | default 3 }}
+          failureThreshold: {{ .Values.studio.livenessProbe.failureThreshold | default 10 }}
         {{- end }}
 
       restartPolicy: Always

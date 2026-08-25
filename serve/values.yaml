@@ -36,6 +36,7 @@ studio:
     enabled: true
   enable_project_extra_settings: false
   inactive_users: true
+  pod_status_aggregation_enabled: true
   custom_apps:
     enabled: true
     apps:
@@ -90,7 +91,7 @@ studio:
       type: Recreate
     image:
       repository: ghcr.io/scilifelabdatacentre/serve/serve-ingress
-      tag: develop-20260819
+      tag: develop-20260824
       pullPolicy: Always
     resources:
       limits:
@@ -101,7 +102,7 @@ studio:
         memory: "256Mi"
   image:
     repository: ghcr.io/scilifelabdatacentre/serve/serve-studio
-    tag: develop-20260819
+    tag: develop-20260824
     pullPolicy: Always
   resources:
     limits:
@@ -144,12 +145,19 @@ studio:
       httpHeaders:
     initialDelaySeconds: 20
     periodSeconds: 10
+    timeoutSeconds: 3
+    failureThreshold: 2
   livenessProbe:
     enabled: true
-    tcpSocket:
+    httpGet:
+      path: /status/liveness
       port: 8080
+      scheme: HTTP
+      httpHeaders:
     initialDelaySeconds: 20
-    periodSeconds: 20
+    periodSeconds: 30
+    timeoutSeconds: 3
+    failureThreshold: 10
   djangoSecret:
   altchaHmacKey:
   axes:
