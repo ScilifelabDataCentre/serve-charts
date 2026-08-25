@@ -22,7 +22,7 @@ spec:
     port: {{ .Values.gateway.port | default (contains "nip.io" .Values.global.domain | ternary 80 443) }}
   rules:
   - backendRefs:
-    - name: {{ .Values.service.name }}
+    - name: {{ include "common.serviceName" . }}
       kind: Service
       port: {{ .Values.service.port }}
     matches:

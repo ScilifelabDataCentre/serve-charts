@@ -23,7 +23,7 @@ spec:
         - path: /
           backend:
             service:
-              name: {{ .Values.service.name }}
+              name: {{ include "common.serviceName" . }}
               port:
                 number: {{ .Values.service.port }}
           pathType: ImplementationSpecific
