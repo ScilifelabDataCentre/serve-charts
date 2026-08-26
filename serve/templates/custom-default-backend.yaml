@@ -71,7 +71,7 @@ spec:
         - name: SEND_SAME_HTTP_CODE
           value: {{ .Values.errorPages.sendSameHttpCode | quote }}
         - name: HOMEPAGE_URL
-          value: "{{ $scheme }}://{{ .Values.studio.domain }}/home/"
+          value: "{{ $scheme }}://{{ .Values.studio.domain }}/"
         - name: ADD_LINK
           value: "Contact us=mailto:serve@scilifelab.se"
         - name: ADD_CODE
