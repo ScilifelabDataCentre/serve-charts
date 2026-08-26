@@ -1,0 +1,134 @@
+<!--
+
+    ShinyProxy
+
+    Copyright (C) 2016-2026 Open Analytics
+
+    ===========================================================================
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the Apache License as published by
+    The Apache Software Foundation, either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    Apache License for more details.
+
+    You should have received a copy of the Apache License
+    along with this program.  If not, see <http://www.apache.org/licenses/>
+
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head></head>
+    <body>
+        <div id="navbar" th:fragment="navbar" th:if="${showNavbar and page == 'app'}">
+            <style>
+                .serve-loading-navbar {
+                    min-height: 42px;
+                    margin-bottom: 0;
+                    background: #f7f7f7;
+                    border-color: #ddd;
+                }
+
+                .serve-loading-navbar .navbar-text {
+                    float: none;
+                    margin: 10px 15px;
+                    color: #333;
+                    text-align: center;
+                }
+            </style>
+            <nav class="navbar navbar-default navbar-fixed-top navbar-height serve-loading-navbar"
+                 aria-live="polite"
+                 role="status">
+                <div class="container-fluid">
+                    <p class="navbar-text">
+                        <span aria-hidden="true" class="glyphicon glyphicon-time"></span>
+                        The app is loading. Some apps may take a few minutes to become ready to use.
+                    </p>
+                </div>
+            </nav>
+            <script>
+                (function () {
+                    const originalSetupIframe = Shiny.ui.setupIframe;
+                    let navbarHidden = false;
+
+                    function hideNavbar() {
+                        if (navbarHidden) {
+                            return;
+                        }
+
+                        navbarHidden = true;
+                        $('#navbar').fadeOut('slow', function () {
+                            $('body').css('padding-top', '0');
+                            Shiny.ui.setShinyFrameHeight();
+                        });
+                    }
+
+                    function hideNavbarIfIdle(frameDocument) {
+                        // Allow Shiny to enter its initial busy state.
+                        window.setTimeout(function () {
+                            if (!frameDocument.documentElement.classList.contains('shiny-busy')) {
+                                hideNavbar();
+                            }
+                        }, 250);
+                    }
+
+                    function waitForShinyReady(iframe) {
+                        let frameDocument;
+                        let frameShiny;
+                        let frameWindow;
+
+                        try {
+                            frameDocument = iframe.contentDocument;
+                            frameWindow = iframe.contentWindow;
+                            frameShiny = frameWindow && frameWindow.Shiny;
+                        } catch (error) {
+                            // Keep the message visible if iframe access fails.
+                            return;
+                        }
+
+                        if (!frameDocument || !frameWindow) {
+                            return;
+                        }
+
+                        // Hide after Shiny finishes its initial processing.
+                        $(frameDocument).one('shiny:idle.serveLoadingNavbar', hideNavbar);
+
+                        if (!frameShiny) {
+                            return;
+                        }
+
+                        // Handle apps already idle before the listener was attached.
+                        if (frameShiny.initializedPromise && typeof frameShiny.initializedPromise.then === 'function') {
+                            frameShiny.initializedPromise.then(function () {
+                                hideNavbarIfIdle(frameDocument);
+                            });
+                            return;
+                        }
+
+                        // Compatibility fallback for older Shiny versions.
+                        const socket = frameShiny.shinyapp && frameShiny.shinyapp.$socket;
+                        if (socket && socket.readyState === 1) {
+                            hideNavbarIfIdle(frameDocument);
+                        }
+                    }
+
+                    Shiny.ui.setupIframe = function () {
+                        originalSetupIframe.apply(Shiny.ui, arguments);
+                        $('#shinyframe').one('load', function () {
+                            waitForShinyReady(this);
+                        });
+                    };
+
+                    const navbarHeight = $('.navbar-height').height();
+                    if (navbarHeight !== undefined) {
+                        $('body').css('padding-top', navbarHeight + 'px');
+                    }
+                })();
+            </script>
+        </div>
+    </body>
+</html>

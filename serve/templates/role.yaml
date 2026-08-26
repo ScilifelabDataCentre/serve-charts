@@ -30,7 +30,10 @@ metadata:
   namespace: {{ .Values.namespace }}
 rules:
   - apiGroups: [""]       # "" indicates the core API group
-    resources: ["pods","persistentvolumeclaims"]
+    resources: ["pods", "events", "services"]
+    verbs: ["get", "watch", "list", "create", "update", "patch", "delete"]
+  - apiGroups: [""]       # "" indicates the core API group
+    resources: ["persistentvolumeclaims"]
     verbs: ["get", "watch", "list", "create", "delete"]
   - apiGroups: [""]       # "" indicates the core API group
     resources: ["pods/log"]
