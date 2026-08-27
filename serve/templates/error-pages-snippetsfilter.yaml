@@ -1,0 +1,65 @@
+# Intercepts upstream 5xx errors on the studio app's own HTTPRoute (see httproute.yaml)
+# and routes them to the nginx-errors backend, replicating what
+# nginx.ingress.kubernetes.io/custom-http-errors + default-backend did under ingress-nginx.
+{{- if and .Values.gateway.enabled .Values.gateway.errorPagesSnippetsFilter.enabled }}
+apiVersion: gateway.nginx.org/v1alpha1
+kind: SnippetsFilter
+metadata:
+  name: {{ .Release.Name }}-error-pages
+  namespace: {{ .Values.namespace }}
+spec:
+  snippets:
+  - context: http.server
+    value: |
+      proxy_intercept_errors on;
+      error_page 403 = @error_page_403;
+      error_page 404 = @error_page_404;
+      error_page 500 = @error_page_500;
+      error_page 502 = @error_page_502;
+      error_page 503 = @error_page_503;
+      error_page 504 = @error_page_504;
+      location @error_page_403 {
+        internal;
+        proxy_intercept_errors off;
+        proxy_set_header X-Code 403;
+        proxy_pass http://nginx-errors.{{ .Values.namespace }}.svc.cluster.local:80;
+      }
+      location @error_page_404 {
+        internal;
+        proxy_intercept_errors off;
+        proxy_set_header X-Code 404;
+        proxy_pass http://nginx-errors.{{ .Values.namespace }}.svc.cluster.local:80;
+      }
+      location @error_page_500 {
+        internal;
+        proxy_intercept_errors off;
+        proxy_set_header X-Code 500;
+        proxy_pass http://nginx-errors.{{ .Values.namespace }}.svc.cluster.local:80;
+      }
+      location @error_page_502 {
+        internal;
+        proxy_intercept_errors off;
+        proxy_set_header X-Code 502;
+        proxy_pass http://nginx-errors.{{ .Values.namespace }}.svc.cluster.local:80;
+      }
+      location @error_page_503 {
+        internal;
+        proxy_intercept_errors off;
+        proxy_set_header X-Code 503;
+        proxy_pass http://nginx-errors.{{ .Values.namespace }}.svc.cluster.local:80;
+      }
+      location @error_page_504 {
+        internal;
+        proxy_intercept_errors off;
+        proxy_set_header X-Code 504;
+        proxy_pass http://nginx-errors.{{ .Values.namespace }}.svc.cluster.local:80;
+      }
+  - context: http.server.location
+    value: |
+      error_page 403 = @error_page_403;
+      error_page 404 = @error_page_404;
+      error_page 500 = @error_page_500;
+      error_page 502 = @error_page_502;
+      error_page 503 = @error_page_503;
+      error_page 504 = @error_page_504;
+{{- end }}

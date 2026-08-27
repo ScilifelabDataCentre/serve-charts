@@ -40,6 +40,14 @@ spec:
     - path:
         type: PathPrefix
         value: /
+    {{- if .Values.gateway.errorPagesSnippetsFilter.enabled }}
+    filters:
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.nginx.org
+        kind: SnippetsFilter
+        name: {{ .Release.Name }}-error-pages
+    {{- end }}
   - backendRefs:
     - name: {{ .Release.Name }}-studio
       kind: Service

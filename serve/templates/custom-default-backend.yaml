@@ -1,38 +1,14 @@
-# Configuration for the default backend: service and handling of a 404 error on a subdomain level (wild card domain).
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-ingress-from-default-backend
-  namespace: {{ .Values.namespace | default "default" }}
-spec:
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/name: nginx-errors
-  policyTypes:
-  - Egress
-  egress:
-  # Allow DNS lookups (required for curl to resolve raw.githubusercontent.com)
-  - to:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: kube-system
-    ports:
-    - protocol: UDP
-      port: 53
-    - protocol: TCP
-      port: 53
-  - to:
-    - ipBlock:
-        cidr: 0.0.0.0/0
-    ports:
-      - protocol: TCP
-        port: 443
+# Configuration for the default backend: renders custom error pages (403/404/500/502/503)
+# for unmatched subdomains (wildcard) and, via error-pages-snippetsfilter.yaml, for upstream
+# 5xx errors on the studio app's own HTTPRoute.
+{{- $scheme := "https" }}
+{{- if eq (int .Values.gateway.port) 80 }}{{- $scheme = "http" }}{{- end }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: nginx-errors
+  namespace: {{ .Values.namespace | default "default" }}
   labels:
     app.kubernetes.io/name: nginx-errors
     app.kubernetes.io/part-of: ingress-nginx
@@ -45,10 +21,22 @@ spec:
     targetPort: 8080
     name: http
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-errors-template
+  namespace: {{ .Values.namespace | default "default" }}
+data:
+  error-page.tpl.html: |-
+{{ .Files.Get "assets/error-page.tpl.html" | indent 4 }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-errors
+  namespace: {{ .Values.namespace | default "default" }}
+  annotations:
+    reloader.stakater.com/auto: "true"
   labels:
     app.kubernetes.io/name: nginx-errors
     app.kubernetes.io/part-of: ingress-nginx
@@ -64,35 +52,36 @@ spec:
         app.kubernetes.io/name: nginx-errors
         app.kubernetes.io/part-of: ingress-nginx
     spec:
-      initContainers:
-      - name: fetch-error-pages
-        image: curlimages/curl:latest
-        command:
-        - /bin/sh
-        - -c
-        - |
-          mkdir -p /www
-          curl -o /www/403.html https://raw.githubusercontent.com/ScilifelabDataCentre/serve-charts/refs/heads/develop/k8s-error-pages/error-page-403.html
-          curl -o /www/404.html https://raw.githubusercontent.com/ScilifelabDataCentre/serve-charts/refs/heads/develop/k8s-error-pages/error-page-404.html
-          curl -o /www/503.html https://raw.githubusercontent.com/ScilifelabDataCentre/serve-charts/refs/heads/develop/k8s-error-pages/error-page-503.html
-          curl -o /www/502.html https://raw.githubusercontent.com/ScilifelabDataCentre/serve-charts/refs/heads/develop/k8s-error-pages/error-page-502.html
-          curl -o /www/500.html https://raw.githubusercontent.com/ScilifelabDataCentre/serve-charts/refs/heads/develop/k8s-error-pages/error-page-500.html
-
-        volumeMounts:
-        - name: error-pages
-          mountPath: /www
+      volumes:
+      - name: error-pages-template
+        configMap:
+          name: nginx-errors-template
       containers:
       - name: nginx-error-server
-        image: registry.k8s.io/ingress-nginx/custom-error-pages:v1.2.7@sha256:bc95ae1de9f36ef75cc9ea323893e406c58a2264de21c278879be63e60a659ca
+        image: "{{ .Values.errorPages.image.repository }}:{{ .Values.errorPages.image.tag }}"
         ports:
         - containerPort: 8080
         volumeMounts:
-        - name: error-pages
-          mountPath: /www
-
-      volumes:
-      - name: error-pages
-        emptyDir: {}
+        - name: error-pages-template
+          mountPath: /templates
+          readOnly: true
+        env:
+        - name: HTML_TEMPLATE
+          value: /templates/error-page.tpl.html
+        - name: SEND_SAME_HTTP_CODE
+          value: {{ .Values.errorPages.sendSameHttpCode | quote }}
+        - name: HOMEPAGE_URL
+          value: "{{ $scheme }}://{{ .Values.studio.domain }}/"
+        - name: ADD_LINK
+          value: "Contact us=mailto:serve@scilifelab.se"
+        - name: ADD_CODE
+          value: |-
+            403=Forbidden|You don't have permission to view this page.
+            404=Not found|Page cannot be served. Go back to the home page and try again.
+            500=Internal problem|Service encountered an internal problem. Try the home page, or try again a bit later. If it persists, contact us.
+            502=Temporarily not available|Service is temporarily unavailable. Please try again shortly.
+            503=Temporarily not available|The application is being created, please wait a moment, then refresh.
+            504=Temporarily not available|The application is taking longer than expected to respond. Please try again shortly.
 ---
 {{- if .Values.gateway.enabled }}
 apiVersion: gateway.networking.k8s.io/v1

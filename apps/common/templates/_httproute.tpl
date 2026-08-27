@@ -29,14 +29,93 @@ spec:
     - path:
         type: PathPrefix
         value: /
-    {{- if and (ne .Values.permission "public") (ne .Values.permission "link") }}
+    {{- if or .Values.gateway.errorPagesSnippetsFilter.enabled (and (ne .Values.permission "public") (ne .Values.permission "link")) }}
     filters:
+    {{- end }}
+    {{- if .Values.gateway.errorPagesSnippetsFilter.enabled }}
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.nginx.org
+        kind: SnippetsFilter
+        name: {{ .Release.Name }}-error-pages
+    {{- end }}
+    {{- if and (ne .Values.permission "public") (ne .Values.permission "link") }}
     - type: ExtensionRef
       extensionRef:
         group: gateway.nginx.org
         kind: SnippetsFilter
         name: {{ .Release.Name }}-auth
     {{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+SnippetsFilter to intercept upstream 5xx errors and route them to the shared nginx-errors backend
+(deployed by the serve chart's custom-default-backend.yaml, in the same namespace).
+Usage: {{ include "common.errorPagesSnippetsFilter" . }}
+*/}}
+{{- define "common.errorPagesSnippetsFilter" -}}
+{{- if and .Values.gateway.enabled .Values.gateway.errorPagesSnippetsFilter.enabled }}
+apiVersion: gateway.nginx.org/v1alpha1
+kind: SnippetsFilter
+metadata:
+  name: {{ .Release.Name }}-error-pages
+  namespace: {{ .Release.Namespace }}
+spec:
+  snippets:
+  - context: http.server
+    value: |
+      proxy_intercept_errors on;
+      error_page 403 = @error_page_403;
+      error_page 404 = @error_page_404;
+      error_page 500 = @error_page_500;
+      error_page 502 = @error_page_502;
+      error_page 503 = @error_page_503;
+      error_page 504 = @error_page_504;
+      location @error_page_403 {
+        internal;
+        proxy_intercept_errors off;
+        proxy_set_header X-Code 403;
+        proxy_pass http://nginx-errors.{{ .Release.Namespace }}.svc.cluster.local:80;
+      }
+      location @error_page_404 {
+        internal;
+        proxy_intercept_errors off;
+        proxy_set_header X-Code 404;
+        proxy_pass http://nginx-errors.{{ .Release.Namespace }}.svc.cluster.local:80;
+      }
+      location @error_page_500 {
+        internal;
+        proxy_intercept_errors off;
+        proxy_set_header X-Code 500;
+        proxy_pass http://nginx-errors.{{ .Release.Namespace }}.svc.cluster.local:80;
+      }
+      location @error_page_502 {
+        internal;
+        proxy_intercept_errors off;
+        proxy_set_header X-Code 502;
+        proxy_pass http://nginx-errors.{{ .Release.Namespace }}.svc.cluster.local:80;
+      }
+      location @error_page_503 {
+        internal;
+        proxy_intercept_errors off;
+        proxy_set_header X-Code 503;
+        proxy_pass http://nginx-errors.{{ .Release.Namespace }}.svc.cluster.local:80;
+      }
+      location @error_page_504 {
+        internal;
+        proxy_intercept_errors off;
+        proxy_set_header X-Code 504;
+        proxy_pass http://nginx-errors.{{ .Release.Namespace }}.svc.cluster.local:80;
+      }
+  - context: http.server.location
+    value: |
+      error_page 403 = @error_page_403;
+      error_page 404 = @error_page_404;
+      error_page 500 = @error_page_500;
+      error_page 502 = @error_page_502;
+      error_page 503 = @error_page_503;
+      error_page 504 = @error_page_504;
 {{- end }}
 {{- end }}
 
