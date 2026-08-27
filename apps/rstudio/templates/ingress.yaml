@@ -22,7 +22,7 @@ spec:
         paths:
         - path: /
           backend:
-            serviceName: {{ .Values.service.name }}
+            serviceName: {{ include "common.serviceName" . }}
             servicePort: {{ .Values.service.port }}
   tls:
     - secretName: {{ .Values.ingress.secretName }}
@@ -48,7 +48,7 @@ spec:
         - path: /
           backend:
             service:
-              name: {{ .Values.service.name }}
+              name: {{ include "common.serviceName" . }}
               port:
                 number: {{ .Values.service.port }}
           pathType: ImplementationSpecific

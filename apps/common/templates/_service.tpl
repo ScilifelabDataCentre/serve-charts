@@ -1,4 +1,11 @@
 {{/*
+Kubernetes Service names are DNS labels and must not exceed 63 characters.
+*/}}
+{{- define "common.serviceName" -}}
+{{- .Values.service.name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
 Standard Service for a serve app.
 Usage: {{ include "common.service" . }}
 */}}
@@ -6,10 +13,10 @@ Usage: {{ include "common.service" . }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.service.name }}
+  name: {{ include "common.serviceName" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    run: {{ if .Values.service.runLabel }}{{ .Values.service.runLabel }}{{ else }}{{ .Release.Name }}{{ with .Values.appname }}-{{ . }}{{ end }}{{ end }}
+    run: {{ .Values.service.runLabel | default .Values.appname | default .Release.Name | trunc 63 | trimSuffix "-" }}
     {{- if .Values.appname }}
     app: {{ .Values.appname }}
     {{- end }}

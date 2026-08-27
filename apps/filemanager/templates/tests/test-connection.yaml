@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ["wget"]
-      args: ["--no-check-certificate", "{{ .Values.service.name }}:{{ .Values.service.port }}"]
+      args: ["--no-check-certificate", "{{ include "common.serviceName" . }}:{{ .Values.service.port }}"]
   restartPolicy: Never
