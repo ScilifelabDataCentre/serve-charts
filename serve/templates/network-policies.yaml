@@ -276,9 +276,18 @@ spec:
   podSelector: {}
   ingress:
   - from:
+    {{- if .Values.gateway.enabled }}
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/managed-by: ngf-nginx
+        namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: {{ .Values.gateway.namespace | default "gateway" }} # <- This should allow traffic from the Gateway API data plane
+    {{- else }}
       - namespaceSelector:
           matchLabels:
             kubernetes.io/metadata.name: {{ .Values.networkPolicy.ingress_controller_namespace }} # <- This should allow traffic from ingress namespace
+    {{- end }}
 ---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1

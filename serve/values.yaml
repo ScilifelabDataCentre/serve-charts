@@ -367,6 +367,12 @@ ingress:
   rateLimit:
     rpm: "100"  # Requests per minute
 
+errorPages:
+  image:
+    repository: ghcr.io/tarampampam/error-pages
+    tag: "4.2.4"
+  sendSameHttpCode: true
+
 gateway:
   create: false
   enabled: true
@@ -378,6 +384,8 @@ gateway:
   domainSectionName: serve-dev
   sectionName: serve-dev-subdomains
   studioSectionName: serve-dev-subdomains
+  errorPagesSnippetsFilter:
+    enabled: true
   whitelistingSnippetsFilter:
     enabled: true
     # IP ranges allowed to access admin endpoints
