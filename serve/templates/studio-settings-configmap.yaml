@@ -114,7 +114,6 @@ data:
         'django_extensions',    # for executing runscript among others
         'django_filters',
         'django_structlog',
-        'django_tagulous',
         'guardian',
         "crispy_forms",
         "crispy_bootstrap5",
@@ -214,19 +213,6 @@ data:
 
     CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
     CRISPY_TEMPLATE_PACK = "bootstrap5"
-
-    # Tagulous serialization settings
-    SERIALIZATION_MODULES = {
-        'xml':    'django_tagulous.serializers.xml_serializer',
-        'json':   'django_tagulous.serializers.json',
-        'python': 'django_tagulous.serializers.python',
-        'yaml':   'django_tagulous.serializers.pyyaml',
-    }
-
-    # tagulous.W001 checks SERIALIZATION_MODULES against the pre-rename "tagulous.serializers.*"
-    # paths and wasn't updated for the django_tagulous rename in 2.x, so it always fires even
-    # though the module paths above are the correct, non-deprecated ones.
-    SILENCED_SYSTEM_CHECKS = ['tagulous.W001']
 
     STATICFILES_FINDERS = (
         'django.contrib.staticfiles.finders.FileSystemFinder',
