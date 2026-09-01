@@ -41,6 +41,7 @@ spec:
       labels: {{- include "common.labels.standard" ( dict "customLabels" $podLabels "context" $ ) | nindent 8 }}
         app.kubernetes.io/part-of: mlflow
         app.kubernetes.io/component: tracking
+        release: {{ .Release.Name }}
     spec:
       serviceAccountName: {{ include "mlflow.v0.tracking.serviceAccountName" . }}
       {{- include "mlflow.v0.imagePullSecrets" . | nindent 6 }}
