@@ -110,6 +110,27 @@ Return the MLFlow Tracking URI
 {{- end -}}
 
 {{/*
+The tracking Service's name/port, computed the same way the rest of the chart computes them
+(release-name aware, TLS aware) - so the serve-charts common.service/common.httproute templates
+target the actual Service instead of a name that only happens to be right for one release name.
+"service.ports" (rather than the simpler "service.port"/"targetport") is required here: the
+legacy tracking/ingress.yaml and tracking/servicemonitor.yaml templates both reference this
+Service's port *by name* (mlflow.v0.tracking.portName, i.e. "http"/"https"), and common.service
+only puts a name on the port when given an explicit .Values.service.ports list.
+Usage: {{ merge (dict "Values" (include "mlflow.v0.tracking.serviceValues" . | fromYaml)) . }}
+*/}}
+{{- define "mlflow.v0.tracking.serviceValues" -}}
+service:
+  name: {{ include "mlflow.v0.tracking.fullname" . }}
+  port: {{ include "mlflow.v0.tracking.port" . }}
+  ports:
+    - name: {{ include "mlflow.v0.tracking.portName" . }}
+      protocol: TCP
+      port: {{ include "mlflow.v0.tracking.port" . }}
+      targetPort: {{ include "mlflow.v0.tracking.portName" . }}
+{{- end -}}
+
+{{/*
 Get the source configmap.
 */}}
 {{- define "mlflow.v0.tracking.auth.overridesConfigMapName" -}}

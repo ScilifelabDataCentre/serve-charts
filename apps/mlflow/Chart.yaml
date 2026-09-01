@@ -27,6 +27,10 @@ dependencies:
   tags:
   - bitnami-common
   version: 2.x.x
+- alias: serve-common
+  name: common
+  repository: "file://../common"
+  version: "0.1.2"
 description: MLflow is an open-source platform designed to manage the end-to-end machine
   learning lifecycle. It allows you to track experiments, package code into reproducible
   runs, and share and deploy models.
@@ -46,4 +50,4 @@ sources:
 - https://github.com/bitnami/charts/tree/main/bitnami/mlflow
 - https://github.com/bitnami/containers/tree/main/bitnami/mlflow
 - https://github.com/mlflow/mlflow
-version: 5.3.0
+version: 5.3.1
