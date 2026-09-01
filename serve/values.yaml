@@ -395,8 +395,9 @@ gateway:
       - "130.237.0.0/16"
       - "130.229.0.0/16"
   rateLimit:
-    enabled: false
-    rate: "2r/s"
+    enabled: true
+    dryRun: true
+    rate: "6r/s"
     burst: 20
     noDelay: true
     zoneSize: "10m"
