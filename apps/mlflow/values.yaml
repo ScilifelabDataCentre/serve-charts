@@ -12,6 +12,13 @@
 ## @param global.defaultStorageClass Global default StorageClass for Persistent Volume(s)
 ##
 global:
+  ## @param global.domain Domain used to build the MLflow tracking hostname for the HTTPRoute (`<release-name>.<domain>`)
+  ## @param global.auth_domain Domain of the serve auth endpoint, used by the auth-redirect filter when `permission` is not `public`/`link`
+  ## @param global.protocol Protocol used to reach the serve auth endpoint
+  ##
+  domain: ""
+  auth_domain: ""
+  protocol: "https"
   imageRegistry: ""
   ## E.g.
   ## imagePullSecrets:
@@ -77,6 +84,53 @@ diagnosticMode:
   ##
   args:
     - infinity
+## @section Serve platform networking parameters
+## These parameters expose the MLflow tracking Service/HTTPRoute/ClientSettingsPolicy through the
+## serve-charts local "common" library chart, the same way the other serve app charts do.
+##
+
+## @param permission Access level for the HTTPRoute (public, link, or private/protected). Controls whether an auth-redirect filter is referenced.
+##
+permission: public
+
+## @param appconfig Unused by mlflow; present only so the serve-charts common.service template's
+## fallback logic (which unconditionally reads .Values.appconfig.port) doesn't error on a nil map.
+##
+appconfig: {}
+
+## MLflow tracking HTTPRoute Gateway attachment, via the serve-charts common library chart
+##
+gateway:
+  ## @param gateway.enabled Enable HTTPRoute generation for MLflow tracking via the serve-charts common library.
+  ## The serve backend always overrides this (BaseAppInstance.get_k8s_values sets gateway.enabled=GATEWAY_ENABLED
+  ## for every app), so this default only matters for standalone `helm lint`/`helm template`/install.
+  ##
+  enabled: true
+  ## @param gateway.name Name of the Gateway resource to attach to
+  ##
+  name: default
+  ## @param gateway.namespace Namespace of the Gateway resource
+  ##
+  namespace: gateway
+  ## @param gateway.sectionName Listener section name on the Gateway
+  ##
+  sectionName: serve-dev-subdomains
+  errorPagesSnippetsFilter:
+    ## @param gateway.errorPagesSnippetsFilter.enabled Route upstream 5xx/403/404 errors on the HTTPRoute to the shared nginx-errors backend
+    ##
+    enabled: true
+  rateLimit:
+    ## @param gateway.rateLimit.enabled Enable a RateLimitPolicy for the HTTPRoute (no template created for mlflow yet; kept for parity with the other app charts)
+    ##
+    enabled: false
+
+## MLflow tracking ClientSettingsPolicy (max request body size), via the serve-charts common library chart
+##
+ingress:
+  ## @param ingress.clientMaxBodySize Maximum allowed size of the client request body on the HTTPRoute. Leave empty to disable.
+  ##
+  clientMaxBodySize: "1000m"
+
 ## @section MLflow common Parameters
 ##
 

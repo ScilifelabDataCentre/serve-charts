@@ -4,5 +4,5 @@ SPDX-License-Identifier: APACHE-2.0
 */}}
 
 {{- if .Values.tracking.enabled }}
-{{- include "common.service" (merge (dict "Values" (include "mlflow.v0.tracking.serviceValues" . | fromYaml)) .) }}
+{{- include "common.errorPagesSnippetsFilter" . }}
 {{- end }}

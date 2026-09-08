@@ -1,14 +1,8 @@
-{{- if and .Values.tracking.enabled .Values.tracking.httproute.enabled .Values.tracking.httproute.clientMaxBodySize }}
-apiVersion: gateway.nginx.org/v1alpha1
-kind: ClientSettingsPolicy
-metadata:
-  name: {{ template "mlflow.v0.tracking.fullname" . }}-client-settings
-  namespace: {{ include "common.names.namespace" . | quote }}
-spec:
-  targetRef:
-    group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    name: {{ template "mlflow.v0.tracking.fullname" . }}
-  body:
-    maxSize: {{ .Values.tracking.httproute.clientMaxBodySize | lower | quote }}
+{{- /*
+Copyright Broadcom, Inc. All Rights Reserved.
+SPDX-License-Identifier: APACHE-2.0
+*/}}
+
+{{- if .Values.tracking.enabled }}
+{{- include "common.clientSettingsPolicy" . }}
 {{- end }}

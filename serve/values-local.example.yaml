@@ -185,17 +185,6 @@ gateway:
       - "130.229.0.0/16"
       - "192.168.0.0/16"
       - "172.0.0.0/20"
-  rateLimit:
-    enabled: false
-    rate: "2r/s"
-    burst: 20
-    noDelay: true
-    zoneSize: "10m"
-    condition:
-      type: Header
-      header:
-        name: X-Forwarded-For
-        value: ".*"
 
 reloader:
   enabled: true
