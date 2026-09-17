@@ -54,6 +54,7 @@
                 (function () {
                     const originalSetupIframe = Shiny.ui.setupIframe;
                     let navbarHidden = false;
+                    let readinessCheckId = null;
 
                     function hideNavbar() {
                         if (navbarHidden) {
@@ -61,23 +62,19 @@
                         }
 
                         navbarHidden = true;
+                        if (readinessCheckId !== null) {
+                            window.clearInterval(readinessCheckId);
+                            readinessCheckId = null;
+                        }
                         $('#navbar').fadeOut('slow', function () {
                             $('body').css('padding-top', '0');
                             Shiny.ui.setShinyFrameHeight();
                         });
                     }
 
-                    function hideNavbarIfIdle(frameDocument) {
-                        // Allow Shiny to enter its initial busy state.
-                        window.setTimeout(function () {
-                            if (!frameDocument.documentElement.classList.contains('shiny-busy')) {
-                                hideNavbar();
-                            }
-                        }, 250);
-                    }
-
                     function waitForShinyReady(iframe) {
                         let frameDocument;
+                        let frameJQuery;
                         let frameShiny;
                         let frameWindow;
 
@@ -85,6 +82,7 @@
                             frameDocument = iframe.contentDocument;
                             frameWindow = iframe.contentWindow;
                             frameShiny = frameWindow && frameWindow.Shiny;
+                            frameJQuery = frameWindow && (frameWindow.jQuery || frameWindow.$);
                         } catch (error) {
                             // Keep the message visible if iframe access fails.
                             return;
@@ -94,26 +92,52 @@
                             return;
                         }
 
-                        // Hide after Shiny finishes its initial processing.
-                        $(frameDocument).one('shiny:idle.serveLoadingNavbar', hideNavbar);
-
-                        if (!frameShiny) {
-                            return;
+                        if (typeof frameJQuery === 'function') {
+                            frameJQuery(frameDocument).one('shiny:idle.serveLoadingNavbar', hideNavbar);
                         }
 
-                        // Handle apps already idle before the listener was attached.
-                        if (frameShiny.initializedPromise && typeof frameShiny.initializedPromise.then === 'function') {
+                        let initialized = false;
+                        if (frameShiny && frameShiny.initializedPromise
+                            && typeof frameShiny.initializedPromise.then === 'function') {
                             frameShiny.initializedPromise.then(function () {
-                                hideNavbarIfIdle(frameDocument);
+                                initialized = true;
                             });
-                            return;
                         }
 
-                        // Compatibility fallback for older Shiny versions.
-                        const socket = frameShiny.shinyapp && frameShiny.shinyapp.$socket;
-                        if (socket && socket.readyState === 1) {
-                            hideNavbarIfIdle(frameDocument);
+                        let idleSince = null;
+                        if (readinessCheckId !== null) {
+                            window.clearInterval(readinessCheckId);
                         }
+                        readinessCheckId = window.setInterval(function () {
+                            try {
+                                frameDocument = iframe.contentDocument;
+                                frameWindow = iframe.contentWindow;
+                                frameShiny = frameWindow && frameWindow.Shiny;
+                            } catch (error) {
+                                idleSince = null;
+                                return;
+                            }
+
+                            if (!frameDocument || !frameDocument.documentElement) {
+                                idleSince = null;
+                                return;
+                            }
+
+                            const socket = frameShiny && frameShiny.shinyapp && frameShiny.shinyapp.$socket;
+                            const connected = initialized || (socket && socket.readyState === 1);
+                            const busy = frameDocument.documentElement.classList.contains('shiny-busy');
+
+                            if (!connected || busy) {
+                                idleSince = null;
+                                return;
+                            }
+
+                            if (idleSince === null) {
+                                idleSince = Date.now();
+                            } else if (Date.now() - idleSince >= 500) {
+                                hideNavbar();
+                            }
+                        }, 250);
                     }
 
                     Shiny.ui.setupIframe = function () {
