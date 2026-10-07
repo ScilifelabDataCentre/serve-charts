@@ -127,13 +127,13 @@ rabbitmq:
     existingPasswordSecretKey: ""
   resources:
     limits:
-      cpu:
+      cpu: 500m
       ephemeral-storage: 50Mi
-      memory:
+      memory: 512Mi
     requests:
-      cpu:
+      cpu: 100m
       ephemeral-storage: 50Mi
-      memory:
+      memory: 256Mi
 
 redis:
   enabled: true
