@@ -12,7 +12,7 @@ If you notice a bug or would like to request a new feature, please [create an is
 
 ### Prerequisites
 
-- A Kubernetes cluster version **1.34.10**
+- A Kubernetes cluster version **1.35.7**
 - Helm 3
 - A storage class for dynamic provisioning of persistent volumes
 - An ingress controller: either the NGINX Ingress Controller (legacy) or NGINX Gateway Fabric (Gateway API)
@@ -23,7 +23,7 @@ For local deployment, you need a Kubernetes cluster running on your machine. We 
 
 Once installed, start Rancher Desktop with the following recommended settings:
 
-- `Preferences > Kubernetes`: select Kubernetes version `1.34.10`
+- `Preferences > Kubernetes`: select Kubernetes version `1.35.7`
 - `Preferences > Container Engine`: select `containerd`
 - `Preferences > Virtual Machine > Emulation`: select `QEMU` (or `VZ` on Apple M3)
 - `Preferences > Virtual Machine > Hardware`: `4 CPUs` and `16 GB` memory
