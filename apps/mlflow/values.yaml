@@ -1315,6 +1315,38 @@ run:
     ## @param run.persistence.annotations Persistent Volume annotations
     ##
     annotations: {}
+
+## @section Trident Protect backup parameters
+## Backs up the volumes of the release with NetApp Trident Protect (template in the serve-charts common chart).
+## ref: https://docs.netapp.com/us-en/trident/trident-protect/trident-protect-protect-apps.html
+##
+backup:
+  ## @param backup.enabled Create a Trident Protect Application and Schedule for the release volumes
+  ##
+  enabled: true
+  ## @param backup.appVaultRef Name of the Trident Protect AppVault backups are written to. Empty uses the cluster default (storagegrid-s3-bucket)
+  ##
+  appVaultRef: ""
+  ## @param backup.backupRetention Number of backups to keep. "1" keeps only the latest daily backup
+  ##
+  backupRetention: "1"
+  ## @param backup.snapshotRetention Number of local snapshots to keep
+  ##
+  snapshotRetention: "0"
+  ## @param backup.labelSelector Labels of the PVCs to back up. Empty means app.kubernetes.io/instance=<release name>
+  ##
+  labelSelector: {}
+  schedule:
+    ## @param backup.schedule.granularity Backup frequency (Hourly, Daily, Weekly, Monthly)
+    ## @param backup.schedule.windowStartHour Start (UTC hour) of the window the backup start times are spread over
+    ## @param backup.schedule.windowMinutes Length of that window in minutes; each release gets a fixed minute in it based on its name
+    ## @param backup.schedule.runImmediately Take a first backup as soon as the Schedule is created
+    ##
+    granularity: Daily
+    windowStartHour: 22
+    windowMinutes: 360
+    runImmediately: true
+
 ## @section Init Container Parameters
 ##
 
