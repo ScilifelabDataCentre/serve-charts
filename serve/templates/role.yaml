@@ -21,6 +21,9 @@ rules:
   - apiGroups: ["gateway.nginx.org"]
     resources: ["snippetsfilters", "ratelimitpolicies", "clientsettingspolicies"]
     verbs: ["*"]
+  - apiGroups: ["protect.trident.netapp.io"]
+    resources: ["applications", "schedules"]
+    verbs: ["*"]
 {{- end }}
 ---
 kind: Role
