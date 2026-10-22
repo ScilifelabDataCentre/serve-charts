@@ -1324,6 +1324,9 @@ backup:
   ## @param backup.enabled Create a Trident Protect Application and Schedule for the release volumes
   ##
   enabled: true
+  ## @param backup.appVaultRef Name of the Trident Protect AppVault backups are written to. Empty uses the cluster default (storagegrid-s3-bucket)
+  ##
+  appVaultRef: ""
   ## @param backup.backupRetention Number of backups to keep. "1" keeps only the latest daily backup
   ##
   backupRetention: "1"

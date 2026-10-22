@@ -2,7 +2,8 @@
 Trident Protect Application + Schedule backing up the volumes of a serve app release.
 Usage: {{ include "common.tridentprotect" . }}
 
-Rendered only when .Values.backup.enabled is true. Expects in the app chart values:
+Rendered only when .Values.backup.enabled is true and the Trident Protect CRDs are installed on the
+cluster. Expects in the app chart values:
   backup:
     enabled: true
     appVaultRef: ""
@@ -19,7 +20,8 @@ The start time of each release is spread over the window using a hash of the rel
 so that many releases do not all back up at the same minute.
 */}}
 {{- define "common.tridentprotect" -}}
-{{- if .Values.backup.enabled }}
+{{- $tridentProtect := and (.Capabilities.APIVersions.Has "protect.trident.netapp.io/v1/Application") (.Capabilities.APIVersions.Has "protect.trident.netapp.io/v1/Schedule") }}
+{{- if and .Values.backup.enabled $tridentProtect }}
 {{- $schedule := .Values.backup.schedule }}
 {{- $name := printf "%s-backup" .Release.Name | trunc 63 | trimSuffix "-" }}
 {{- $selector := .Values.backup.labelSelector | default (dict "app.kubernetes.io/instance" .Release.Name) }}
