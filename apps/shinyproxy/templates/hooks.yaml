@@ -58,7 +58,7 @@ spec:
           - "delete"
           - "pods"
           - "-l"
-          - "sp.instance={{ .Release.Name }},sp.environment!={{ .Values.extraEnv | toJson | sha256sum | trunc 16 }}"
+          - "sp.instance={{ .Release.Name }},sp.environment!={{ (dict "env" .Values.extraEnv "envFrom" .Values.extraEnvFrom) | toJson | sha256sum | trunc 16 }}"
           - "-n"
           - "{{ .Release.Namespace }}"
 {{- end }}
