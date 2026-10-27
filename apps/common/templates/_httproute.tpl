@@ -50,12 +50,16 @@ spec:
 {{- end }}
 
 {{/*
-SnippetsFilter to intercept upstream 5xx errors and route them to the shared nginx-errors backend
+SnippetsFilter to intercept upstream 403/404/5xx errors and route them to the shared nginx-errors backend
 (deployed by the serve chart's custom-default-backend.yaml, in the same namespace).
+4xx codes listed in gateway.errorPagesSnippetsFilter.passThroughCodes (403, 404) are not intercepted,
+so the app's own response for them (body and headers, e.g. CORS) reaches the client.
+5xx is always intercepted, so app crash details are never shown.
 Usage: {{ include "common.errorPagesSnippetsFilter" . }}
 */}}
 {{- define "common.errorPagesSnippetsFilter" -}}
 {{- if and .Values.gateway.enabled .Values.gateway.errorPagesSnippetsFilter.enabled }}
+{{- $passThrough := .Values.gateway.errorPagesSnippetsFilter.passThroughCodes | default list | toStrings }}
 apiVersion: gateway.nginx.org/v1alpha1
 kind: SnippetsFilter
 metadata:
@@ -66,24 +70,32 @@ spec:
   - context: http.server
     value: |
       proxy_intercept_errors on;
+      {{- if not (has "403" $passThrough) }}
       error_page 403 = @error_page_403;
+      {{- end }}
+      {{- if not (has "404" $passThrough) }}
       error_page 404 = @error_page_404;
+      {{- end }}
       error_page 500 = @error_page_500;
       error_page 502 = @error_page_502;
       error_page 503 = @error_page_503;
       error_page 504 = @error_page_504;
+      {{- if not (has "403" $passThrough) }}
       location @error_page_403 {
         internal;
         proxy_intercept_errors off;
         proxy_set_header X-Code 403;
         proxy_pass http://nginx-errors.{{ .Release.Namespace }}.svc.cluster.local:80;
       }
+      {{- end }}
+      {{- if not (has "404" $passThrough) }}
       location @error_page_404 {
         internal;
         proxy_intercept_errors off;
         proxy_set_header X-Code 404;
         proxy_pass http://nginx-errors.{{ .Release.Namespace }}.svc.cluster.local:80;
       }
+      {{- end }}
       location @error_page_500 {
         internal;
         proxy_intercept_errors off;
@@ -110,8 +122,12 @@ spec:
       }
   - context: http.server.location
     value: |
+      {{- if not (has "403" $passThrough) }}
       error_page 403 = @error_page_403;
+      {{- end }}
+      {{- if not (has "404" $passThrough) }}
       error_page 404 = @error_page_404;
+      {{- end }}
       error_page 500 = @error_page_500;
       error_page 502 = @error_page_502;
       error_page 503 = @error_page_503;

@@ -38,6 +38,8 @@ gateway:
   namespace: gateway
   errorPagesSnippetsFilter:
     enabled: true
+    # Bypass Serve's custom response for 4xx codes (403, 404)
+    passThroughCodes: []
   rateLimit:
     enabled: false
     rate: "2r/s"
