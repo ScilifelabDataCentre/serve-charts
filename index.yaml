@@ -2,6 +2,18 @@ apiVersion: v1
 entries:
   common:
   - apiVersion: v2
+    created: "2026-10-27T09:21:37.589849232Z"
+    description: Shared Helm templates for serve app charts
+    digest: b46c84a0e3d3ac1d14667b8dbe0ba432b6100ebbecaaa267e0a6ac5348270fba
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: common
+    type: library
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/common-0.2.0/common-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
     created: "2026-08-27T07:16:43.96328971Z"
     description: Shared Helm templates for serve app charts
     digest: c8d49a6f4b89943a007714c7aea8ac193232bc255956596c0f677e387400a94b
@@ -38,6 +50,22 @@ entries:
     - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/common-0.1.0/common-0.1.0.tgz
     version: 0.1.0
   custom-app:
+  - apiVersion: v2
+    appVersion: "0.1"
+    created: "2026-10-27T09:21:37.826490457Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 0.2.0
+    description: A Helm chart for a standard serve app
+    digest: 50a2d2b624848303ffd49fd227094f82cf407f3aa22dee0078cd4b3dfcb6faa8
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: custom-app
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/custom-app-1.1.9/custom-app-1.1.9.tgz
+    version: 1.1.9
   - apiVersion: v2
     appVersion: "0.1"
     created: "2026-08-27T07:16:44.106246837Z"
@@ -197,6 +225,22 @@ entries:
   dash-app:
   - apiVersion: v2
     appVersion: "0.1"
+    created: "2026-10-27T09:21:38.020083343Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 0.2.0
+    description: A Helm chart Dash apps
+    digest: d81fb78bf0f29068ad5beaea213738fa8b7948770291503fccbf43bdf6117bc2
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: dash-app
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/dash-app-1.0.10/dash-app-1.0.10.tgz
+    version: 1.0.10
+  - apiVersion: v2
+    appVersion: "0.1"
     created: "2026-08-27T07:16:44.232971253Z"
     dependencies:
     - name: common
@@ -328,6 +372,22 @@ entries:
     - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/dash-app-1.0.0/dash-app-1.0.0.tgz
     version: 1.0.0
   filemanager:
+  - apiVersion: v2
+    appVersion: "0.1"
+    created: "2026-10-27T09:21:38.188084348Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 0.2.0
+    description: A Helm chart for the serve File Manager
+    digest: c917ae44f37c379ad83e640b30a89724acec31885b6241338e1ee23a386ab30b
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: filemanager
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/filemanager-1.0.11/filemanager-1.0.11.tgz
+    version: 1.0.11
   - apiVersion: v2
     appVersion: "0.1"
     created: "2026-08-27T07:16:44.370914761Z"
@@ -654,6 +714,60 @@ entries:
       tanzuCategory: application
     apiVersion: v2
     appVersion: 3.3.2
+    created: "2026-10-27T09:21:38.567413382Z"
+    dependencies:
+    - condition: minio.enabled
+      name: minio
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 17.x.x
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 16.x.x
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    - alias: serve-common
+      name: common
+      repository: file://../common
+      version: 0.2.0
+    description: MLflow is an open-source platform designed to manage the end-to-end
+      machine learning lifecycle. It allows you to track experiments, package code
+      into reproducible runs, and share and deploy models.
+    digest: 3af32e251d4995a604a9d5d62a5fce519c8c7b0e33f0c084e6f0c792c241d6fb
+    home: https://bitnami.com
+    icon: https://dyltqmyl993wv.cloudfront.net/assets/stacks/mlflow/img/mlflow-stack-220x234.png
+    keywords:
+    - mlflow
+    - models
+    - python
+    - machine
+    - learning
+    maintainers:
+    - name: Broadcom, Inc. All Rights Reserved.
+      url: https://github.com/bitnami/charts
+    name: mlflow
+    sources:
+    - https://github.com/bitnami/charts/tree/main/bitnami/mlflow
+    - https://github.com/bitnami/containers/tree/main/bitnami/mlflow
+    - https://github.com/mlflow/mlflow
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/mlflow-5.4.0/mlflow-5.4.0.tgz
+    version: 5.4.0
+  - annotations:
+      images: |
+        - name: git
+          image: docker.io/bitnami/git:2.51.0-debian-12-r0
+        - name: mlflow
+          image: docker.io/bitnami/mlflow:3.3.2-debian-12-r0
+        - name: os-shell
+          image: docker.io/bitnami/os-shell:12-debian-12-r51
+      licenses: Apache-2.0
+      tanzuCategory: application
+    apiVersion: v2
+    appVersion: 3.3.2
     created: "2026-09-01T11:04:18.97107327Z"
     dependencies:
     - condition: minio.enabled
@@ -760,6 +874,22 @@ entries:
     - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/netpolicy-1.0.0/netpolicy-1.0.0.tgz
     version: 1.0.0
   rstudio:
+  - apiVersion: v2
+    appVersion: "0.1"
+    created: "2026-10-27T09:21:38.777315305Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 0.2.0
+    description: A Helm chart for RStudio in the browser
+    digest: efea14b61baeb38b28e5fefe612318b74076c7c99c8a231bf25960afd34df3e6
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: rstudio
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/rstudio-1.0.11/rstudio-1.0.11.tgz
+    version: 1.0.11
   - apiVersion: v2
     appVersion: "0.1"
     created: "2026-08-27T07:16:44.679982377Z"
@@ -907,6 +1037,22 @@ entries:
   shinyapp:
   - apiVersion: v2
     appVersion: "0.1"
+    created: "2026-10-27T09:21:38.961229117Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 0.2.0
+    description: A Helm chart Shiny apps
+    digest: 2f076bdb963195607cf023aa75d1fdcf666e1213f93262d1cec89b78dcbdd6a1
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: shinyapp
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/shinyapp-1.0.11/shinyapp-1.0.11.tgz
+    version: 1.0.11
+  - apiVersion: v2
+    appVersion: "0.1"
     created: "2026-08-27T07:16:44.820473341Z"
     dependencies:
     - name: common
@@ -1050,6 +1196,23 @@ entries:
     - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/shinyapp-1.0.0/shinyapp-1.0.0.tgz
     version: 1.0.0
   shinyproxy:
+  - apiVersion: v2
+    appVersion: 3.2.4
+    created: "2026-10-27T09:21:39.136684823Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 0.2.0
+    description: A Helm chart to install Shinyproxy
+    digest: 76d8854cb5f4be3d80f4a699aacf718a60c0468c5658ae1c253929a52fa994f3
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: shinyproxy
+    type: application
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/shinyproxy-1.4.15/shinyproxy-1.4.15.tgz
+    version: 1.4.15
   - apiVersion: v2
     appVersion: 3.2.4
     created: "2026-08-27T07:16:44.956756517Z"
@@ -1342,6 +1505,22 @@ entries:
   tissuumaps:
   - apiVersion: v2
     appVersion: "0.1"
+    created: "2026-10-27T09:21:39.304173226Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 0.2.0
+    description: A Helm chart tissuumaps apps
+    digest: 3698edb169e68fe90db58a08f026e4e4d7cba7ffcec280a343e48693b05ea28f
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: tissuumaps
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/tissuumaps-1.0.10/tissuumaps-1.0.10.tgz
+    version: 1.0.10
+  - apiVersion: v2
+    appVersion: "0.1"
     created: "2026-08-27T07:16:45.076113734Z"
     dependencies:
     - name: common
@@ -1488,6 +1667,22 @@ entries:
   vscode:
   - apiVersion: v2
     appVersion: "0.1"
+    created: "2026-10-27T09:21:39.508672477Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 0.2.0
+    description: A Helm chart for VS code in the browser
+    digest: ba5082033c8c36602000d782bcb37a751f73a4e68d3f07eb04e4d65410f75626
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: vscode
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/vscode-1.0.10/vscode-1.0.10.tgz
+    version: 1.0.10
+  - apiVersion: v2
+    appVersion: "0.1"
     created: "2026-08-27T07:16:45.296285733Z"
     dependencies:
     - name: common
@@ -1618,4 +1813,4 @@ entries:
     urls:
     - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/vscode-1.0.0/vscode-1.0.0.tgz
     version: 1.0.0
-generated: "2026-10-01T18:50:15.902661345Z"
+generated: "2026-10-27T09:21:39.508824015Z"
