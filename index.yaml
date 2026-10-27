@@ -52,6 +52,22 @@ entries:
   custom-app:
   - apiVersion: v2
     appVersion: "0.1"
+    created: "2026-10-27T09:22:38.833730203Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 0.2.0
+    description: A Helm chart for a standard serve app
+    digest: 42ef9e6b0b47ea9ed06d84fc2d125f0d1c40822bd83409ee2e1ea44817c2df41
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: custom-app
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/custom-app-1.1.10/custom-app-1.1.10.tgz
+    version: 1.1.10
+  - apiVersion: v2
+    appVersion: "0.1"
     created: "2026-10-27T09:21:37.826490457Z"
     dependencies:
     - name: common
@@ -223,6 +239,22 @@ entries:
     - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/custom-app-1.0.0/custom-app-1.0.0.tgz
     version: 1.0.0
   dash-app:
+  - apiVersion: v2
+    appVersion: "0.1"
+    created: "2026-10-27T09:22:39.090539398Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 0.2.0
+    description: A Helm chart Dash apps
+    digest: cd003b58d153c92e3d2a288681b97a525ced33a3110f512efc1e7fc4a3d75e6a
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: dash-app
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/dash-app-1.0.11/dash-app-1.0.11.tgz
+    version: 1.0.11
   - apiVersion: v2
     appVersion: "0.1"
     created: "2026-10-27T09:21:38.020083343Z"
@@ -1037,6 +1069,22 @@ entries:
   shinyapp:
   - apiVersion: v2
     appVersion: "0.1"
+    created: "2026-10-27T09:22:39.329232825Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 0.2.0
+    description: A Helm chart Shiny apps
+    digest: 087dceb3b40d643efa995db400a1fdda173e7de8ddebe6ac91279044cb181d4f
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: shinyapp
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/shinyapp-1.0.12/shinyapp-1.0.12.tgz
+    version: 1.0.12
+  - apiVersion: v2
+    appVersion: "0.1"
     created: "2026-10-27T09:21:38.961229117Z"
     dependencies:
     - name: common
@@ -1196,6 +1244,23 @@ entries:
     - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/shinyapp-1.0.0/shinyapp-1.0.0.tgz
     version: 1.0.0
   shinyproxy:
+  - apiVersion: v2
+    appVersion: 3.2.4
+    created: "2026-10-27T09:22:39.560778838Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 0.2.0
+    description: A Helm chart to install Shinyproxy
+    digest: 5f37dae83fbadc6d92f4a8c58f45a38009ef1f639bebacf81d63d12c94479575
+    maintainers:
+    - email: serve@scilifelab.se
+      name: Team Whale
+    name: shinyproxy
+    type: application
+    urls:
+    - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/shinyproxy-1.4.16/shinyproxy-1.4.16.tgz
+    version: 1.4.16
   - apiVersion: v2
     appVersion: 3.2.4
     created: "2026-10-27T09:21:39.136684823Z"
@@ -1813,4 +1878,4 @@ entries:
     urls:
     - https://github.com/ScilifelabDataCentre/serve-charts/releases/download/vscode-1.0.0/vscode-1.0.0.tgz
     version: 1.0.0
-generated: "2026-10-27T09:21:39.508824015Z"
+generated: "2026-10-27T09:22:39.561345097Z"
