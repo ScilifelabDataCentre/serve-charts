@@ -1,3 +1,6 @@
+extraEnv: []
+extraEnvFrom: []
+
 appname: customapp
 project:
   name: project

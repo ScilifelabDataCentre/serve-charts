@@ -39,6 +39,14 @@ spec:
       - name: {{ .Values.appname }}
         image: {{ .Values.appconfig.image }}
         imagePullPolicy: IfNotPresent
+        {{- with .Values.extraEnv }}
+        env:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.extraEnvFrom }}
+        envFrom:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         ports:
           - containerPort: {{ .Values.appconfig.port }}
         securityContext:
