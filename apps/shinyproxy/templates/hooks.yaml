@@ -30,3 +30,35 @@ spec:
           - "sp.instance={{ .Release.Name }}"
           - "-n"
           - "{{ .Release.Namespace }}"
+
+---
+{{- if .Release.IsUpgrade }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "refresh-user-pods-{{ .Release.Name }}"
+  annotations:
+    "helm.sh/hook": post-upgrade
+    "helm.sh/hook-weight": "5"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: {{ .Values.hooks.deleteUserPods.backoffLimit }}
+  activeDeadlineSeconds: {{ .Values.hooks.deleteUserPods.activeDeadlineSeconds }}
+  template:
+    metadata:
+      labels:
+        allow-api-access: "true"
+    spec:
+      restartPolicy: Never
+      serviceAccountName: {{ .Release.Namespace }}-shinyproxy
+      containers:
+      - name: refresh-user-pods
+        image: {{ .Values.hooks.deleteUserPods.image }}
+        args:
+          - "delete"
+          - "pods"
+          - "-l"
+          - "sp.instance={{ .Release.Name }},sp.environment!={{ .Values.extraEnv | toJson | sha256sum | trunc 16 }}"
+          - "-n"
+          - "{{ .Release.Namespace }}"
+{{- end }}

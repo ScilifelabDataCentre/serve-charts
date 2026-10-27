@@ -91,6 +91,10 @@ spec:
           - ./start-script.sh;
           {{- end }}
 
+        {{- with .Values.extraEnv }}
+        env:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         ports:
           - containerPort: {{ .Values.appconfig.port }}
         securityContext:

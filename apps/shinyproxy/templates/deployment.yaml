@@ -6,6 +6,8 @@ metadata:
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
+  strategy:
+    type: Recreate
   replicas: 1
   selector:
     matchLabels:
@@ -17,6 +19,7 @@ spec:
   template:
     metadata:
       annotations:
+        checksum/environment: {{ .Values.extraEnv | toJson | sha256sum }}
         prometheus.io/scrape: "true"
         prometheus.io/path: /metrics
         # prometheus.io/port: "8501"

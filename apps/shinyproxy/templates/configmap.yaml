@@ -46,9 +46,16 @@ data:
         allow-container-re-use: {{ .Values.appconfig.allowContainerReuse }}
         labels:
           sp.instance: {{ .Release.Name }}
+          sp.environment: {{ .Values.extraEnv | toJson | sha256sum | trunc 16 | quote }}
           allow-internet-egress: "true"
           shinyproxy-app: {{ .Release.Name }}
         kubernetes-pod-patches: |
+          {{- range .Values.extraEnv }}
+          - op: add
+            path: /spec/containers/0/env/-
+            value:
+              {{- toYaml . | nindent 14 }}
+          {{- end }}
           - op: add
             path: /spec/securityContext
             value:

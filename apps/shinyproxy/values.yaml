@@ -1,3 +1,5 @@
+extraEnv: []
+
 appname: shinyapp
 name: shinyapp
 project:
