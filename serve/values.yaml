@@ -202,6 +202,11 @@ studio:
   githubApiUsername:
   dockerhubToken:
   dockerhubUsername: scilifelabteamwhale
+  harbor:
+    registryHost: ""
+    proxyCacheEnabled: false
+    dockerhubProject: docker.io
+    ghcrProject: ghcr.io
   invenioEnabled: false
   invenioUrl:
   invenioApiToken:

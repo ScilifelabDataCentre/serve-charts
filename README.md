@@ -86,6 +86,26 @@ kubectl exec -it <studio-pod-name> -- /bin/bash
 
 The `/app` directory inside the container is where the code is mounted, so any changes made on your host machine will be reflected immediately in the container.
 
+## Using Harbor for application images
+
+Harbor is optional and off by default. With a Serve backend that supports Harbor,
+use these values to cache public Docker Hub and GHCR images:
+
+```yaml
+studio:
+  harbor:
+    registryHost: harbor.serve-dev.scilifelab.se
+    proxyCacheEnabled: true
+    dockerhubProject: docker.io
+    ghcrProject: ghcr.io
+```
+
+Use the hostname without `https://` or a path. The Harbor projects must allow
+anonymous pulls, so no credentials are needed.
+
+Users can keep entering their usual image addresses. Serve tries Harbor first
+and falls back to Docker Hub or GHCR if it cannot use the cache.
+
 ## Deploy an SSL certificate
 
 For production, you need a wildcard SSL certificate for your domain. For example, if your domain is `your-domain.com`, you will need a certificate covering `*.your-domain.com` and `*.studio.your-domain.com`. Create the `prod-ingress` TLS secret using:
