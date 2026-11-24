@@ -7,7 +7,6 @@ metadata:
 spec:
   hostnames:
   - {{ .Values.gateway.domain | quote }}
-  - "gw.{{ .Values.gateway.domain }}"
   parentRefs:
   {{- if .Values.gateway.domainSectionName }}
   - group: gateway.networking.k8s.io
