@@ -468,6 +468,15 @@ data:
     GITHUB_API_TOKEN = os.getenv('GITHUB_API_TOKEN')
     GITHUB_API_USERNAME = os.getenv('GITHUB_API_USERNAME')
 
+    # Allowed container image registries for non-staff users.
+    # Comma-separated. Falls back to the default if empty or only blanks/commas.
+    _DEFAULT_ALLOWED_IMAGE_REGISTRIES = ["docker.io", "ghcr.io", "quay.io"]
+    ALLOWED_IMAGE_REGISTRIES = [
+        r.strip().lower()
+        for r in os.getenv("ALLOWED_IMAGE_REGISTRIES", "{{ .Values.studio.allowedImageRegistries | default "" }}").split(",")
+        if r.strip()
+    ] or _DEFAULT_ALLOWED_IMAGE_REGISTRIES
+
     # Invenio API
     INVENIO_URL = os.getenv("INVENIO_URL")
     INVENIO_API_TOKEN = os.getenv("INVENIO_API_TOKEN")
